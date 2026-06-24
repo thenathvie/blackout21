@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0402">
     <title>Blackout 21 - Le Jeu à Boire</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
@@ -163,10 +164,25 @@
         .tv-top-bar { display: flex; justify-content: center; margin-bottom: 5px; width: 100%; position: relative;}
         .tv-code-badge { font-weight: 900; background: #000; padding: 6px 15px; border-radius: 6px; border: 1px solid var(--gold); color: var(--gold); font-size: 1em; letter-spacing: 2px; transition: 1s ease;}
 
-        /* TEST BUTTONS */
-        .admin-controls { position: absolute; top: 0; left: 0; display: flex; gap: 5px; opacity: 0.3; transition: 0.2s;}
-        .admin-controls:hover { opacity: 1; }
-        .btn-admin { font-size: 10px; padding: 5px 8px; background: #333; color: #fff; border: 1px solid #666; cursor: pointer; border-radius: 4px;}
+        /* AVERTISSEMENT MODE PORTRAIT SUR MOBILE */
+        #portrait-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        @keyframes rotatePhone { 0% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } 100% { transform: rotate(-90deg); } }
+        
+        /* Affichage de l'avertissement uniquement si class 'is-portrait' ET 'is-mobile-game' sont sur le body */
+        body.is-mobile-game.is-portrait #portrait-warning { display: flex; }
+
+        /* OPTIMISATION PAYSAGE (Smartphones) */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            #screen-mobile-game .lobby-box { padding: 10px; }
+            #screen-mobile-game .status-badge { margin-bottom: 2px; }
+            #screen-mobile-game h2 { font-size: 1.2em; margin-bottom: 5px; }
+            #mobile-bank-score { padding: 5px 10px; font-size: 1em; margin: 5px 0; }
+            #mobile-my-cards { min-height: 70px; }
+            #mobile-my-cards .card { width: 45px; height: 65px; font-size: 20px; }
+            .game-controls { gap: 5px; margin-top: 5px; }
+            .btn-game { padding: 8px 5px; font-size: 12px; }
+            .event-banner { font-size: 0.75em; padding: 5px; }
+        }
 
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -180,6 +196,14 @@
     </style>
 </head>
 <body>
+
+<div id="portrait-warning">
+    <div style="font-size: 5em; animation: rotatePhone 2s infinite ease-in-out;">📱</div>
+    <h2 style="color: var(--gold); margin-top: 30px; font-family: 'Montserrat', sans-serif;">MODE PAYSAGE REQUIS</h2>
+    <p style="color: rgba(255,255,255,0.8); font-weight: 600; font-size: 1.1em; line-height: 1.5; max-width: 300px;">
+        Veuillez tourner votre téléphone à l'horizontale pour une meilleure expérience à table.
+    </p>
+</div>
 
 <div id="app-container">
 
@@ -242,13 +266,6 @@
 
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
-            <div class="admin-controls" id="tv-admin-controls" style="display:none;">
-                <button class="btn-admin" onclick="forceEvent('happy_hour')">X2</button>
-                <button class="btn-admin" onclick="forceEvent('red_alert')">Mort</button>
-                <button class="btn-admin" onclick="forceEvent('green_carpet')">Vegas</button>
-                <button class="btn-admin" onclick="forceEvent('russian_roulette')">Roulette</button>
-                <button class="btn-admin" onclick="forceEvent(null)">Normal</button>
-            </div>
             <div class="tv-code-badge">TABLE: <span id="tv-game-room-code"></span></div>
         </div>
         
@@ -336,6 +353,17 @@
 
         const vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
 
+        // Détection de l'orientation pour le mobile
+        function checkOrientation() {
+            if (window.innerHeight > window.innerWidth) {
+                document.body.classList.add('is-portrait');
+            } else {
+                document.body.classList.remove('is-portrait');
+            }
+        }
+        window.addEventListener('resize', checkOrientation);
+        checkOrientation(); // Appel initial
+
         function calculateScore(hand) {
             let score = 0; let aces = 0;
             if(!hand) return 0;
@@ -375,6 +403,10 @@
         window.showScreen = (screenId) => {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+            
+            // Activation de la vérification Paysage uniquement sur l'écran du jeu
+            document.body.classList.toggle('is-mobile-game', screenId === 'screen-mobile-game');
+            
             const err = document.getElementById('error-msg');
             if(err) err.innerText = ""; 
         };
@@ -421,8 +453,6 @@
             
             await setDoc(doc(db, "rooms", currentRoomCode), { status: "waiting", players: [], pings: {}, tvPing: Date.now(), streaks: {}, roundsSinceLastEvent: 0, nextForcedEvent: null });
             document.getElementById('display-room-code').innerText = currentRoomCode;
-            document.getElementById('tv-game-room-code').innerText = currentRoomCode;
-            document.getElementById('tv-admin-controls').style.display = "flex";
             window.showScreen('screen-tv-lobby');
 
             onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
@@ -438,12 +468,6 @@
                     tvLastStatus = localRoomData.status;
                 }
             });
-        };
-
-        window.forceEvent = async (eventName) => {
-            if (!currentRoomCode || !isTV) return;
-            await updateDoc(doc(db, "rooms", currentRoomCode), { nextForcedEvent: eventName });
-            alert(eventName ? `Événement ${eventName} forcé pour la prochaine manche.` : "Partie normale forcée pour la prochaine manche.");
         };
 
         function updateLobbyTV() {
@@ -501,17 +525,17 @@
             let nextEvt = localRoomData.nextForcedEvent || null;
             let roundsCounter = (localRoomData.roundsSinceLastEvent || 0) + 1;
             
-            // MODIFICATION DES PROBABILITÉS
+            // PROBABILITÉS D'ÉVÉNEMENTS
             if (nextEvt === null && roundsCounter >= 10) {
-                let rand = Math.random(); // Tire un nombre entre 0.0 et 1.0
+                let rand = Math.random(); 
                 if (rand < 0.15) {
-                    nextEvt = "happy_hour";        // 15% de chance (de 0 à 0.15)
+                    nextEvt = "happy_hour";        // 15%
                 } else if (rand < 0.25) { 
-                    nextEvt = "green_carpet";      // 10% de chance (de 0.15 à 0.25)
+                    nextEvt = "green_carpet";      // 10%
                 } else if (rand < 0.325) {
-                    nextEvt = "russian_roulette";  // 7.5% de chance (de 0.25 à 0.325)
+                    nextEvt = "russian_roulette";  // 7.5%
                 } else if (rand < 0.375) {
-                    nextEvt = "red_alert";         // 5% de chance (de 0.325 à 0.375)
+                    nextEvt = "red_alert";         // 5%
                 }
             }
             if (nextEvt) roundsCounter = 0;
@@ -551,6 +575,10 @@
 
         function updateThemeAndBanner(data) {
             document.body.className = data.currentEvent ? `theme-${data.currentEvent.replace('_', '-')}` : '';
+            // Réapplique les classes importantes pour l'orientation
+            checkOrientation();
+            document.body.classList.toggle('is-mobile-game', document.getElementById('screen-mobile-game').classList.contains('active'));
+
             const tvBanner = document.getElementById('tv-event-banner');
             const mobileBanner = document.getElementById('mobile-event-banner');
             
