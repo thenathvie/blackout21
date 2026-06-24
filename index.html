@@ -172,7 +172,6 @@
 
 <div id="app-container">
 
-    <!-- ACCUEIL -->
     <div id="screen-home" class="screen active">
         <div class="lobby-box">
             <h1>Blackjack</h1>
@@ -183,7 +182,6 @@
         </div>
     </div>
 
-    <!-- REJOINDRE -->
     <div id="screen-join" class="screen">
         <div class="lobby-box">
             <h2>Rejoindre</h2>
@@ -195,7 +193,6 @@
         </div>
     </div>
 
-    <!-- LOBBY MOBILE -->
     <div id="screen-mobile-lobby" class="screen">
         <div class="lobby-box">
             <div style="font-size: 3em; margin-bottom: 5px;">🥃</div>
@@ -204,7 +201,6 @@
         </div>
     </div>
 
-    <!-- DECO -->
     <div id="screen-disconnected" class="screen">
         <div class="lobby-box" style="border-color: var(--danger);">
             <h2 style="color: var(--danger);">🚨 Table Fermée</h2>
@@ -213,7 +209,6 @@
         </div>
     </div>
 
-    <!-- LOBBY TV -->
     <div id="screen-tv-lobby" class="screen">
         <div class="lobby-box" style="max-width: 800px;">
             <h2>CODE D'ACCÈS VIP</h2>
@@ -224,10 +219,8 @@
         </div>
     </div>
 
-    <!-- JEU TV -->
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
-            <!-- ADMIN BOUTONS POUR FORCER LES EVENEMENTS -->
             <div class="admin-controls" id="tv-admin-controls" style="display:none;">
                 <button class="btn-admin" onclick="forceEvent('happy_hour')">X2</button>
                 <button class="btn-admin" onclick="forceEvent('red_alert')">Mort</button>
@@ -242,7 +235,7 @@
 
         <div id="tv-board">
             <div class="dealer-area">
-                <h2>LA BANQUE <span id="tv-dealer-score" style="font-size: 0.6em; color: var(--gold); margin-left: 10px; font-family: 'Montserrat', sans-serif;"></span></h2>
+                <h2>LA BANQUE <span id="tv-dealer-score" style="font-size: 1em; color: var(--gold); margin-left: 10px; font-family: 'Montserrat', sans-serif; background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--gold);"></span></h2>
                 <div class="cards-container" id="tv-dealer-cards"></div>
             </div>
             <div id="tv-result-msg"></div>
@@ -251,14 +244,13 @@
         <button id="new-round-btn" class="btn btn-main" style="display:none; font-size: 1em; padding: 12px 25px; margin-top: 10px; max-width: 300px;" onclick="window.startGame()">Manche Suivante 🔄</button>
     </div>
 
-    <!-- JEU MOBILE -->
     <div id="screen-mobile-game" class="screen">
         <div class="lobby-box" style="padding: 15px; width: 100%; border: none; background: transparent; box-shadow: none;">
             <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 10px;"></div>
             <div id="mobile-status-badge" class="status-badge">Phase de jeu</div>
             <h2 id="mobile-status-title" style="margin-top: 0; font-size: 1.2em;">Chargement...</h2>
             
-            <div id="mobile-bank-score" style="color: var(--gold); font-weight: 800; font-size: 0.85em; margin: 5px 0; background: rgba(0,0,0,0.8); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border);">Banque : --</div>
+            <div id="mobile-bank-score" style="color: var(--gold); font-weight: 900; font-size: 1.2em; margin: 10px 0; background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 6px; border: 1px solid var(--gold); display: inline-block;">Banque : --</div>
 
             <div style="background: rgba(0,0,0,0.6); padding: 10px; border-radius: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; border: 1px solid var(--glass-border);">
                 <div id="mobile-my-cards" class="cards-container" style="min-height: 90px; margin-top:0;"></div>
@@ -276,20 +268,17 @@
         </div>
     </div>
 
-    <!-- MODAL REVEAL FLASH (MOBILE) -->
     <div id="mobile-reveal-modal" class="fullscreen-modal" style="z-index: 2000;">
         <div id="reveal-icon" style="font-size: 5em; margin-bottom: 10px; animation: popIn 0.3s ease-out;"></div>
         <h1 id="reveal-title" style="font-size: 3em; margin: 0; text-transform: uppercase; font-family: 'Playfair Display', serif; animation: popIn 0.4s ease-out;"></h1>
     </div>
 
-    <!-- MODAL DISTRIBUTION (MOBILE) -->
     <div id="mobile-distrib-modal" class="fullscreen-modal">
         <h2 id="distrib-modal-title" class="modal-title"></h2>
         <p id="distrib-modal-text" class="modal-text"></p>
         <div style="width: 100%; max-width: 300px;" id="distrib-buttons-container"></div>
     </div>
 
-    <!-- MODAL RÉSULTAT (MOBILE) -->
     <div id="mobile-drink-modal" class="fullscreen-modal">
         <div style="font-size: 4em; margin-bottom: 5px;" id="drink-modal-icon">🍷</div>
         <h2 id="drink-modal-title" class="modal-title">VERDICT</h2>
@@ -336,6 +325,23 @@
             }
             while (score > 21 && aces > 0) { score -= 10; aces -= 1; }
             return score;
+        }
+
+        // Nouvelle fonction pour l'affichage visuel (gère le "3/13")
+        function displayScore(hand) {
+            if(!hand) return 0;
+            let minScore = 0; let hasAce = false;
+            for (let card of hand) {
+                if (['J', 'Q', 'K'].includes(card.value)) minScore += 10;
+                else if (card.value === 'A') { minScore += 1; hasAce = true; }
+                else minScore += parseInt(card.value);
+            }
+            let maxScore = (hasAce && minScore + 10 <= 21) ? minScore + 10 : minScore;
+            
+            if (minScore !== maxScore && maxScore !== 21) {
+                return `${minScore}/${maxScore}`;
+            }
+            return maxScore;
         }
 
         function createHtmlCard(card, hidden = false, index = 0, totalCards = 1) {
@@ -495,7 +501,7 @@
             if (newDealerCardsHtml !== lastDealerCardsHtml) { document.getElementById('tv-dealer-cards').innerHTML = newDealerCardsHtml; lastDealerCardsHtml = newDealerCardsHtml; }
             
             if (data.dealerHand && data.dealerHand.length > 0) {
-                document.getElementById('tv-dealer-score').innerText = hideSecond ? `: ${calculateScore([data.dealerHand[0]])} (1 cachée)` : `: ${calculateScore(data.dealerHand)}`;
+                document.getElementById('tv-dealer-score').innerText = hideSecond ? `${displayScore([data.dealerHand[0]])} (1 cachée)` : `${displayScore(data.dealerHand)}`;
             }
 
             let newPlayersAreaHtml = "";
@@ -521,7 +527,7 @@
                         <h3>${p.replace("_split", " (Split)")}</h3>
                         <div style="color:var(--gold); font-weight:bold; font-size:0.85em; height:16px; margin-bottom:5px;">${stateText}</div>
                         <div class="cards-container">${hand.map((c, i) => createHtmlCard(c, false, i, hand.length)).join('')}</div>
-                        <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); background:#000; padding:4px 15px; border-radius:20px; border:1px solid var(--gold); font-weight:bold;">${calculateScore(hand)}</div>
+                        <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); background:#000; padding:4px 15px; border-radius:20px; border:1px solid var(--gold); font-weight:bold; white-space:nowrap;">${displayScore(hand)}</div>
                     </div>`;
             });
 
@@ -706,7 +712,7 @@
 
             if (data.dealerHand && data.dealerHand.length > 0) {
                 const hideSecond = (data.status !== "finished" && data.status !== "distributing" && !data.dealerPlaying);
-                document.getElementById('mobile-bank-score').innerText = hideSecond ? `Banque : ${calculateScore([data.dealerHand[0]])}` : `Banque : ${calculateScore(data.dealerHand)}`;
+                document.getElementById('mobile-bank-score').innerText = hideSecond ? `Banque : ${displayScore([data.dealerHand[0]])}` : `Banque : ${displayScore(data.dealerHand)}`;
             }
 
             if (data.status === "distributing") {
@@ -769,7 +775,8 @@
             if (newMobileCardsHtml !== lastMobileCardsHtml) { document.getElementById('mobile-my-cards').innerHTML = newMobileCardsHtml; lastMobileCardsHtml = newMobileCardsHtml; }
             
             let currentScore = calculateScore(myHand);
-            document.getElementById('mobile-my-score').innerText = `Score : ${currentScore} ${displayP.includes("_split") ? "(Split)" : ""}`;
+            let currentDisplayScore = displayScore(myHand);
+            document.getElementById('mobile-my-score').innerText = `Score : ${currentDisplayScore} ${displayP.includes("_split") ? "(Split)" : ""}`;
 
             if (myState === "bust") { title.innerText = "💥 BRÛLÉ !"; title.style.color = "var(--danger)"; controls.style.display = "none"; badge.innerText = "Perdu"; badge.style.borderColor = "var(--danger)";}
             else if (myState === "stand") { title.innerText = "✅ RESTE"; title.style.color = "var(--gold)"; controls.style.display = "none"; badge.innerText = "En attente"; badge.style.borderColor = "var(--gold)";}
