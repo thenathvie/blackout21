@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Blackout 21 - Le Jeu à Boire</title>
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
@@ -184,7 +183,6 @@
 
 <div id="app-container">
 
-    <!-- ACCUEIL -->
     <div id="screen-home" class="screen active">
         <div class="lobby-box">
             <div class="app-logo"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span> <span style="color: var(--gold);">🍷</span></div>
@@ -195,7 +193,6 @@
         </div>
     </div>
 
-    <!-- REJOINDRE -->
     <div id="screen-join" class="screen">
         <div class="lobby-box">
             <div class="app-logo" style="font-size: 2em; margin-bottom: 20px;"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
@@ -208,7 +205,6 @@
         </div>
     </div>
 
-    <!-- LOBBY MOBILE -->
     <div id="screen-mobile-lobby" class="screen">
         <div class="lobby-box">
             <div style="font-size: 3em; margin-bottom: 5px;">🥃</div>
@@ -217,7 +213,6 @@
         </div>
     </div>
 
-    <!-- DECO -->
     <div id="screen-disconnected" class="screen">
         <div class="lobby-box" style="border-color: var(--danger);">
             <h2 style="color: var(--danger);">🚨 Table Fermée</h2>
@@ -226,7 +221,6 @@
         </div>
     </div>
 
-    <!-- LOBBY TV -->
     <div id="screen-tv-lobby" class="screen">
         <div class="lobby-box" style="max-width: 800px;">
             <div class="app-logo" style="font-size: 2em; margin-bottom: 10px;"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
@@ -238,20 +232,16 @@
         </div>
     </div>
 
-    <!-- MACHINE À SOUS TV -->
     <div id="tv-slot-modal" class="fullscreen-modal" style="z-index: 3000;">
         <div class="slot-machine-container">
             <h1 id="tv-slot-title" class="slot-title-text">🎰 TIRAGE AU SORT</h1>
             <div id="tv-slot-window" class="slot-machine-window">
-                <!-- Les noms défileront ici -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- JEU TV -->
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
-            <!-- ADMIN BOUTONS POUR FORCER LES EVENEMENTS -->
             <div class="admin-controls" id="tv-admin-controls" style="display:none;">
                 <button class="btn-admin" onclick="forceEvent('happy_hour')">X2</button>
                 <button class="btn-admin" onclick="forceEvent('red_alert')">Mort</button>
@@ -275,7 +265,6 @@
         <button id="new-round-btn" class="btn btn-main" style="display:none; font-size: 1em; padding: 12px 25px; margin-top: 10px; max-width: 300px;" onclick="window.startGame()">Manche Suivante 🔄</button>
     </div>
 
-    <!-- JEU MOBILE -->
     <div id="screen-mobile-game" class="screen">
         <div class="lobby-box" style="padding: 15px; width: 100%; border: none; background: transparent; box-shadow: none;">
             <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 10px;"></div>
@@ -300,20 +289,17 @@
         </div>
     </div>
 
-    <!-- MODAL REVEAL FLASH (MOBILE) -->
     <div id="mobile-reveal-modal" class="fullscreen-modal" style="z-index: 2000;">
         <div id="reveal-icon" style="font-size: 5em; margin-bottom: 10px; animation: popIn 0.3s ease-out;"></div>
         <h1 id="reveal-title" style="font-size: 3em; margin: 0; text-transform: uppercase; font-family: 'Playfair Display', serif; animation: popIn 0.4s ease-out;"></h1>
     </div>
 
-    <!-- MODAL DISTRIBUTION (MOBILE) -->
     <div id="mobile-distrib-modal" class="fullscreen-modal">
         <h2 id="distrib-modal-title" class="modal-title"></h2>
         <p id="distrib-modal-text" class="modal-text"></p>
         <div style="width: 100%; max-width: 300px;" id="distrib-buttons-container"></div>
     </div>
 
-    <!-- MODAL RÉSULTAT (MOBILE) -->
     <div id="mobile-drink-modal" class="fullscreen-modal">
         <div style="font-size: 4em; margin-bottom: 5px;" id="drink-modal-icon">🍷</div>
         <h2 id="drink-modal-title" class="modal-title">VERDICT</h2>
@@ -515,10 +501,17 @@
             let nextEvt = localRoomData.nextForcedEvent || null;
             let roundsCounter = (localRoomData.roundsSinceLastEvent || 0) + 1;
             
+            // MODIFICATION DES PROBABILITÉS
             if (nextEvt === null && roundsCounter >= 10) {
-                if (Math.random() < 0.25) {
-                    const evts = ["happy_hour", "red_alert", "green_carpet", "russian_roulette"];
-                    nextEvt = evts[Math.floor(Math.random() * evts.length)];
+                let rand = Math.random(); // Tire un nombre entre 0.0 et 1.0
+                if (rand < 0.15) {
+                    nextEvt = "happy_hour";        // 15% de chance (de 0 à 0.15)
+                } else if (rand < 0.25) { 
+                    nextEvt = "green_carpet";      // 10% de chance (de 0.15 à 0.25)
+                } else if (rand < 0.325) {
+                    nextEvt = "russian_roulette";  // 7.5% de chance (de 0.25 à 0.325)
+                } else if (rand < 0.375) {
+                    nextEvt = "red_alert";         // 5% de chance (de 0.325 à 0.375)
                 }
             }
             if (nextEvt) roundsCounter = 0;
