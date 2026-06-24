@@ -256,7 +256,6 @@
             }
         }, 5000);
 
-
         // ==========================================
         // LOGIQUE TV (CROUPIER)
         // ==========================================
@@ -342,7 +341,6 @@
                 let cardsHtml = hand.map(c => createHtmlCard(c)).join('');
                 let stateText = state === 'bust' ? "💥 BUST" : state === 'stand' ? "✅ STAND" : state === 'left' ? "❌ ABANDON" : "";
                 
-                // --- V6 TV : Affichages conditionnels ---
                 if (isDistributing) {
                     stateText = "🤫 Choix des cibles...";
                 } else if (isFinished && data.results && data.results[p]) {
@@ -368,7 +366,6 @@
                     </div>`;
             });
 
-            // Avancement des tours de jeu
             if (data.status === "playing" && data.currentTurnIndex < data.players.length) {
                 let currentPlayer = data.players[data.currentTurnIndex];
                 if (!data.playerHands?.[currentPlayer] || data.playerStates[currentPlayer] === "left") {
@@ -379,18 +376,15 @@
                 playDealerTurn();
             }
 
-            // --- V6 TV : Vérification si toutes les gorgées ont été données ---
             if (isDistributing && data.poolToGive) {
                 let totalLeft = 0;
                 Object.values(data.poolToGive).forEach(v => totalLeft += v);
                 if (totalLeft === 0) {
-                    // Tout est distribué, on passe à l'affichage des résultats !
                     await updateDoc(doc(db, "rooms", currentRoomCode), { status: "finished" });
                     return;
                 }
             }
 
-            // Affichage des boutons / messages finaux
             document.getElementById('new-round-btn').style.display = isFinished ? "inline-block" : "none";
             
             if (isDistributing) {
@@ -410,9 +404,6 @@
             }
         }
 
-        // ==========================================
-        // V6 : MOTEUR DES RÈGLES ET CRÉATION DU POOL
-        // ==========================================
         async function playDealerTurn() {
             let data = localRoomData;
             let dHand = [...data.dealerHand];
@@ -428,14 +419,13 @@
             let receivedSips = {};
             let randomVictim = null;
 
-            // Init des structures
             data.players.forEach(p => { receivedSips[p] = 0; poolToGive[p] = 0; });
 
             if (isDealerBJ) {
                 let activeP = data.players.filter(p => data.playerStates[p] !== "left" && data.playerHands[p]);
                 if (activeP.length > 0) {
                     randomVictim = activeP[Math.floor(Math.random() * activeP.length)];
-                    receivedSips[randomVictim] += 6; // Ajout direct à la victime secrète
+                    receivedSips[randomVictim] += 6; 
                 }
             }
 
@@ -450,34 +440,33 @@
                 let take = 0;
                 let give = 0;
                 
-                if (pState === "bust") { outcome = "bust"; take = 3; }[cite: 2]
-                else if (isDealerBJ && isPlayerBJ) { outcome = "bj_both"; take = 3; give = 3; }[cite: 2]
-                else if (isPlayerBJ) { outcome = "bj_player"; give = 6; }[cite: 2]
-                else if (isDealerBJ) { outcome = "bj_dealer"; take = 2; }[cite: 2]
-                else if (dScore > 21) { outcome = "dealer_bust"; give = 1; }[cite: 2]
-                else if (pScore > dScore) { outcome = "win"; give = 2; }[cite: 2]
-                else if (pScore < dScore) { outcome = "loss"; take = 2; }[cite: 2]
-                else { outcome = "tie"; take = 1; give = 1; }[cite: 2]
+                if (pState === "bust") { outcome = "bust"; take = 3; }
+                else if (isDealerBJ && isPlayerBJ) { outcome = "bj_both"; take = 3; give = 3; }
+                else if (isPlayerBJ) { outcome = "bj_player"; give = 6; }
+                else if (isDealerBJ) { outcome = "bj_dealer"; take = 2; }
+                else if (dScore > 21) { outcome = "dealer_bust"; give = 1; }
+                else if (pScore > dScore) { outcome = "win"; give = 2; }
+                else if (pScore < dScore) { outcome = "loss"; take = 2; }
+                else { outcome = "tie"; take = 1; give = 1; }
 
-                if (["bust", "loss", "bj_dealer"].includes(outcome)) {[cite: 2]
+                if (["bust", "loss", "bj_dealer"].includes(outcome)) {
                     streaks[p] = (streaks[p] || 0) + 1;
-                } else if (["win", "bj_player", "dealer_bust"].includes(outcome)) {[cite: 2]
+                } else if (["win", "bj_player", "dealer_bust"].includes(outcome)) {
                     streaks[p] = 0;
-                } else if (outcome === "tie" || outcome === "bj_both") {[cite: 2]
+                } else if (outcome === "tie" || outcome === "bj_both") {
                     streaks[p] = 0; 
                 }
 
                 let culSec = false;
-                if (streaks[p] >= 5) {[cite: 2]
+                if (streaks[p] >= 5) {
                     culSec = true;
                     streaks[p] = 0;
                 }
 
                 results[p] = { outcome, take, give, culSec };
-                poolToGive[p] = give; // On enregistre ce qu'il doit distribuer
+                poolToGive[p] = give;
             });
 
-            // V6 : On passe en statut "distributing" pour masquer les scores d'abord
             await updateDoc(doc(db, "rooms", currentRoomCode), {
                 dealerHand: dHand, deck: deck, dealerPlayed: true, status: "distributing",
                 results: results, streaks: streaks, randomVictim: randomVictim,
@@ -529,7 +518,6 @@
             const textEl = document.getElementById('drink-modal-text');
             const distribZone = document.getElementById('mobile-distribution-zone');
 
-            // --- V6 MOBILE : PHASE DISTRIBUTING (ANONYME) ---
             if (data.status === "distributing") {
                 controls.style.display = "none";
                 drinkModal.style.display = "none";
@@ -542,7 +530,6 @@
                     distribZone.style.display = "flex";
                     document.getElementById('distrib-count-text').innerText = `Il te reste ${amountToGive} gorgée(s) à distribuer anonymement :`;
                     
-                    // Générer les boutons des autres joueurs actifs à la table
                     const btnContainer = document.getElementById('distrib-buttons-container');
                     btnContainer.innerHTML = "";
                     data.players.forEach(p => {
@@ -560,20 +547,19 @@
                 distribZone.style.display = "none";
             }
 
-            // --- V6 MOBILE : PHASE FINISHED (RÉVÉLATION) ---
             if (data.status === "finished" && data.results && data.results[myPseudo]) {
                 const res = data.results[myPseudo];
                 const received = data.receivedSips?.[myPseudo] || 0;
                 let msgTitle = "RÉSULTAT";
                 let msgText = "";
                 
-                if (res.outcome === "bust") msgTitle = "💥 BUST !";[cite: 2]
-                else if (res.outcome === "loss" || res.outcome === "bj_dealer") msgTitle = "💀 PERDU !";[cite: 2]
-                else if (res.outcome === "win") msgTitle = "🎉 GAGNÉ !";[cite: 2]
-                else if (res.outcome === "dealer_bust") msgTitle = "🔥 CROUPIER BUST !";[cite: 2]
-                else if (res.outcome === "bj_player") msgTitle = "🎰 BLACKJACK !";[cite: 2]
-                else if (res.outcome === "bj_both") msgTitle = "⚔️ DOUBLE BLACKJACK";[cite: 2]
-                else if (res.outcome === "tie") msgTitle = "🤝 ÉGALITÉ";[cite: 2]
+                if (res.outcome === "bust") msgTitle = "💥 BUST !";
+                else if (res.outcome === "loss" || res.outcome === "bj_dealer") msgTitle = "💀 PERDU !";
+                else if (res.outcome === "win") msgTitle = "🎉 GAGNÉ !";
+                else if (res.outcome === "dealer_bust") msgTitle = "🔥 CROUPIER BUST !";
+                else if (res.outcome === "bj_player") msgTitle = "🎰 BLACKJACK !";
+                else if (res.outcome === "bj_both") msgTitle = "⚔️ DOUBLE BLACKJACK";
+                else if (res.outcome === "tie") msgTitle = "🤝 ÉGALITÉ";
 
                 const totalTake = res.take + received;
                 if (totalTake > 0) {
@@ -588,9 +574,9 @@
                 }
 
                 textEl.classList.remove("is-culsec");
-                if (res.culSec) {[cite: 2]
+                if (res.culSec) {
                     msgTitle = "🚨 PUNITION 🚨";
-                    msgText = `CUL SEC !!\n(5 Défaites d'affilée)\n\n${msgText}`;[cite: 2]
+                    msgText = `CUL SEC !!\n(5 Défaites d'affilée)\n\n${msgText}`;
                     textEl.classList.add("is-culsec");
                 }
 
@@ -601,7 +587,6 @@
                 return;
             }
 
-            // Gestion de l'affichage classique des cartes pendant la partie
             const myHand = data.playerHands?.[myPseudo];
             if (!myHand) {
                 title.innerText = "⏳ Manche en cours... Tu joueras à la prochaine !";
@@ -638,7 +623,6 @@
             }
         }
 
-        // Action de distribution anonyme (V6)
         window.giveSipTo = async (targetPlayer) => {
             let data = localRoomData;
             let currentLeft = data.poolToGive?.[myPseudo] || 0;
