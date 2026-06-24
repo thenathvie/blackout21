@@ -205,7 +205,7 @@
         <div class="lobby-box" style="border-color: var(--danger);">
             <h2 style="color: var(--danger);">🚨 Table Fermée</h2>
             <p style="font-size: 0.9em; opacity: 0.8;">La session a pris fin.</p>
-            <button class="btn btn-main" onclick="localStorage.removeItem('bj_pseudo'); localStorage.removeItem('bj_room'); window.location.reload()">Menu Principal</button>
+            <button class="btn btn-main" onclick="window.location.reload()">Menu Principal</button>
         </div>
     </div>
 
@@ -363,9 +363,12 @@
             if (currentRoomCode) {
                 if (isTV) updateDoc(doc(db, "rooms", currentRoomCode), { status: "closed" }).catch(()=>{});
                 else if (myPseudo && localRoomData) {
-                    // Pour les joueurs, on ne les retire à la fermeture de page que s'ils sont dans le lobby d'attente.
-                    // En pleine partie, on laisse le système de ping (20s) gérer pour permettre la reconconnexion en cas de refresh ou switch d'app.
                     if (localRoomData.status === "waiting") updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayRemove(myPseudo) }).catch(()=>{});
+                    else if (["playing", "distributing"].includes(localRoomData.status)) {
+                        let updates = { [`playerStates.${myPseudo}`]: "left" };
+                        if (localRoomData.players[localRoomData.currentTurnIndex]?.startsWith(myPseudo)) updates.currentTurnIndex = localRoomData.currentTurnIndex + 1;
+                        updateDoc(doc(db, "rooms", currentRoomCode), updates).catch(()=>{});
+                    }
                 }
             }
         });
@@ -564,6 +567,7 @@
             
             await new Promise(r => setTimeout(r, 1500));
             
+            // Re-fetch des données fraiches pour les calculs de fin
             data = localRoomData;
             
             let dScore = calculateScore(dHand), isDealerBJNatural = (dHand.length === 2 && dScore === 21);
@@ -589,7 +593,7 @@
                 let outcome = "", take = 0, give = 0;
                 
                 if (data.playerStates[p] === "bust") { outcome = "bust"; take = 3; }
-                else if (pScore === 21 && dScore === 21) { outcome = "bj_both"; take = 3; give = 3; } 
+                else if (pScore === 21 && dScore === 21) { outcome = "bj_both"; take = 3; give = 3; } // NOUVELLE REGLE EGALITE 21
                 else if (isPlayerBJNatural) { outcome = "bj_player"; give = 6; }
                 else if (isDealerBJNatural) { outcome = "bj_dealer"; take = 2; }
                 else if (dScore > 21) { outcome = "dealer_bust"; give = 1; }
@@ -608,7 +612,7 @@
                 if (data.currentEvent === "russian_roulette") {
                     let realP = p.replace("_split", "");
                     if (realP !== data.eventTarget) { 
-                        rrTotalGiveToTarget += give; 
+                        rrTotalGiveToTarget += give; // Les gorgées gagnées vont au target
                         give = 0; 
                     }
                 }
@@ -649,16 +653,12 @@
                 const roomSnap = await getDoc(doc(db, "rooms", currentRoomCode));
                 if (roomSnap.exists()) {
                     await updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayUnion(myPseudo), [`pings.${myPseudo}`]: Date.now() });
-                    
-                    // Sauvegarde locale de la session joueur
-                    localStorage.setItem("bj_pseudo", myPseudo);
-                    localStorage.setItem("bj_room", currentRoomCode);
-
                     window.showScreen('screen-mobile-lobby');
                     
                     onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
                         localRoomData = docSnap.data();
                         
+                        // Déclencheur pour l'écran de révélation
                         if (localRoomData.status !== lastStatus) {
                             if (lastStatus === "playing" && ["distributing", "finished"].includes(localRoomData.status)) {
                                 let myOutcome = localRoomData.results?.[myPseudo]?.outcome || "loss";
@@ -667,13 +667,7 @@
                             lastStatus = localRoomData.status;
                         }
 
-                        if (localRoomData.status === "closed") { 
-                            window.showScreen('screen-disconnected'); 
-                            currentRoomCode = ""; 
-                            // Nettoyage de la session expirée
-                            localStorage.removeItem("bj_pseudo");
-                            localStorage.removeItem("bj_room");
-                        }
+                        if (localRoomData.status === "closed") { window.showScreen('screen-disconnected'); currentRoomCode = ""; }
                         else if (["playing", "distributing", "finished"].includes(localRoomData.status)) updateGameMobile();
                         else { window.showScreen('screen-mobile-lobby'); document.getElementById('mobile-drink-modal').style.display = "none"; document.getElementById('mobile-distrib-modal').style.display = "none"; }
                     });
@@ -839,15 +833,6 @@
             newP.splice(newP.indexOf(target) + 1, 0, ghost);
             await updateDoc(doc(db, "rooms", currentRoomCode), { players: newP, deck, [`playerHands.${target}`]: [hand[0], deck.pop()], [`playerHands.${ghost}`]: [hand[1], deck.pop()], [`playerStates.${ghost}`]: "playing", [`pings.${ghost}`]: Date.now() });
         };
-
-        // Auto-reconnexion au chargement si une session active est détectée dans le navigateur
-        const savedPseudo = localStorage.getItem("bj_pseudo");
-        const savedRoom = localStorage.getItem("bj_room");
-        if (savedPseudo && savedRoom) {
-            document.getElementById('input-pseudo').value = savedPseudo;
-            document.getElementById('input-room').value = savedRoom;
-            window.joinRoom();
-        }
     </script>
 </body>
 </html>
