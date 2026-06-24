@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1b4332; /* Vert sombre casino */
+            background-color: #1b4332;
             color: white;
             text-align: center;
             margin: 0;
@@ -140,57 +140,41 @@
         <div id="display-room-code" class="room-code">----</div>
         
         <h3>Joueurs connectés (<span id="player-count">0</span>/6) :</h3>
-        <ul id="tv-player-list" class="player-list">
-            </ul>
+        <ul id="tv-player-list" class="player-list"></ul>
         
         <button id="start-game-btn" class="btn btn-main" style="display: none;">DÉMARRER LA PARTIE 🚀</button>
     </div>
 
     <script type="module">
-        // Importation des modules Firebase
+        // 1. Importation propre via CDN pour le navigateur
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==========================================
-        // ⚠️ REMPLACE CES VALEURS PAR LES TIENNES ⚠️
-        // ==========================================
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+        // 2. Ta configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCEMdQpb7X9t_9wxMtZiX_GQJZgjSbcuKM",
+            authDomain: "blackjackdaniel-1d8e1.firebaseapp.com",
+            projectId: "blackjackdaniel-1d8e1",
+            storageBucket: "blackjackdaniel-1d8e1.firebasestorage.app",
+            messagingSenderId: "1079648243805",
+            appId: "1:1079648243805:web:363145ace40901f055fdb4",
+            measurementId: "G-0BCDEG9S6W"
+        };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCEMdQpb7X9t_9wxMtZiX_GQJZgjSbcuKM",
-  authDomain: "blackjackdaniel-1d8e1.firebaseapp.com",
-  projectId: "blackjackdaniel-1d8e1",
-  storageBucket: "blackjackdaniel-1d8e1.firebasestorage.app",
-  messagingSenderId: "1079648243805",
-  appId: "1:1079648243805:web:363145ace40901f055fdb4",
-  measurementId: "G-0BCDEG9S6W"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // Initialisation de Firebase
+        // 3. Initialisation unique de Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Variables globales
         let currentRoomCode = "";
 
-        // Fonction pour changer d'écran
+        // Navigation entre les écrans
         window.showScreen = (screenId) => {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
-            document.getElementById('error-msg').innerText = ""; // Reset erreur
+            document.getElementById('error-msg').innerText = ""; 
         };
 
-        // Générer un code aléatoire de 4 lettres
+        // Génération du code TV
         function generateRoomCode() {
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             let code = "";
@@ -200,24 +184,19 @@ const analytics = getAnalytics(app);
             return code;
         }
 
-        // ==========================================
-        // LOGIQUE ÉCRAN TV (CROUPIER)
-        // ==========================================
+        // Action : Lancer la TV
         window.initTVMode = async () => {
             currentRoomCode = generateRoomCode();
             
-            // Création du salon dans Firestore
             try {
                 await setDoc(doc(db, "rooms", currentRoomCode), {
                     status: "waiting",
                     players: []
                 });
 
-                // Affichage du code
                 document.getElementById('display-room-code').innerText = currentRoomCode;
                 window.showScreen('screen-tv-lobby');
 
-                // Écouter les changements en temps réel (quand un joueur rejoint)
                 onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
@@ -226,10 +205,11 @@ const analytics = getAnalytics(app);
                 });
             } catch (error) {
                 console.error("Erreur création room : ", error);
-                alert("Erreur de connexion à Firebase. As-tu bien mis tes identifiants et activé Firestore en mode test ?");
+                alert("Erreur de connexion à Firebase. Assure-toi que Firestore est bien en mode test dans ta console.");
             }
         };
 
+        // Mise à jour interface TV
         function updatePlayerListTV(players) {
             const listEl = document.getElementById('tv-player-list');
             const countEl = document.getElementById('player-count');
@@ -245,7 +225,6 @@ const analytics = getAnalytics(app);
                 listEl.appendChild(li);
             });
 
-            // Afficher le bouton démarrer si au moins 1 joueur (et max 6)
             if (players.length > 0 && players.length <= 6) {
                 startBtn.style.display = "inline-block";
             } else {
@@ -253,9 +232,7 @@ const analytics = getAnalytics(app);
             }
         }
 
-        // ==========================================
-        // LOGIQUE ÉCRAN TÉLÉPHONE (JOUEUR)
-        // ==========================================
+        // Action : Rejoindre depuis le téléphone
         window.joinRoom = async () => {
             const pseudo = document.getElementById('input-pseudo').value.trim();
             let roomCode = document.getElementById('input-room').value.trim().toUpperCase();
@@ -283,19 +260,17 @@ const analytics = getAnalytics(app);
                         return;
                     }
 
-                    // Ajouter le joueur au salon dans Firestore
                     await updateDoc(roomRef, {
                         players: arrayUnion(pseudo)
                     });
 
-                    // Passage à l'écran d'attente
                     window.showScreen('screen-mobile-lobby');
                 } else {
                     errorMsg.innerText = "Salon introuvable. Vérifiez le code.";
                 }
             } catch (error) {
                 console.error("Erreur pour rejoindre : ", error);
-                errorMsg.innerText = "Erreur de connexion.";
+                errorMsg.innerText = "Erreur de connexion avec Firebase.";
             }
         };
     </script>
