@@ -168,7 +168,6 @@
         #portrait-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; }
         @keyframes rotatePhone { 0% { transform: rotate(0deg); } 50% { transform: rotate(-90deg); } 100% { transform: rotate(-90deg); } }
         
-        /* Affichage de l'avertissement uniquement si class 'is-portrait' ET 'is-mobile-game' sont sur le body */
         body.is-mobile-game.is-portrait #portrait-warning { display: flex; }
 
         /* OPTIMISATION PAYSAGE (Smartphones) */
@@ -183,6 +182,43 @@
             .btn-game { padding: 8px 5px; font-size: 12px; }
             .event-banner { font-size: 0.75em; padding: 5px; }
         }
+
+        /* ==========================================================================
+           MODIFICATIONS v0.2 : EXPANSION ET TAILLES ÉCRAN TV
+           ========================================================================== */
+        #screen-tv-lobby .lobby-box {
+            max-width: 92vw;
+            width: 85%;
+            padding: 45px;
+            border-radius: 24px;
+        }
+        #screen-tv-lobby h2 { font-size: 3em; margin-bottom: 15px; }
+        #screen-tv-lobby .room-code { font-size: 92px; padding: 15px 45px; letter-spacing: 12px; margin: 20px 0; }
+        #screen-tv-lobby h3 { font-size: 2em; margin-top: 25px; }
+        #screen-tv-lobby .player-badge { font-size: 22px; padding: 14px 28px; border-radius: 10px; }
+        #start-game-btn { font-size: 1.5em !important; padding: 18px 45px !important; }
+
+        #screen-tv-game #tv-board { gap: 25px; }
+        #screen-tv-game .dealer-area { max-width: 96vw; padding: 25px; border-radius: 0 0 70px 70px; }
+        #screen-tv-game .dealer-area h2 { font-size: 2.8em; }
+        #screen-tv-game #tv-dealer-score { font-size: 0.75em !important; }
+        
+        #screen-tv-game .players-area { gap: 20px; padding: 0 20px; }
+        #screen-tv-game .player-mat { min-width: 210px; max-width: 300px; flex-grow: 1; padding: 22px; border-radius: 14px; }
+        #screen-tv-game .player-mat h3 { font-size: 1.6em; }
+        #screen-tv-game .player-mat div[style*="color:var(--gold)"] { font-size: 1.2em !important; height: 24px; }
+        #screen-tv-game .player-mat div[style*="position:absolute"] { font-size: 1.4em !important; padding: 6px 22px !important; bottom: -18px !important; }
+
+        /* Agrandissement des cartes sur l'écran TV */
+        #screen-tv-game .cards-container { min-height: 140px; padding-left: 30px; margin-top: 15px; }
+        #screen-tv-game .card { width: 85px; height: 120px; font-size: 38px; border-radius: 8px; margin-left: -30px; box-shadow: -4px 4px 12px rgba(0,0,0,0.6); }
+        #screen-tv-game .card:not(.hidden)::before { font-size: 18px; top: 4px; left: 6px; }
+        #screen-tv-game .card:not(.hidden)::after { font-size: 18px; bottom: 4px; right: 6px; }
+        #screen-tv-game .card .center-suit { font-size: 55px; }
+
+        #tv-result-msg { font-size: 34px; margin: 20px 0; font-weight: 900; }
+        .tv-code-badge { font-size: 1.5em; padding: 10px 30px; }
+        #new-round-btn { font-size: 1.4em !important; padding: 18px 40px !important; max-width: 400px !important; }
 
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -253,6 +289,7 @@
             <h3 style="color: #fff; margin-top: 10px; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Joueurs à table (<span id="player-count">0</span>/6)</h3>
             <ul id="tv-player-list" class="player-list"></ul>
             <button id="start-game-btn" class="btn btn-main" style="display: none; padding: 15px; font-size: 1.1em; margin-top: 10px;" onclick="window.startGame()">Faites vos jeux ♠️</button>
+            <button class="btn btn-sub" style="margin-top: 25px; max-width: 280px; font-size: 14px; padding: 10px 20px;" onclick="window.exitTVMode()">← Fermer la Table</button>
         </div>
     </div>
 
@@ -267,6 +304,7 @@
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
             <div class="tv-code-badge">TABLE: <span id="tv-game-room-code"></span></div>
+            <button class="btn btn-sub" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: auto; padding: 6px 15px; font-size: 12px; margin: 0; border-width: 1px; border-radius: 6px;" onclick="window.exitTVMode()">← Quitter</button>
         </div>
         
         <div id="tv-event-banner" class="event-banner"></div>
@@ -419,6 +457,19 @@
                 }
             }
         });
+
+        // FONCTION RETOUR TV (v0.2)
+        window.exitTVMode = async () => {
+            if (currentRoomCode) {
+                try {
+                    await updateDoc(doc(db, "rooms", currentRoomCode), { status: "closed" });
+                } catch(e){}
+            }
+            currentRoomCode = "";
+            isTV = false;
+            localRoomData = null;
+            window.showScreen('screen-home');
+        };
 
         setInterval(() => {
             if (!isTV && myPseudo && currentRoomCode && localRoomData && localRoomData.status !== "closed") {
