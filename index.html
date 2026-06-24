@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Alcool - Version 1</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2E7D32; /* Vert table de casino */
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 5px;
+        }
+        .prevention {
+            font-size: 0.9em;
+            color: #ffcccc;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .board {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .area {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            min-height: 120px;
+            margin-top: 10px;
+        }
+        .card {
+            background-color: white;
+            color: black;
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            border: 1px solid #ccc;
+        }
+        .red { color: red; }
+        .black { color: black; }
+        .hidden {
+            background-color: #1565C0;
+            color: transparent;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
+        }
+        .controls {
+            margin-top: 20px;
+            gap: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+        }
+        #hit-btn { background-color: #f44336; color: white; }
+        #hit-btn:hover:not(:disabled) { background-color: #d32f2f; }
+        #stand-btn { background-color: #2196F3; color: white; }
+        #stand-btn:hover:not(:disabled) { background-color: #1976D2; }
+        #deal-btn { background-color: #FFC107; color: black; }
+        #deal-btn:hover:not(:disabled) { background-color: #FFA000; }
+        #message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 30px;
+            color: #FFEB3B;
+        }
+    </style>
+</head>
+<body>
 
+    <h1>🃏 Blackjack Alcool</h1>
+    <div class="prevention">Buvez responsablement, pas de conduite sous l'emprise de l'alcool.</div>
+
+    <div class="controls">
+        <button id="deal-btn" onclick="startGame()">Nouvelle Partie</button>
+    </div>
+
+    <div class="board">
+        <div class="area" id="dealer-area">
+            <h2>Croupier <span id="dealer-score"></span></h2>
+            <div class="cards" id="dealer-cards"></div>
+        </div>
+
+        <div class="area" id="player-area">
+            <h2>Joueur <span id="player-score"></span></h2>
+            <div class="cards" id="player-cards"></div>
+            
+            <div class="controls">
+                <button id="hit-btn" onclick="hit()" disabled>HIT (Tirer)</button>
+                <button id="stand-btn" onclick="stand()" disabled>STAND (Rester)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="message"></div>
+
+    <script>
+        const suits = ['♠', '♥', '♣', '♦'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        
+        let deck = [];
+        let dealerHand = [];
+        let playerHand = [];
+        let isGameOver = false;
+
+        // Créer et mélanger le paquet
+        function createDeck() {
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ value, suit });
+                }
+            }
+            // Mélange de Fisher-Yates
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        // Calculer le score d'une main
+        function calculateScore(hand) {
+            let score = 0;
+            let aces = 0;
+
+            for (let card of hand) {
+                if (['J', 'Q', 'K'].includes(card.value)) {
+                    score += 10;
+                } else if (card.value === 'A') {
+                    aces += 1;
+                    score += 11;
+                } else {
+                    score += parseInt(card.value);
+                }
+            }
+
+            // Gérer la valeur de l'As (1 ou 11) si on dépasse 21
+            while (score > 21 && aces > 0) {
+                score -= 10;
+                aces -= 1;
+            }
+
+            return score;
+        }
+
+        // Afficher une carte en HTML
+        function renderCard(card, isHidden = false) {
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            
+            if (isHidden) {
+                cardDiv.classList.add('hidden');
+            } else {
+                const isRed = card.suit === '♥' || card.suit === '♦';
+                cardDiv.classList.add(isRed ? 'red' : 'black');
+                cardDiv.innerHTML = `${card.value} <br> ${card.suit}`;
+            }
+            return cardDiv;
+        }
+
+        // Mettre à jour l'interface visuelle
+        function updateBoard(hideDealerCard = true) {
+            const dealerCardsDiv = document.getElementById('dealer-cards');
+            const playerCardsDiv = document.getElementById('player-cards');
+            
+            dealerCardsDiv.innerHTML = '';
+            playerCardsDiv.innerHTML = '';
+
+            // Affichage main joueur
+            playerHand.forEach(card => playerCardsDiv.appendChild(renderCard(card)));
+            document.getElementById('player-score').innerText = `- Score: ${calculateScore(playerHand)}`;
+
+            // Affichage main croupier
+            dealerHand.forEach((card, index) => {
+                if (index === 1 && hideDealerCard && !isGameOver) {
+                    dealerCardsDiv.appendChild(renderCard(card, true)); // Carte face cachée
+                } else {
+                    dealerCardsDiv.appendChild(renderCard(card));
+                }
+            });
+
+            // Affichage score croupier (masqué si la carte est cachée)
+            if (hideDealerCard && !isGameOver) {
+                document.getElementById('dealer-score').innerText = '';
+            } else {
+                document.getElementById('dealer-score').innerText = `- Score: ${calculateScore(dealerHand)}`;
+            }
+        }
+
+        // Lancer une nouvelle partie
+        function startGame() {
+            createDeck();
+            dealerHand = [deck.pop(), deck.pop()];
+            playerHand = [deck.pop(), deck.pop()];
+            isGameOver = false;
+
+            document.getElementById('message').innerText = '';
+            document.getElementById('hit-btn').disabled = false;
+            document.getElementById('stand-btn').disabled = false;
+            document.getElementById('deal-btn').disabled = true;
+
+            updateBoard();
+            
+            // Vérifier le Blackjack naturel dès la distribution
+            if (calculateScore(playerHand) === 21) {
+                endGame("BLACKJACK NATUREL !");
+            }
+        }
+
+        // Action : Tirer une carte (HIT)
+        function hit() {
+            if (isGameOver) return;
+            
+            playerHand.push(deck.pop());
+            updateBoard();
+
+            if (calculateScore(playerHand) > 21) {
+                endGame("BUST ! Tu as dépassé 21.");
+            }
+        }
+
+        // Action : S'arrêter (STAND)
+        function stand() {
+            if (isGameOver) return;
+
+            // Le croupier joue (tire jusqu'à 17)
+            while (calculateScore(dealerHand) < 17) {
+                dealerHand.push(deck.pop());
+            }
+
+            // Évaluation finale
+            const playerScore = calculateScore(playerHand);
+            const dealerScore = calculateScore(dealerHand);
+
+            if (dealerScore > 21) {
+                endGame("Le croupier a BUST ! Tu gagnes.");
+            } else if (playerScore > dealerScore) {
+                endGame("Victoire contre le croupier !");
+            } else if (playerScore < dealerScore) {
+                endGame("Défaite contre le croupier.");
+            } else {
+                endGame("Égalité avec le croupier (Push).");
+            }
+        }
+
+        // Fin de partie
+        function endGame(msg) {
+            isGameOver = true;
+            document.getElementById('message').innerText = msg;
+            document.getElementById('hit-btn').disabled = true;
+            document.getElementById('stand-btn').disabled = true;
+            document.getElementById('deal-btn').disabled = false;
+            updateBoard(false); // Révèle la carte du croupier
+        }
+    </script>
+</body>
+</html>
