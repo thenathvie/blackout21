@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Alcool - Version 1</title>
+    <title>Blackjack Alcool - Version 2 (Lobby)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #2E7D32; /* Vert table de casino */
+            background-color: #1b4332; /* Vert sombre casino */
             color: white;
             text-align: center;
             margin: 0;
             padding: 20px;
-        }
-        h1 {
-            margin-bottom: 5px;
         }
         .prevention {
             font-size: 0.9em;
@@ -22,80 +19,89 @@
             margin-bottom: 20px;
             font-style: italic;
         }
-        .board {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        .area {
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
+        .screen {
+            display: none;
             max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .cards {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            min-height: 120px;
-            margin-top: 10px;
+        .active {
+            display: block;
         }
-        .card {
-            background-color: white;
-            color: black;
-            width: 80px;
-            height: 120px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-            border: 1px solid #ccc;
+        h1, h2 {
+            margin-top: 0;
         }
-        .red { color: red; }
-        .black { color: black; }
-        .hidden {
-            background-color: #1565C0;
-            color: transparent;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);
-        }
-        .controls {
-            margin-top: 20px;
-            gap: 10px;
-            display: flex;
-            justify-content: center;
-        }
-        button {
-            padding: 10px 20px;
+        .btn {
+            padding: 12px 24px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             border: none;
-            border-radius: 5px;
-            transition: 0.2s;
+            border-radius: 8px;
+            margin: 10px;
+            transition: background 0.2s;
         }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            color: #666;
+        .btn-main { background-color: #ffb703; color: black; }
+        .btn-main:hover { background-color: #fb8500; }
+        .btn-sub { background-color: #2196F3; color: white; }
+        .btn-sub:hover { background-color: #0b7dda; }
+        
+        input {
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            text-transform: uppercase;
         }
-        #hit-btn { background-color: #f44336; color: white; }
-        #hit-btn:hover:not(:disabled) { background-color: #d32f2f; }
-        #stand-btn { background-color: #2196F3; color: white; }
-        #stand-btn:hover:not(:disabled) { background-color: #1976D2; }
-        #deal-btn { background-color: #FFC107; color: black; }
-        #deal-btn:hover:not(:disabled) { background-color: #FFA000; }
-        #message {
-            font-size: 24px;
+        
+        .room-code {
+            font-size: 48px;
             font-weight: bold;
-            margin-top: 20px;
-            min-height: 30px;
-            color: #FFEB3B;
+            color: #ffb703;
+            letter-spacing: 5px;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .player-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .player-badge {
+            background-color: #023e8a;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #error-msg {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -104,187 +110,181 @@
     <h1>🃏 Blackjack Alcool</h1>
     <div class="prevention">Buvez responsablement, pas de conduite sous l'emprise de l'alcool.</div>
 
-    <div class="controls">
-        <button id="deal-btn" onclick="startGame()">Nouvelle Partie</button>
+    <div id="screen-home" class="screen active">
+        <h2>Bienvenue dans le jeu</h2>
+        <p>Choisissez comment vous souhaitez utiliser cet appareil :</p>
+        <button class="btn btn-main" onclick="window.initTVMode()">📺 ÉCRAN PRINCIPAL (TV)</button>
+        <br><br>
+        <button class="btn btn-sub" onclick="window.showScreen('screen-join')">📱 REJOINDRE (Téléphone)</button>
     </div>
 
-    <div class="board">
-        <div class="area" id="dealer-area">
-            <h2>Croupier <span id="dealer-score"></span></h2>
-            <div class="cards" id="dealer-cards"></div>
-        </div>
-
-        <div class="area" id="player-area">
-            <h2>Joueur <span id="player-score"></span></h2>
-            <div class="cards" id="player-cards"></div>
-            
-            <div class="controls">
-                <button id="hit-btn" onclick="hit()" disabled>HIT (Tirer)</button>
-                <button id="stand-btn" onclick="stand()" disabled>STAND (Rester)</button>
-            </div>
-        </div>
+    <div id="screen-join" class="screen">
+        <h2>Rejoindre la table</h2>
+        <input type="text" id="input-pseudo" placeholder="Votre Pseudo" maxlength="12"><br>
+        <input type="text" id="input-room" placeholder="Code (4 lettres)" maxlength="4"><br>
+        <button class="btn btn-main" onclick="window.joinRoom()">Entrer dans le Salon</button>
+        <div id="error-msg"></div>
+        <br>
+        <button class="btn btn-sub" onclick="window.showScreen('screen-home')" style="background-color: #6c757d;">Retour</button>
     </div>
 
-    <div id="message"></div>
+    <div id="screen-mobile-lobby" class="screen">
+        <h2>Connecté ! 🎉</h2>
+        <p>Regardez l'écran de la TV.</p>
+        <p>En attente du lancement de la partie par le croupier...</p>
+    </div>
 
-    <script>
-        const suits = ['♠', '♥', '♣', '♦'];
-        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    <div id="screen-tv-lobby" class="screen">
+        <h2>Salon de jeu</h2>
+        <p>Connectez vos téléphones en allant sur ce site et entrez le code :</p>
+        <div id="display-room-code" class="room-code">----</div>
         
-        let deck = [];
-        let dealerHand = [];
-        let playerHand = [];
-        let isGameOver = false;
+        <h3>Joueurs connectés (<span id="player-count">0</span>/6) :</h3>
+        <ul id="tv-player-list" class="player-list">
+            </ul>
+        
+        <button id="start-game-btn" class="btn btn-main" style="display: none;">DÉMARRER LA PARTIE 🚀</button>
+    </div>
 
-        // Créer et mélanger le paquet
-        function createDeck() {
-            deck = [];
-            for (let suit of suits) {
-                for (let value of values) {
-                    deck.push({ value, suit });
-                }
+    <script type="module">
+        // Importation des modules Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // ⚠️ REMPLACE CES VALEURS PAR LES TIENNES ⚠️
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "TON_API_KEY",
+            authDomain: "TON_PROJET.firebaseapp.com",
+            projectId: "TON_PROJET",
+            storageBucket: "TON_PROJET.appspot.com",
+            messagingSenderId: "TON_SENDER_ID",
+            appId: "TON_APP_ID"
+        };
+
+        // Initialisation de Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Variables globales
+        let currentRoomCode = "";
+
+        // Fonction pour changer d'écran
+        window.showScreen = (screenId) => {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.getElementById('error-msg').innerText = ""; // Reset erreur
+        };
+
+        // Générer un code aléatoire de 4 lettres
+        function generateRoomCode() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let code = "";
+            for (let i = 0; i < 4; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            // Mélange de Fisher-Yates
-            for (let i = deck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [deck[i], deck[j]] = [deck[j], deck[i]];
-            }
+            return code;
         }
 
-        // Calculer le score d'une main
-        function calculateScore(hand) {
-            let score = 0;
-            let aces = 0;
-
-            for (let card of hand) {
-                if (['J', 'Q', 'K'].includes(card.value)) {
-                    score += 10;
-                } else if (card.value === 'A') {
-                    aces += 1;
-                    score += 11;
-                } else {
-                    score += parseInt(card.value);
-                }
-            }
-
-            // Gérer la valeur de l'As (1 ou 11) si on dépasse 21
-            while (score > 21 && aces > 0) {
-                score -= 10;
-                aces -= 1;
-            }
-
-            return score;
-        }
-
-        // Afficher une carte en HTML
-        function renderCard(card, isHidden = false) {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('card');
+        // ==========================================
+        // LOGIQUE ÉCRAN TV (CROUPIER)
+        // ==========================================
+        window.initTVMode = async () => {
+            currentRoomCode = generateRoomCode();
             
-            if (isHidden) {
-                cardDiv.classList.add('hidden');
-            } else {
-                const isRed = card.suit === '♥' || card.suit === '♦';
-                cardDiv.classList.add(isRed ? 'red' : 'black');
-                cardDiv.innerHTML = `${card.value} <br> ${card.suit}`;
+            // Création du salon dans Firestore
+            try {
+                await setDoc(doc(db, "rooms", currentRoomCode), {
+                    status: "waiting",
+                    players: []
+                });
+
+                // Affichage du code
+                document.getElementById('display-room-code').innerText = currentRoomCode;
+                window.showScreen('screen-tv-lobby');
+
+                // Écouter les changements en temps réel (quand un joueur rejoint)
+                onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        updatePlayerListTV(data.players);
+                    }
+                });
+            } catch (error) {
+                console.error("Erreur création room : ", error);
+                alert("Erreur de connexion à Firebase. As-tu bien mis tes identifiants et activé Firestore en mode test ?");
             }
-            return cardDiv;
-        }
+        };
 
-        // Mettre à jour l'interface visuelle
-        function updateBoard(hideDealerCard = true) {
-            const dealerCardsDiv = document.getElementById('dealer-cards');
-            const playerCardsDiv = document.getElementById('player-cards');
+        function updatePlayerListTV(players) {
+            const listEl = document.getElementById('tv-player-list');
+            const countEl = document.getElementById('player-count');
+            const startBtn = document.getElementById('start-game-btn');
             
-            dealerCardsDiv.innerHTML = '';
-            playerCardsDiv.innerHTML = '';
+            listEl.innerHTML = "";
+            countEl.innerText = players.length;
 
-            // Affichage main joueur
-            playerHand.forEach(card => playerCardsDiv.appendChild(renderCard(card)));
-            document.getElementById('player-score').innerText = `- Score: ${calculateScore(playerHand)}`;
-
-            // Affichage main croupier
-            dealerHand.forEach((card, index) => {
-                if (index === 1 && hideDealerCard && !isGameOver) {
-                    dealerCardsDiv.appendChild(renderCard(card, true)); // Carte face cachée
-                } else {
-                    dealerCardsDiv.appendChild(renderCard(card));
-                }
+            players.forEach(player => {
+                const li = document.createElement('li');
+                li.classList.add('player-badge');
+                li.innerText = player;
+                listEl.appendChild(li);
             });
 
-            // Affichage score croupier (masqué si la carte est cachée)
-            if (hideDealerCard && !isGameOver) {
-                document.getElementById('dealer-score').innerText = '';
+            // Afficher le bouton démarrer si au moins 1 joueur (et max 6)
+            if (players.length > 0 && players.length <= 6) {
+                startBtn.style.display = "inline-block";
             } else {
-                document.getElementById('dealer-score').innerText = `- Score: ${calculateScore(dealerHand)}`;
+                startBtn.style.display = "none";
             }
         }
 
-        // Lancer une nouvelle partie
-        function startGame() {
-            createDeck();
-            dealerHand = [deck.pop(), deck.pop()];
-            playerHand = [deck.pop(), deck.pop()];
-            isGameOver = false;
+        // ==========================================
+        // LOGIQUE ÉCRAN TÉLÉPHONE (JOUEUR)
+        // ==========================================
+        window.joinRoom = async () => {
+            const pseudo = document.getElementById('input-pseudo').value.trim();
+            let roomCode = document.getElementById('input-room').value.trim().toUpperCase();
+            const errorMsg = document.getElementById('error-msg');
 
-            document.getElementById('message').innerText = '';
-            document.getElementById('hit-btn').disabled = false;
-            document.getElementById('stand-btn').disabled = false;
-            document.getElementById('deal-btn').disabled = true;
-
-            updateBoard();
-            
-            // Vérifier le Blackjack naturel dès la distribution
-            if (calculateScore(playerHand) === 21) {
-                endGame("BLACKJACK NATUREL !");
-            }
-        }
-
-        // Action : Tirer une carte (HIT)
-        function hit() {
-            if (isGameOver) return;
-            
-            playerHand.push(deck.pop());
-            updateBoard();
-
-            if (calculateScore(playerHand) > 21) {
-                endGame("BUST ! Tu as dépassé 21.");
-            }
-        }
-
-        // Action : S'arrêter (STAND)
-        function stand() {
-            if (isGameOver) return;
-
-            // Le croupier joue (tire jusqu'à 17)
-            while (calculateScore(dealerHand) < 17) {
-                dealerHand.push(deck.pop());
+            if (pseudo === "" || roomCode.length !== 4) {
+                errorMsg.innerText = "Veuillez entrer un pseudo et un code valide à 4 lettres.";
+                return;
             }
 
-            // Évaluation finale
-            const playerScore = calculateScore(playerHand);
-            const dealerScore = calculateScore(dealerHand);
+            try {
+                const roomRef = doc(db, "rooms", roomCode);
+                const roomSnap = await getDoc(roomRef);
 
-            if (dealerScore > 21) {
-                endGame("Le croupier a BUST ! Tu gagnes.");
-            } else if (playerScore > dealerScore) {
-                endGame("Victoire contre le croupier !");
-            } else if (playerScore < dealerScore) {
-                endGame("Défaite contre le croupier.");
-            } else {
-                endGame("Égalité avec le croupier (Push).");
+                if (roomSnap.exists()) {
+                    const data = roomSnap.data();
+                    
+                    if (data.players.length >= 6) {
+                        errorMsg.innerText = "Ce salon est plein (6 joueurs max).";
+                        return;
+                    }
+
+                    if (data.players.includes(pseudo)) {
+                        errorMsg.innerText = "Ce pseudo est déjà pris dans ce salon.";
+                        return;
+                    }
+
+                    // Ajouter le joueur au salon dans Firestore
+                    await updateDoc(roomRef, {
+                        players: arrayUnion(pseudo)
+                    });
+
+                    // Passage à l'écran d'attente
+                    window.showScreen('screen-mobile-lobby');
+                } else {
+                    errorMsg.innerText = "Salon introuvable. Vérifiez le code.";
+                }
+            } catch (error) {
+                console.error("Erreur pour rejoindre : ", error);
+                errorMsg.innerText = "Erreur de connexion.";
             }
-        }
-
-        // Fin de partie
-        function endGame(msg) {
-            isGameOver = true;
-            document.getElementById('message').innerText = msg;
-            document.getElementById('hit-btn').disabled = true;
-            document.getElementById('stand-btn').disabled = true;
-            document.getElementById('deal-btn').disabled = false;
-            updateBoard(false); // Révèle la carte du croupier
-        }
+        };
     </script>
 </body>
 </html>
