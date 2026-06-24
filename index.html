@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Alcool - Version 3.2</title>
+    <title>Blackjack Alcool - Version 3.3 (Correctifs Stabilité)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -77,6 +77,12 @@
     <div id="screen-mobile-lobby" class="screen lobby-box">
         <h2>Connecté ! 🎉</h2>
         <p>Regarde l'écran de la TV. En attente du lancement...</p>
+    </div>
+
+    <div id="screen-disconnected" class="screen lobby-box" style="border: 3px solid #f44336;">
+        <h2>🚨 Table Fermée !</h2>
+        <p>Le croupier est parti vomir (ou a pris une pause). Fin de la partie !</p>
+        <button class="btn btn-main" onclick="window.location.reload()">Retour à l'accueil</button>
     </div>
 
     <div id="screen-tv-lobby" class="screen lobby-box">
@@ -159,21 +165,19 @@
         };
 
         // ==========================================
-        // DÉCONNEXIONS ET INACTIVITÉ (15s)
+        // DÉCONNEXIONS ET INACTIVITÉ
         // ==========================================
 
         window.addEventListener('beforeunload', () => {
             if (currentRoomCode) {
                 if (isTV) {
-                    // La TV ferme : Le croupier s'en va
                     updateDoc(doc(db, "rooms", currentRoomCode), { status: "closed" }).catch(()=>{});
                 } else if (myPseudo && localRoomData) {
                     if (localRoomData.status === "waiting") {
-                        // Départ instantané du lobby
                         updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayRemove(myPseudo) }).catch(()=>{});
                     } else if (localRoomData.status === "playing") {
-                        // Le joueur quitte en pleine partie : On force la fin de son tour
-                        let updates = { [`playerStates.${myPseudo}`]: "stand" };
+                        // En jeu : on le marque comme ayant abandonné
+                        let updates = { [`playerStates.${myPseudo}`]: "left" };
                         if (localRoomData.players[localRoomData.currentTurnIndex] === myPseudo) {
                             updates.currentTurnIndex = localRoomData.currentTurnIndex + 1;
                         }
@@ -183,45 +187,52 @@
             }
         });
 
-        // Ping mobile (toutes les 5 secondes)
-        setInterval(() => {
-            if (!isTV && myPseudo && currentRoomCode && localRoomData && localRoomData.status !== "closed") {
-                updateDoc(doc(db, "rooms", currentRoomCode), {
-                    [`pings.${myPseudo}`]: Date.now()
-                }).catch(()=>{});
-            }
-        }, 5000);
+        // ==========================================
+        // INTERVALLES DE SÉCURITÉ (PINGS)
+        // ==========================================
 
-        // Moniteur TV (Vérifie l'inactivité toutes les 3s pour réagir vite aux 15s)
+        // Mobile : Envoie son ping et vérifie le ping de la TV (Toutes les 4s)
+        setInterval(() => {
+            if (!isTV && myPseudo && currentRoomCode && localRoomData) {
+                // Si la TV n'a pas répondu depuis plus de 12 secondes, elle a crashé ou quitté
+                if (localRoomData.status === "closed" || (localRoomData.tvPing && Date.now() - localRoomData.tvPing > 12000)) {
+                    window.showScreen('screen-disconnected');
+                    currentRoomCode = ""; // Stoppe l'intervalle
+                    return;
+                }
+
+                if (localRoomData.status !== "closed") {
+                    updateDoc(doc(db, "rooms", currentRoomCode), {
+                        [`pings.${myPseudo}`]: Date.now()
+                    }).catch(()=>{});
+                }
+            }
+        }, 4000);
+
+        // TV : Envoie son ping et vérifie l'inactivité des joueurs (Toutes les 3s)
         setInterval(async () => {
             if (isTV && currentRoomCode && localRoomData && localRoomData.status !== "closed") {
                 const now = Date.now();
-                let updates = {};
-                let modified = false;
+                let updates = { tvPing: now }; // La TV confirme qu'elle est en vie
 
                 localRoomData.players.forEach(p => {
                     const lastPing = localRoomData.pings?.[p] || now;
                     const state = localRoomData.playerStates?.[p];
                     
-                    // Inactivité de 15 secondes
+                    // Si joueur inactif 15 secondes
                     if (now - lastPing > 15000) {
                         if (localRoomData.status === "waiting") {
-                            updates.players = arrayRemove(p); // Retire du lobby
-                            modified = true;
-                        } else if (localRoomData.status === "playing" && state === "playing") {
-                            // Le joueur met trop de temps : on force le "STAND"
-                            updates[`playerStates.${p}`] = "stand";
+                            updates.players = arrayRemove(p); 
+                        } else if (localRoomData.status === "playing" && state !== "left" && state !== "bust" && state !== "stand") {
+                            updates[`playerStates.${p}`] = "left"; // Marqué comme abandon
                             if (localRoomData.players[localRoomData.currentTurnIndex] === p) {
-                                updates.currentTurnIndex = localRoomData.currentTurnIndex + 1; // Passe au suivant
+                                updates.currentTurnIndex = localRoomData.currentTurnIndex + 1; 
                             }
-                            modified = true;
                         }
                     }
                 });
 
-                if (modified) {
-                    try { await updateDoc(doc(db, "rooms", currentRoomCode), updates); } catch(e){}
-                }
+                try { await updateDoc(doc(db, "rooms", currentRoomCode), updates); } catch(e){}
             }
         }, 3000);
 
@@ -235,9 +246,10 @@
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             for (let i = 0; i < 4; i++) currentRoomCode += chars.charAt(Math.floor(Math.random() * chars.length));
             
-            await setDoc(doc(db, "rooms", currentRoomCode), { status: "waiting", players: [], pings: {} });
+            // On initialise le ping de la TV dès le début
+            await setDoc(doc(db, "rooms", currentRoomCode), { status: "waiting", players: [], pings: {}, tvPing: Date.now() });
             document.getElementById('display-room-code').innerText = currentRoomCode;
-            document.getElementById('tv-game-room-code').innerText = currentRoomCode; // Affichage en jeu
+            document.getElementById('tv-game-room-code').innerText = currentRoomCode;
             window.showScreen('screen-tv-lobby');
 
             onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
@@ -258,6 +270,15 @@
         }
 
         window.startGame = async () => {
+            const now = Date.now();
+            
+            // NETTOYAGE : On garde uniquement les joueurs actifs (on supprime ceux marqués "left" ou crashés)
+            let activePlayers = localRoomData.players.filter(p => {
+                const isLeft = localRoomData.playerStates?.[p] === "left";
+                const lastPing = localRoomData.pings?.[p] || now;
+                return !isLeft && (now - lastPing < 20000); 
+            });
+
             const suits = ['♠', '♥', '♣', '♦'];
             const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
             let deck = [];
@@ -266,14 +287,17 @@
 
             let playerHands = {};
             let playerStates = {};
-            // Génère les mains pour tous les joueurs présents à cet instant T
-            localRoomData.players.forEach(p => {
+            
+            // On ne distribue qu'aux joueurs nettoyés
+            activePlayers.forEach(p => {
                 playerHands[p] = [deck.pop(), deck.pop()];
                 playerStates[p] = "playing"; 
             });
             let dealerHand = [deck.pop(), deck.pop()];
 
+            // On écrase la liste des joueurs avec la liste propre
             await updateDoc(doc(db, "rooms", currentRoomCode), {
+                players: activePlayers, 
                 status: "playing", deck, playerHands, playerStates, dealerHand, currentTurnIndex: 0, dealerPlayed: false
             });
         };
@@ -293,14 +317,14 @@
             
             data.players.forEach((p, index) => {
                 const hand = data.playerHands?.[p];
-                if (!hand) return; // Ignore un joueur qui vient de rejoindre mid-game (il jouera la manche suivante)
+                if (!hand) return; // On masque les joueurs qui rejoignent en cours
 
                 const state = data.playerStates[p];
                 const isCurrentTurn = (index === data.currentTurnIndex && !isFinished);
                 
                 let cardsHtml = hand.map(c => createHtmlCard(c)).join('');
-                let stateText = state === 'bust' ? "💥 BUST" : state === 'stand' ? "✅ STAND" : "";
-                let matClass = `player-mat ${isCurrentTurn ? 'active-turn' : ''} ${state === 'bust' ? 'bust' : ''}`;
+                let stateText = state === 'bust' ? "💥 BUST" : state === 'stand' ? "✅ STAND" : state === 'left' ? "❌ ABANDON" : "";
+                let matClass = `player-mat ${isCurrentTurn ? 'active-turn' : ''} ${(state === 'bust' || state === 'left') ? 'bust' : ''}`;
                 
                 playersArea.innerHTML += `
                     <div class="${matClass}">
@@ -310,11 +334,14 @@
                     </div>`;
             });
 
-            // Avance le tour si le joueur actuel n'a pas de main (rejoint mid-game) ou a quitté
+            // GESTION DU PASSAGE DE TOUR AUTO (Joueurs qui rejoignent en cours ou qui ont quitté)
             if (data.currentTurnIndex < data.players.length) {
                 let currentPlayer = data.players[data.currentTurnIndex];
-                if (!data.playerHands?.[currentPlayer] || data.playerStates[currentPlayer] === "stand" || data.playerStates[currentPlayer] === "bust") {
-                    // Le passage automatique gère le skip si le state change côté serveur
+                
+                // Si le joueur n'a pas de main (rejoint mid-game) ou s'il a abandonné, on skip direct !
+                if (!data.playerHands?.[currentPlayer] || data.playerStates[currentPlayer] === "left") {
+                    updateDoc(doc(db, "rooms", currentRoomCode), { currentTurnIndex: data.currentTurnIndex + 1 });
+                    return; // On attend la prochaine mise à jour Firebase
                 }
             } 
             // Croupier joue
@@ -357,10 +384,9 @@
                     onSnapshot(roomRef, (docSnap) => {
                         localRoomData = docSnap.data();
                         
-                        // Message drôle si le croupier ferme la page
                         if (localRoomData.status === "closed") {
-                            alert("🚨 Le croupier est parti vomir (ou prendre une pause) ! La table ferme ses portes.");
-                            window.location.reload();
+                            window.showScreen('screen-disconnected');
+                            currentRoomCode = "";
                             return;
                         }
 
@@ -372,13 +398,13 @@
         };
 
         function updateGameMobile() {
+            if (!currentRoomCode) return; // Sécurité si déconnecté
             window.showScreen('screen-mobile-game');
             const data = localRoomData;
             
             const title = document.getElementById('mobile-status-title');
             const controls = document.getElementById('mobile-controls');
 
-            // Gérer les joueurs qui rejoignent en pleine manche
             const myHand = data.playerHands?.[myPseudo];
             if (!myHand) {
                 title.innerText = "⏳ Manche en cours... Tu joueras à la prochaine !";
