@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Alcool - Version 4 (Gorgées & Cul Sec)</title>
+    <title>Blackjack Alcool - Version 5 (Règles Expertes)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -56,13 +56,15 @@
         /* Pop-up Gorgées Mobile */
         #mobile-drink-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; 
+            background: rgba(0,0,0,0.95); z-index: 100; flex-direction: column; 
             justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.4s ease-out;
         }
         #drink-modal-title { font-size: 40px; margin-bottom: 10px; text-transform: uppercase; }
-        #drink-modal-text { font-size: 28px; font-weight: bold; color: #ffb703; text-align: center; }
-        .is-culsec { color: #f44336 !important; font-size: 35px !important; text-shadow: 0 0 10px red; }
+        #drink-modal-text { font-size: 28px; font-weight: bold; color: white; text-align: center; white-space: pre-line; line-height: 1.5; }
+        .take-color { color: #f44336; }
+        .give-color { color: #4CAF50; }
+        .is-culsec { color: #f44336 !important; font-size: 35px !important; text-shadow: 0 0 15px red; }
 
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
@@ -131,6 +133,7 @@
         </div>
     </div>
 
+    <!-- POP-UP RÉSULTAT MOBILE (V5) -->
     <div id="mobile-drink-modal">
         <h2 id="drink-modal-title">RÉSULTAT</h2>
         <p id="drink-modal-text">Calcul en cours...</p>
@@ -183,7 +186,7 @@
         };
 
         // ==========================================
-        // DÉCONNEXIONS & PINGS OPTIMISÉS
+        // DÉCONNEXIONS & PINGS (Opti V4 conservée)
         // ==========================================
 
         window.addEventListener('beforeunload', () => {
@@ -204,7 +207,6 @@
             }
         });
 
-        // Ping Mobile allégé (toutes les 5s)
         setInterval(() => {
             if (!isTV && myPseudo && currentRoomCode && localRoomData) {
                 if (localRoomData.status === "closed" || (localRoomData.tvPing && Date.now() - localRoomData.tvPing > 15000)) {
@@ -218,12 +220,10 @@
             }
         }, 5000);
 
-        // Ping TV allégé (toutes les 5s, déconnexion après 20s pour éviter les bugs réseau)
         setInterval(async () => {
             if (isTV && currentRoomCode && localRoomData && localRoomData.status !== "closed") {
                 const now = Date.now();
                 let updates = { tvPing: now }; 
-                let modified = true; // On force l'update du ping TV
 
                 localRoomData.players.forEach(p => {
                     const lastPing = localRoomData.pings?.[p] || now;
@@ -254,7 +254,6 @@
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             for (let i = 0; i < 4; i++) currentRoomCode += chars.charAt(Math.floor(Math.random() * chars.length));
             
-            // Ajout du compteur de Défaites (streaks)
             await setDoc(doc(db, "rooms", currentRoomCode), { status: "waiting", players: [], pings: {}, tvPing: Date.now(), streaks: {} });
             document.getElementById('display-room-code').innerText = currentRoomCode;
             document.getElementById('tv-game-room-code').innerText = currentRoomCode;
@@ -300,11 +299,10 @@
             });
             let dealerHand = [deck.pop(), deck.pop()];
 
-            // Reset des résultats de la manche précédente, mais on conserve les Streaks
             await updateDoc(doc(db, "rooms", currentRoomCode), {
                 players: activePlayers, 
                 status: "playing", deck, playerHands, playerStates, dealerHand, currentTurnIndex: 0, dealerPlayed: false,
-                results: {} 
+                results: {}, randomVictim: null
             });
         };
 
@@ -329,16 +327,22 @@
                 const isCurrentTurn = (index === data.currentTurnIndex && !isFinished);
                 
                 let cardsHtml = hand.map(c => createHtmlCard(c)).join('');
-                
-                // Affichage TV simplifié pendant le jeu
                 let stateText = state === 'bust' ? "💥 BUST" : state === 'stand' ? "✅ STAND" : state === 'left' ? "❌ ABANDON" : "";
                 
-                // Si la partie est finie, on affiche le nombre de gorgées sur la TV aussi
+                // --- V5 TV Display ---
                 if (isFinished && data.results && data.results[p]) {
                     const res = data.results[p];
-                    if (res.culSec) stateText = "🚨 CUL SEC !";
-                    else if (res.sips > 0) stateText = `🍺 ${res.sips} Gorgées`;
-                    else stateText = "🎉 SAUVÉ";
+                    if (res.culSec) {
+                        stateText = "🚨 CUL SEC !";
+                    } else if (res.take > 0 && res.give > 0) {
+                        stateText = `🍺 Prends ${res.take} | 🎁 Donne ${res.give}`;
+                    } else if (res.take > 0) {
+                        stateText = `🍺 Prends ${res.take}`;
+                    } else if (res.give > 0) {
+                        stateText = `🎁 Distribue ${res.give}`;
+                    } else {
+                        stateText = "🎉 SAUVÉ";
+                    }
                 }
 
                 let matClass = `player-mat ${isCurrentTurn ? 'active-turn' : ''} ${(state === 'bust' || state === 'left') ? 'bust' : ''}`;
@@ -362,66 +366,88 @@
             }
 
             document.getElementById('new-round-btn').style.display = isFinished ? "inline-block" : "none";
-            if(isFinished) document.getElementById('tv-result-msg').innerText = "Manche terminée ! Aux joueurs de boire 🍻";
-            else document.getElementById('tv-result-msg').innerText = "";
+            
+            // --- V5 TV Message ---
+            if(isFinished) {
+                let extraMsg = "Manche terminée ! Aux joueurs de boire 🍻";
+                if (data.dealerHand.length === 2 && calculateScore(data.dealerHand) === 21 && data.randomVictim) {
+                    extraMsg = `🔥 BLACKJACK DU CROUPIER ! ${data.randomVictim} prend 6 gorgées bonus ! 🔥`;
+                    document.getElementById('tv-result-msg').style.color = "#f44336";
+                } else {
+                    document.getElementById('tv-result-msg').style.color = "#ffb703";
+                }
+                document.getElementById('tv-result-msg').innerText = extraMsg;
+            } else { 
+                document.getElementById('tv-result-msg').innerText = ""; 
+            }
         }
 
         // ==========================================
-        // V4 : CALCUL DES GORGÉES ET DU CUL SEC
+        // V5 : CALCUL DES GORGÉES EXPERT
         // ==========================================
         async function playDealerTurn() {
             let data = localRoomData;
             let dHand = [...data.dealerHand];
             let deck = [...data.deck];
 
-            // Le croupier tire jusqu'à 17
             while(calculateScore(dHand) < 17) { dHand.push(deck.pop()); }
             
             let dScore = calculateScore(dHand);
+            let isDealerBJ = (dHand.length === 2 && dScore === 21);
             let results = {};
             let streaks = data.streaks || {};
+            let randomVictim = null;
 
-            // Calcul pour chaque joueur actif
+            // Sélection de la victime du Blackjack Dealer
+            if (isDealerBJ) {
+                let activeP = data.players.filter(p => data.playerStates[p] !== "left" && data.playerHands[p]);
+                if (activeP.length > 0) {
+                    randomVictim = activeP[Math.floor(Math.random() * activeP.length)];
+                }
+            }
+
             data.players.forEach(p => {
                 if (data.playerStates[p] === "left" || !data.playerHands[p]) return;
                 
                 let pScore = calculateScore(data.playerHands[p]);
                 let pState = data.playerStates[p];
-                let outcome = "";
-                let sips = 0;
+                let isPlayerBJ = (data.playerHands[p].length === 2 && pScore === 21);
                 
-                // Règles des gorgées
-                if (pState === "bust") {
-                    outcome = "bust"; sips = 5;
-                } else if (dScore > 21) {
-                    outcome = "win"; sips = 0;
-                } else if (pScore > dScore) {
-                    outcome = "win"; sips = 0;
-                } else if (pScore < dScore) {
-                    outcome = "loss"; sips = 3;
-                } else {
-                    outcome = "tie"; sips = 2; // Égalité
-                }
+                let outcome = "";
+                let take = 0;
+                let give = 0;
+                
+                // --- RÈGLES V5 ---
+                if (pState === "bust") { outcome = "bust"; take = 3; }
+                else if (isDealerBJ && isPlayerBJ) { outcome = "bj_both"; take = 3; give = 3; }
+                else if (isPlayerBJ) { outcome = "bj_player"; give = 6; }
+                else if (isDealerBJ) { outcome = "bj_dealer"; take = 2; }
+                else if (dScore > 21) { outcome = "dealer_bust"; give = 1; }
+                else if (pScore > dScore) { outcome = "win"; give = 2; }
+                else if (pScore < dScore) { outcome = "loss"; take = 2; }
+                else { outcome = "tie"; take = 1; give = 1; }
 
-                // Compteur de CUL SEC
-                if (outcome === "win" || outcome === "tie") {
-                    streaks[p] = 0; // Remise à zéro
-                } else {
-                    streaks[p] = (streaks[p] || 0) + 1; // +1 Défaite
+                // --- GESTION DU CUL SEC (5 Défaites) ---
+                if (["bust", "loss", "bj_dealer"].includes(outcome)) {
+                    streaks[p] = (streaks[p] || 0) + 1;
+                } else if (["win", "bj_player", "dealer_bust"].includes(outcome)) {
+                    streaks[p] = 0; // Victoire = reset
+                } else if (outcome === "tie" || outcome === "bj_both") {
+                    streaks[p] = 0; // On est sympa, l'égalité reset le compteur
                 }
 
                 let culSec = false;
-                if (streaks[p] >= 3) {
+                if (streaks[p] >= 5) {
                     culSec = true;
-                    streaks[p] = 0; // Remise à zéro après le cul sec
+                    streaks[p] = 0; // Remise à zéro après la punition
                 }
 
-                results[p] = { outcome, sips, culSec };
+                results[p] = { outcome, take, give, culSec };
             });
 
             await updateDoc(doc(db, "rooms", currentRoomCode), {
                 dealerHand: dHand, deck: deck, dealerPlayed: true, status: "finished",
-                results: results, streaks: streaks
+                results: results, streaks: streaks, randomVictim: randomVictim
             });
         }
 
@@ -451,7 +477,7 @@
                         if (localRoomData.status === "playing" || localRoomData.status === "finished") updateGameMobile();
                         else {
                             window.showScreen('screen-mobile-lobby');
-                            document.getElementById('mobile-drink-modal').style.display = "none"; // Cache la popup si retour au lobby
+                            document.getElementById('mobile-drink-modal').style.display = "none";
                         }
                     });
                 } else { document.getElementById('error-msg').innerText = "Code introuvable."; }
@@ -466,34 +492,43 @@
             const title = document.getElementById('mobile-status-title');
             const controls = document.getElementById('mobile-controls');
             const drinkModal = document.getElementById('mobile-drink-modal');
+            const textEl = document.getElementById('drink-modal-text');
 
-            // --- V4 : GESTION DE LA POP-UP DE GORGÉES ---
+            // --- V5 : AFFICHAGE POP-UP MOBILE ---
             if (data.status === "finished" && data.results && data.results[myPseudo]) {
                 const res = data.results[myPseudo];
-                let msgTitle = "";
-                let msgSips = `Bois ${res.sips} gorgée(s) ! 🍻`;
+                let msgTitle = "RÉSULTAT";
+                let msgText = "";
                 
-                if (res.outcome === "win") { msgTitle = "🎉 GAGNÉ !"; msgSips = "Tu es sauvé(e) ! 😎"; }
+                // Titre
+                if (res.outcome === "bust") msgTitle = "💥 BUST !";
+                else if (res.outcome === "loss" || res.outcome === "bj_dealer") msgTitle = "💀 PERDU !";
+                else if (res.outcome === "win") msgTitle = "🎉 GAGNÉ !";
+                else if (res.outcome === "dealer_bust") msgTitle = "🔥 CROUPIER BUST !";
+                else if (res.outcome === "bj_player") msgTitle = "🎰 BLACKJACK !";
+                else if (res.outcome === "bj_both") msgTitle = "⚔️ DOUBLE BLACKJACK";
                 else if (res.outcome === "tie") msgTitle = "🤝 ÉGALITÉ";
-                else if (res.outcome === "bust") msgTitle = "💥 BUST !";
-                else msgTitle = "💀 PERDU !";
 
-                const textEl = document.getElementById('drink-modal-text');
+                // Construction du texte Prends/Donne
+                if (res.take > 0) msgText += `<span class="take-color">🍺 Prends ${res.take} gorgée(s)</span>\n`;
+                if (res.give > 0) msgText += `<span class="give-color">🎁 Distribue ${res.give} gorgée(s)</span>\n`;
+                if (res.take === 0 && res.give === 0) msgText = "Tu ne bois pas ! 😎";
+
+                // Check Cul Sec
+                textEl.classList.remove("is-culsec");
                 if (res.culSec) {
                     msgTitle = "🚨 PUNITION 🚨";
-                    msgSips = "CUL SEC !!\n(3 Défaites d'affilée)";
+                    msgText = `CUL SEC !!\n(5 Défaites d'affilée)\n\n${msgText}`;
                     textEl.classList.add("is-culsec");
-                } else {
-                    textEl.classList.remove("is-culsec");
                 }
 
                 document.getElementById('drink-modal-title').innerText = msgTitle;
-                textEl.innerText = msgSips;
+                textEl.innerHTML = msgText; // Utilisation de innerHTML pour les span de couleur
                 drinkModal.style.display = "flex";
                 controls.style.display = "none";
-                return; // On arrête là pour la vue mobile (le popup couvre tout)
+                return;
             } else {
-                drinkModal.style.display = "none"; // Cache la popup si la manche est en cours
+                drinkModal.style.display = "none"; 
             }
             // ---------------------------------------------
 
