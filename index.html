@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Blackjack - Édition Ultime</title>
+    <title>Blackout 21 - Le Jeu à Boire</title>
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -88,7 +90,11 @@
         }
         .lobby-box::-webkit-scrollbar { display: none; }
 
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.8em; margin: 0 0 5px 0; text-transform: uppercase; background: var(--gold-metallic); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 15px rgba(212, 175, 55, 0.2); letter-spacing: 2px; transition: 1s ease;}
+        /* LOGO STYLES */
+        .app-logo { font-family: 'Playfair Display', serif; font-size: 2.8em; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; transition: 1s ease; font-weight: 900;}
+        .logo-word { background: var(--gold-metallic); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 15px rgba(212, 175, 55, 0.2); }
+        .logo-number { color: var(--danger); text-shadow: 0px 4px 15px rgba(214, 48, 49, 0.4); }
+
         h2 { font-family: 'Playfair Display', serif; font-size: 1.8em; margin: 0 0 10px 0; color: var(--gold); transition: color 1s ease;}
         h3 { font-size: 1.1em; margin: 0; }
         
@@ -149,6 +155,12 @@
         .take-color { color: var(--danger); font-size: 1.5em;}
         .btn-give { background: rgba(0,0,0,0.8); color: var(--gold); border: 1px solid var(--gold); padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; width: 100%; margin-bottom: 8px; text-transform: uppercase; cursor: pointer; }
 
+        /* SLOT MACHINE STYLES */
+        .slot-machine-container { background: linear-gradient(180deg, #b33939, #ff5252, #b33939); padding: 20px; border-radius: 20px; border: 5px solid var(--gold); box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); width: 80%; max-width: 600px; text-align: center; }
+        .slot-machine-window { background: #fff; padding: 20px; border-radius: 10px; border: inset 5px #ccc; margin-top: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
+        .slot-name { font-size: 3em; font-weight: 900; color: #000; text-transform: uppercase; letter-spacing: 2px; }
+        .slot-title-text { font-family: 'Playfair Display', serif; font-size: 2em; color: #fff; text-shadow: 2px 2px 0 #000; margin: 0; }
+
         .tv-top-bar { display: flex; justify-content: center; margin-bottom: 5px; width: 100%; position: relative;}
         .tv-code-badge { font-weight: 900; background: #000; padding: 6px 15px; border-radius: 6px; border: 1px solid var(--gold); color: var(--gold); font-size: 1em; letter-spacing: 2px; transition: 1s ease;}
 
@@ -172,18 +184,21 @@
 
 <div id="app-container">
 
+    <!-- ACCUEIL -->
     <div id="screen-home" class="screen active">
         <div class="lobby-box">
-            <h1>Blackjack</h1>
-            <div class="prevention" style="margin-bottom: 20px;">Édition Ultime</div>
+            <div class="app-logo"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span> <span style="color: var(--gold);">🍷</span></div>
+            <div class="prevention" style="margin-bottom: 20px;">L'Édition Ultime</div>
             <h2>Ouverture de la Table</h2>
             <button class="btn btn-main" onclick="window.initTVMode()">📺 Banque (Écran TV)</button>
             <button class="btn btn-sub" onclick="window.showScreen('screen-join')">📱 Joueur (Smartphone)</button>
         </div>
     </div>
 
+    <!-- REJOINDRE -->
     <div id="screen-join" class="screen">
         <div class="lobby-box">
+            <div class="app-logo" style="font-size: 2em; margin-bottom: 20px;"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
             <h2>Rejoindre</h2>
             <input type="text" id="input-pseudo" placeholder="VOTRE PSEUDO" maxlength="12">
             <input type="text" id="input-room" placeholder="CODE DE TABLE" maxlength="4">
@@ -193,6 +208,7 @@
         </div>
     </div>
 
+    <!-- LOBBY MOBILE -->
     <div id="screen-mobile-lobby" class="screen">
         <div class="lobby-box">
             <div style="font-size: 3em; margin-bottom: 5px;">🥃</div>
@@ -201,16 +217,19 @@
         </div>
     </div>
 
+    <!-- DECO -->
     <div id="screen-disconnected" class="screen">
         <div class="lobby-box" style="border-color: var(--danger);">
             <h2 style="color: var(--danger);">🚨 Table Fermée</h2>
             <p style="font-size: 0.9em; opacity: 0.8;">La session a pris fin.</p>
-            <button class="btn btn-main" onclick="window.location.reload()">Menu Principal</button>
+            <button class="btn btn-main" onclick="localStorage.removeItem('bj_pseudo'); localStorage.removeItem('bj_room'); window.location.reload()">Menu Principal</button>
         </div>
     </div>
 
+    <!-- LOBBY TV -->
     <div id="screen-tv-lobby" class="screen">
         <div class="lobby-box" style="max-width: 800px;">
+            <div class="app-logo" style="font-size: 2em; margin-bottom: 10px;"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
             <h2>CODE D'ACCÈS VIP</h2>
             <div id="display-room-code" class="room-code">----</div>
             <h3 style="color: #fff; margin-top: 10px; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Joueurs à table (<span id="player-count">0</span>/6)</h3>
@@ -219,8 +238,20 @@
         </div>
     </div>
 
+    <!-- MACHINE À SOUS TV -->
+    <div id="tv-slot-modal" class="fullscreen-modal" style="z-index: 3000;">
+        <div class="slot-machine-container">
+            <h1 id="tv-slot-title" class="slot-title-text">🎰 TIRAGE AU SORT</h1>
+            <div id="tv-slot-window" class="slot-machine-window">
+                <!-- Les noms défileront ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JEU TV -->
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
+            <!-- ADMIN BOUTONS POUR FORCER LES EVENEMENTS -->
             <div class="admin-controls" id="tv-admin-controls" style="display:none;">
                 <button class="btn-admin" onclick="forceEvent('happy_hour')">X2</button>
                 <button class="btn-admin" onclick="forceEvent('red_alert')">Mort</button>
@@ -244,6 +275,7 @@
         <button id="new-round-btn" class="btn btn-main" style="display:none; font-size: 1em; padding: 12px 25px; margin-top: 10px; max-width: 300px;" onclick="window.startGame()">Manche Suivante 🔄</button>
     </div>
 
+    <!-- JEU MOBILE -->
     <div id="screen-mobile-game" class="screen">
         <div class="lobby-box" style="padding: 15px; width: 100%; border: none; background: transparent; box-shadow: none;">
             <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 10px;"></div>
@@ -268,17 +300,20 @@
         </div>
     </div>
 
+    <!-- MODAL REVEAL FLASH (MOBILE) -->
     <div id="mobile-reveal-modal" class="fullscreen-modal" style="z-index: 2000;">
         <div id="reveal-icon" style="font-size: 5em; margin-bottom: 10px; animation: popIn 0.3s ease-out;"></div>
         <h1 id="reveal-title" style="font-size: 3em; margin: 0; text-transform: uppercase; font-family: 'Playfair Display', serif; animation: popIn 0.4s ease-out;"></h1>
     </div>
 
+    <!-- MODAL DISTRIBUTION (MOBILE) -->
     <div id="mobile-distrib-modal" class="fullscreen-modal">
         <h2 id="distrib-modal-title" class="modal-title"></h2>
         <p id="distrib-modal-text" class="modal-text"></p>
         <div style="width: 100%; max-width: 300px;" id="distrib-buttons-container"></div>
     </div>
 
+    <!-- MODAL RÉSULTAT (MOBILE) -->
     <div id="mobile-drink-modal" class="fullscreen-modal">
         <div style="font-size: 4em; margin-bottom: 5px;" id="drink-modal-icon">🍷</div>
         <h2 id="drink-modal-title" class="modal-title">VERDICT</h2>
@@ -311,7 +346,7 @@
 
         let lastLobbyPlayersHtml = "", lastDealerCardsHtml = "", lastPlayersAreaHtml = "", lastMobileCardsHtml = "";
         let isRevealing = false;
-        let lastStatus = "waiting";
+        let lastStatus = "waiting", tvLastStatus = "waiting";
 
         const vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
 
@@ -327,7 +362,6 @@
             return score;
         }
 
-        // Nouvelle fonction pour l'affichage visuel (gère le "3/13")
         function displayScore(hand) {
             if(!hand) return 0;
             let minScore = 0; let hasAce = false;
@@ -364,11 +398,6 @@
                 if (isTV) updateDoc(doc(db, "rooms", currentRoomCode), { status: "closed" }).catch(()=>{});
                 else if (myPseudo && localRoomData) {
                     if (localRoomData.status === "waiting") updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayRemove(myPseudo) }).catch(()=>{});
-                    else if (["playing", "distributing"].includes(localRoomData.status)) {
-                        let updates = { [`playerStates.${myPseudo}`]: "left" };
-                        if (localRoomData.players[localRoomData.currentTurnIndex]?.startsWith(myPseudo)) updates.currentTurnIndex = localRoomData.currentTurnIndex + 1;
-                        updateDoc(doc(db, "rooms", currentRoomCode), updates).catch(()=>{});
-                    }
                 }
             }
         });
@@ -414,7 +443,13 @@
                 if (docSnap.exists()) {
                     localRoomData = docSnap.data();
                     if (localRoomData.status === "waiting") updateLobbyTV();
-                    else updateGameTV();
+                    else {
+                        if (localRoomData.status === "rolling" && tvLastStatus !== "rolling") {
+                            runSlotAnimationTV(localRoomData.rollingType, localRoomData.rollingResults);
+                        }
+                        updateGameTV();
+                    }
+                    tvLastStatus = localRoomData.status;
                 }
             });
         };
@@ -430,6 +465,47 @@
             let newPlayersHtml = localRoomData.players.map(p => `<li class="player-badge">${p}</li>`).join('');
             if (newPlayersHtml !== lastLobbyPlayersHtml) { document.getElementById('tv-player-list').innerHTML = newPlayersHtml; lastLobbyPlayersHtml = newPlayersHtml; }
             document.getElementById('start-game-btn').style.display = (localRoomData.players.length > 0) ? "inline-block" : "none";
+        }
+
+        // --- GESTION ANIMATION MACHINE À SOUS (TV UNIQUEMENT) ---
+        async function runSlotAnimationTV(type, results) {
+            const modal = document.getElementById('tv-slot-modal');
+            const title = document.getElementById('tv-slot-title');
+            const windowEl = document.getElementById('tv-slot-window');
+            modal.style.display = "flex";
+            
+            title.innerText = type === "roulette" ? "🎰 ROULETTE RUSSE : CIBLE" : "🚨 BLACKJACK : SANCTION DE LA BANQUE";
+            
+            let players = localRoomData.players.filter(p => !p.includes("_split"));
+            if(players.length === 0) players = ["AUCUN JOUEUR"];
+
+            let ticks = 0;
+            let interval = setInterval(() => {
+                windowEl.innerHTML = `<div class="slot-name">${players[Math.floor(Math.random() * players.length)]}</div>`;
+                ticks++;
+                
+                if (ticks > 25) { // Fin du roulement rapide après ~2.5s
+                    clearInterval(interval);
+                    
+                    if (type === "roulette") {
+                        windowEl.innerHTML = `<div class="slot-name" style="color: var(--danger); font-size: 3.5em;">🎯 ${results[0]} 🎯</div>
+                                              <div style="color: black; font-weight: bold; margin-top: 5px;">Cible Verrouillée</div>`;
+                    } else {
+                        let counts = {};
+                        results.forEach(r => counts[r] = (counts[r]||0) + 1);
+                        let resHtml = Object.entries(counts).map(([name, count]) => `<div style="font-size: 1.5em; font-weight: 900; color: var(--danger);">${name} : 🍺 x${count}</div>`).join('');
+                        windowEl.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${resHtml}</div>`;
+                    }
+                    
+                    setTimeout(() => {
+                        modal.style.display = "none";
+                        if (isTV) {
+                            let nextStatus = type === "roulette" ? "playing" : "distributing";
+                            updateDoc(doc(db, "rooms", currentRoomCode), { status: nextStatus });
+                        }
+                    }, 3500); // Laisse le résultat affiché ~3.5s
+                }
+            }, 100);
         }
 
         window.startGame = async () => {
@@ -448,7 +524,8 @@
             if (nextEvt) roundsCounter = 0;
 
             let target = null;
-            if (nextEvt === "russian_roulette" && activePlayers.length > 0) {
+            let isRoulette = (nextEvt === "russian_roulette" && activePlayers.length > 0);
+            if (isRoulette) {
                 target = activePlayers[Math.floor(Math.random() * activePlayers.length)];
             }
 
@@ -461,12 +538,22 @@
             
             lastDealerCardsHtml = ""; lastPlayersAreaHtml = ""; lastMobileCardsHtml = "";
 
-            await updateDoc(doc(db, "rooms", currentRoomCode), {
-                players: activePlayers, status: "playing", deck, playerHands, playerStates, 
+            let updates = {
+                players: activePlayers, deck, playerHands, playerStates, 
                 dealerHand: [deck.pop(), deck.pop()], currentTurnIndex: 0, dealerPlayed: false, dealerPlaying: false,
                 results: {}, realResults: {}, poolToGive: {}, receivedSips: {}, doubled: {},
                 currentEvent: nextEvt, eventTarget: target, roundsSinceLastEvent: roundsCounter, nextForcedEvent: null
-            });
+            };
+
+            if (isRoulette) {
+                updates.status = "rolling";
+                updates.rollingType = "roulette";
+                updates.rollingResults = [target];
+            } else {
+                updates.status = "playing";
+            }
+
+            await updateDoc(doc(db, "rooms", currentRoomCode), updates);
         };
 
         function updateThemeAndBanner(data) {
@@ -479,7 +566,7 @@
                 if (data.currentEvent === "happy_hour") msg = "🍻 HAPPY HOUR : TOUTES LES GORGÉES SONT DOUBLÉES ! 🍻";
                 if (data.currentEvent === "red_alert") msg = "🚨 ALERTE ROUGE : LA MOINDRE DÉFAITE = CUL SEC ! 🚨";
                 if (data.currentEvent === "green_carpet") msg = "🎰 TAPIS VERT : OBLIGATION DE TIRER JUSQU'À 16 ! 🎰";
-                if (data.currentEvent === "russian_roulette") msg = `☠️ ROULETTE RUSSE : TOUTES VOS GORGÉES GAGNÉES VONT VERS ${data.eventTarget} ! ☠️`;
+                if (data.currentEvent === "russian_roulette") msg = `☠️ ROULETTE RUSSE : TOUTES VOS GORGÉES GAGNÉES VONT VERS ${data.eventTarget || "?"} ! ☠️`;
                 
                 if(tvBanner) { tvBanner.innerText = msg; tvBanner.classList.add('active'); }
                 if(mobileBanner) { mobileBanner.innerText = msg; mobileBanner.classList.add('active'); }
@@ -508,7 +595,7 @@
             data.players.forEach((p, index) => {
                 const hand = data.playerHands?.[p]; if (!hand) return; 
                 const state = data.playerStates[p];
-                const isCurrent = (index === data.currentTurnIndex && !isFin && !isDist && !data.dealerPlaying);
+                const isCurrent = (index === data.currentTurnIndex && !isFin && !isDist && !data.dealerPlaying && data.status === "playing");
                 const isTarget = (data.currentEvent === "russian_roulette" && p.replace("_split", "") === data.eventTarget);
                 
                 let stateText = state === 'bust' ? "💥 BRÛLÉ" : state === 'stand' ? "✅ RESTE" : state === 'left' ? "❌ PARTI" : "";
@@ -543,7 +630,8 @@
             document.getElementById('new-round-btn').style.display = isFin ? "inline-block" : "none";
             const msgEl = document.getElementById('tv-result-msg');
             
-            if (data.dealerPlaying) { msgEl.innerText = "La banque dévoile son jeu..."; msgEl.style.color = "#fff"; }
+            if (data.status === "rolling") { msgEl.innerText = "Tirage au sort en cours... 🎰"; msgEl.style.color = "var(--danger)"; }
+            else if (data.dealerPlaying) { msgEl.innerText = "La banque dévoile son jeu..."; msgEl.style.color = "#fff"; }
             else if (isDist) { msgEl.innerText = "Distribution secrète en cours... 🤫"; msgEl.style.color = "#fff"; }
             else if (isFin) { msgEl.innerText = "Fin de manche. 🍻"; msgEl.style.color = "var(--gold)"; }
             else msgEl.innerText = ""; 
@@ -567,7 +655,6 @@
             
             await new Promise(r => setTimeout(r, 1500));
             
-            // Re-fetch des données fraiches pour les calculs de fin
             data = localRoomData;
             
             let dScore = calculateScore(dHand), isDealerBJNatural = (dHand.length === 2 && dScore === 21);
@@ -575,11 +662,13 @@
 
             data.players.forEach(p => { let realP = p.replace("_split", ""); receivedSips[realP] = 0; poolToGive[realP] = 0; });
 
+            let victims = [];
             if (isDealerBJNatural && data.currentEvent !== "russian_roulette") {
                 let activeReals = [...new Set(data.players.filter(p => data.playerStates[p] !== "left").map(p => p.replace("_split", "")))];
                 if (activeReals.length > 0) { 
                     for(let i=0; i<6; i++) {
                         let randomVictim = activeReals[Math.floor(Math.random() * activeReals.length)]; 
+                        victims.push(randomVictim);
                         receivedSips[randomVictim] += 1; 
                     }
                 }
@@ -593,7 +682,7 @@
                 let outcome = "", take = 0, give = 0;
                 
                 if (data.playerStates[p] === "bust") { outcome = "bust"; take = 3; }
-                else if (pScore === 21 && dScore === 21) { outcome = "bj_both"; take = 3; give = 3; } // NOUVELLE REGLE EGALITE 21
+                else if (pScore === 21 && dScore === 21) { outcome = "bj_both"; take = 3; give = 3; } 
                 else if (isPlayerBJNatural) { outcome = "bj_player"; give = 6; }
                 else if (isDealerBJNatural) { outcome = "bj_dealer"; take = 2; }
                 else if (dScore > 21) { outcome = "dealer_bust"; give = 1; }
@@ -612,7 +701,7 @@
                 if (data.currentEvent === "russian_roulette") {
                     let realP = p.replace("_split", "");
                     if (realP !== data.eventTarget) { 
-                        rrTotalGiveToTarget += give; // Les gorgées gagnées vont au target
+                        rrTotalGiveToTarget += give; 
                         give = 0; 
                     }
                 }
@@ -638,10 +727,21 @@
                 if (streaks[realP] >= 5) { realResults[realP].culSec = true; streaks[realP] = 0; if (results[realP]) results[realP].culSec = true; }
             });
 
-            await updateDoc(doc(db, "rooms", currentRoomCode), {
-                dealerHand: dHand, deck: deck, dealerPlayed: true, dealerPlaying: false, status: "distributing",
+            let finalUpdates = {
+                dealerHand: dHand, deck: deck, dealerPlayed: true, dealerPlaying: false,
                 results, realResults, streaks, poolToGive, receivedSips
-            });
+            };
+
+            // Trigger la machine à sous si nécessaire, sinon passe direct en distribution
+            if (victims.length > 0) {
+                finalUpdates.status = "rolling";
+                finalUpdates.rollingType = "dealer_bj";
+                finalUpdates.rollingResults = victims;
+            } else {
+                finalUpdates.status = "distributing";
+            }
+
+            await updateDoc(doc(db, "rooms", currentRoomCode), finalUpdates);
         }
 
         window.joinRoom = async () => {
@@ -653,22 +753,32 @@
                 const roomSnap = await getDoc(doc(db, "rooms", currentRoomCode));
                 if (roomSnap.exists()) {
                     await updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayUnion(myPseudo), [`pings.${myPseudo}`]: Date.now() });
+                    
+                    localStorage.setItem("bj_pseudo", myPseudo);
+                    localStorage.setItem("bj_room", currentRoomCode);
+
                     window.showScreen('screen-mobile-lobby');
                     
                     onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
                         localRoomData = docSnap.data();
                         
-                        // Déclencheur pour l'écran de révélation
                         if (localRoomData.status !== lastStatus) {
-                            if (lastStatus === "playing" && ["distributing", "finished"].includes(localRoomData.status)) {
-                                let myOutcome = localRoomData.results?.[myPseudo]?.outcome || "loss";
-                                showRevealScreen(myOutcome);
+                            if (lastStatus === "playing" && ["distributing", "finished", "rolling"].includes(localRoomData.status)) {
+                                if(localRoomData.status !== "rolling" || localRoomData.rollingType !== "roulette") {
+                                    let myOutcome = localRoomData.results?.[myPseudo]?.outcome || "loss";
+                                    showRevealScreen(myOutcome);
+                                }
                             }
                             lastStatus = localRoomData.status;
                         }
 
-                        if (localRoomData.status === "closed") { window.showScreen('screen-disconnected'); currentRoomCode = ""; }
-                        else if (["playing", "distributing", "finished"].includes(localRoomData.status)) updateGameMobile();
+                        if (localRoomData.status === "closed") { 
+                            window.showScreen('screen-disconnected'); 
+                            currentRoomCode = ""; 
+                            localStorage.removeItem("bj_pseudo");
+                            localStorage.removeItem("bj_room");
+                        }
+                        else if (["playing", "distributing", "finished", "rolling"].includes(localRoomData.status)) updateGameMobile();
                         else { window.showScreen('screen-mobile-lobby'); document.getElementById('mobile-drink-modal').style.display = "none"; document.getElementById('mobile-distrib-modal').style.display = "none"; }
                     });
                 } else document.getElementById('error-msg').innerText = "Session introuvable.";
@@ -707,6 +817,15 @@
             const badge = document.getElementById('mobile-status-badge');
 
             updateThemeAndBanner(data);
+
+            if (data.status === "rolling") {
+                controls.style.display = "none"; drinkModal.style.display = "none"; distribModal.style.display = "none";
+                badge.innerText = "Animation..."; badge.style.borderColor = "var(--danger)";
+                title.innerText = "🎰 Regardez l'écran TV !";
+                document.getElementById('mobile-my-cards').innerHTML = "<div style='font-size: 3em; text-align:center;'>👀📺</div>";
+                document.getElementById('mobile-my-score').innerText = "";
+                return; 
+            }
 
             if (data.status === "playing") { drinkModal.style.display = "none"; distribModal.style.display = "none"; badge.innerText = "En cours"; badge.style.borderColor = "var(--gold)"; }
 
@@ -833,6 +952,14 @@
             newP.splice(newP.indexOf(target) + 1, 0, ghost);
             await updateDoc(doc(db, "rooms", currentRoomCode), { players: newP, deck, [`playerHands.${target}`]: [hand[0], deck.pop()], [`playerHands.${ghost}`]: [hand[1], deck.pop()], [`playerStates.${ghost}`]: "playing", [`pings.${ghost}`]: Date.now() });
         };
+
+        const savedPseudo = localStorage.getItem("bj_pseudo");
+        const savedRoom = localStorage.getItem("bj_room");
+        if (savedPseudo && savedRoom) {
+            document.getElementById('input-pseudo').value = savedPseudo;
+            document.getElementById('input-room').value = savedRoom;
+            window.joinRoom();
+        }
     </script>
 </body>
 </html>
