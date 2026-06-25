@@ -316,6 +316,7 @@
 
     <div id="screen-mobile-game" class="screen">
         <div class="lobby-box" style="padding: 15px; width: 100%; border: none; background: transparent; box-shadow: none;">
+            <div id="mobile-room-code" style="font-weight: 900; font-size: 0.85em; letter-spacing: 3px; color: var(--gold); background: rgba(0,0,0,0.8); border: 1px solid var(--gold); border-radius: 6px; padding: 4px 12px; margin-bottom: 8px;">TABLE : ----</div>
             <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 10px;"></div>
             <div id="mobile-status-badge" class="status-badge">Phase de jeu</div>
             <h2 id="mobile-status-title" style="margin-top: 0; font-size: 1.2em;">Chargement...</h2>
@@ -573,14 +574,14 @@
             // PROBABILITÉS D'ÉVÉNEMENTS
             if (nextEvt === null && roundsCounter >= 10) {
                 let rand = Math.random(); 
-                if (rand < 0.15) {
-                    nextEvt = "happy_hour";        // 15%
-                } else if (rand < 0.25) { 
-                    nextEvt = "green_carpet";      // 10%
+                if (rand < 0.50) {
+                    nextEvt = "happy_hour";        // 20%
+                } else if (rand < 0.15) { 
+                    nextEvt = "green_carpet";      // 15%
+                } else if (rand < 0.25) {
+                    nextEvt = "russian_roulette";  // 10%
                 } else if (rand < 0.325) {
-                    nextEvt = "russian_roulette";  // 7.5%
-                } else if (rand < 0.375) {
-                    nextEvt = "red_alert";         // 5%
+                    nextEvt = "red_alert";         // 7.5%
                 }
             }
             if (nextEvt) roundsCounter = 0;
@@ -877,6 +878,7 @@
         function updateGameMobile() {
             if (!currentRoomCode || isRevealing) return; 
             window.showScreen('screen-mobile-game');
+            document.getElementById('mobile-room-code').innerText = `TABLE : ${currentRoomCode}`;
             const data = localRoomData;
             const title = document.getElementById('mobile-status-title'), controls = document.getElementById('mobile-controls');
             const drinkModal = document.getElementById('mobile-drink-modal'), distribModal = document.getElementById('mobile-distrib-modal');
