@@ -1,1 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CyberDerby 2099</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --neon-pink: #ff0055;
+            --neon-cyan: #00f0ff;
+            --neon-yellow: #ffff00;
+            --text-main: #e0e0e0;
+            --panel-bg: rgba(20, 20, 30, 0.8);
+            --border-glow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Share Tech Mono', monospace; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        h1, h2, h3, .cyber-title {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .cyber-title {
+            text-align: center;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
+            margin: 20px 0;
+            font-size: 2.5rem;
+        }
+
+        .screen { display: none; flex: 1; padding: 20px; flex-direction: column; align-items: center; }
+        .active-screen { display: flex; }
+
+        /* BOUTONS ET INPUTS */
+        input, select {
+            background: #0a0a14;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            box-shadow: var(--border-glow);
+        }
+
+        button {
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+            margin: 5px;
+        }
+        button:hover, button:active {
+            background: var(--neon-pink);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+        button.cyan-btn {
+            border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+        button.cyan-btn:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px var(--neon-cyan); }
+
+        /* TV - PISTE DE COURSE */
+        .track-container {
+            width: 100%; max-width: 1000px; background: var(--panel-bg);
+            border: 2px solid #333; padding: 20px; border-radius: 10px;
+        }
+        .lane {
+            height: 60px; border-bottom: 1px dashed #333; position: relative;
+            display: flex; align-items: center;
+        }
+        .finish-line {
+            position: absolute; right: 10%; top: 0; bottom: 0; width: 4px;
+            background: repeating-linear-gradient(0deg, #fff, #fff 10px, #000 10px, #000 20px);
+        }
+        .horse {
+            position: absolute; left: 0; height: 40px; width: 80px;
+            background: #222; border: 2px solid; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: bold; color: #fff; transition: left 0.2s linear;
+        }
+        .horse.crashed {
+            background: red !important; border-color: red !important;
+            transform: rotate(180deg); opacity: 0.6;
+        }
+
+        /* MOBILE - PARIS */
+        .bet-card {
+            background: var(--panel-bg); border: 1px solid #333; padding: 15px;
+            margin-bottom: 10px; border-radius: 8px; width: 100%; max-width: 400px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .bet-card span { font-size: 1.2rem; }
+        .odds { color: var(--neon-yellow); font-family: 'Orbitron', sans-serif; }
+        
+        .result-box {
+            text-align: center; padding: 30px; border: 2px solid; margin-top: 20px;
+            background: var(--panel-bg); border-radius: 10px;
+        }
+        .win { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
+        .lose { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); }
+        .crash { border-color: red; color: red; box-shadow: 0 0 30px rgba(255, 0, 0, 0.6); animation: shake 0.5s infinite; }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="screen-login" class="screen active-screen">
+        <h1 class="cyber-title">CyberDerby 2099</h1>
+        <input type="text" id="room-code" placeholder="CODE DU SALON" value="NEON">
+        <input type="text" id="player-name" placeholder="TON PSEUDO">
+        <select id="role-select">
+            <option value="player">Joueur (Mobile)</option>
+            <option value="tv">Écran Central (TV)</option>
+        </select>
+        <button onclick="joinGame()">Connexion_</button>
+    </div>
+
+    <div id="screen-tv" class="screen">
+        <h2 class="cyber-title">Hippodrome TV</h2>
+        <div id="tv-lobby" style="text-align: center;">
+            <h3>Salon: <span id="tv-room-code" style="color:var(--neon-yellow)"></span></h3>
+            <p style="margin:20px 0">Joueurs connectés : <span id="tv-players">0</span></p>
+            <button class="cyan-btn" onclick="generateOddsAndStartBetting()">Générer les cotes & Ouvrir les paris</button>
+        </div>
+
+        <div id="tv-race" style="display:none; width:100%; align-items:center; flex-direction:column;">
+            <div class="track-container" id="track">
+                </div>
+            <button id="btn-start-race" onclick="startRace()" style="margin-top:20px;">LANCER LA COURSE</button>
+        </div>
+
+        <div id="tv-results" style="display:none; text-align:center; margin-top:20px;">
+            <h2 style="color:var(--neon-yellow); font-size:3rem; margin-bottom: 20px;" id="winner-name"></h2>
+            <div id="recap-bets" style="text-align:left; max-width: 600px; margin:auto; padding:20px; background:#111; border:1px solid #333;"></div>
+            <button class="cyan-btn" onclick="backToLobby()" style="margin-top:20px;">Nouvelle Course</button>
+        </div>
+    </div>
+
+    <div id="screen-mobile" class="screen">
+        
+        <div id="mobile-lobby">
+            <h2 style="text-align:center; color:var(--neon-cyan);">En attente de la TV...</h2>
+            <p style="text-align:center; margin-top:20px;">Regarde l'écran central.</p>
+        </div>
+
+        <div id="mobile-betting" style="display:none; width: 100%; align-items: center; flex-direction: column;">
+            <h2 style="margin-bottom:20px;">Fais tes jeux</h2>
+            <div id="horses-list" style="width:100%; max-width:400px;"></div>
+            
+            <div style="margin-top:20px; width:100%; max-width:400px;">
+                <label>Gorgées à parier :</label>
+                <input type="number" id="bet-amount" value="1" min="1" max="10">
+                <button onclick="placeBet()" style="width:100%;">VALIDER LE PARI</button>
+            </div>
+        </div>
+
+        <div id="mobile-racing" style="display:none; text-align:center;">
+            <h2 class="cyber-title" style="animation: shake 2s infinite;">COURSE EN COURS</h2>
+            <p>Allez ton cheval !!</p>
+        </div>
+
+        <div id="mobile-results" style="display:none;">
+            <div id="my-result-box" class="result-box">
+                </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // ==========================================
+        // ⚠️ INSÈRE TA CONFIG FIREBASE ICI ⚠️
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "TON_API_KEY",
+            authDomain: "TON_PROJET.firebaseapp.com",
+            projectId: "TON_PROJET",
+            storageBucket: "TON_PROJET.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:12345:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- VARIABLES GLOBALES ---
+        let myPseudo = "";
+        let currentRoom = "";
+        let isTV = false;
+        let selectedHorseIndex = -1;
+        let localRoomData = null;
+
+        const HORSES_TEMPLATE = [
+            { name: "Cyber-Jäger", color: "#ff8c00" }, 
+            { name: "Cap_tain.EXE", color: "#8b0000" },
+            { name: "Vodka-Glitch", color: "#00f0ff" },
+            { name: "Plasma-Ricard", color: "#ffff00" },
+            { name: "Robo-Goudale", color: "#ff0055" }
+        ];
+
+        // --- LOGIQUE DE CONNEXION ---
+        window.joinGame = async () => {
+            currentRoom = document.getElementById("room-code").value.trim().toUpperCase();
+            myPseudo = document.getElementById("player-name").value.trim();
+            isTV = document.getElementById("role-select").value === "tv";
+
+            if (!currentRoom || (!myPseudo && !isTV)) return alert("Remplis les champs !");
+
+            document.getElementById("screen-login").classList.remove("active-screen");
+            
+            const roomRef = doc(db, "rooms", currentRoom);
+            const docSnap = await getDoc(roomRef);
+
+            if (!docSnap.exists() && isTV) {
+                // Création du salon par la TV
+                await setDoc(roomRef, {
+                    status: "lobby",
+                    players: [],
+                    horses: [],
+                    bets: {},
+                    winnerIndex: -1
+                });
+            } else if (!isTV) {
+                // Rejoindre en tant que joueur
+                let players = docSnap.exists() ? docSnap.data().players : [];
+                if (!players.includes(myPseudo)) {
+                    players.push(myPseudo);
+                    await updateDoc(roomRef, { players });
+                }
+            }
+
+            if (isTV) {
+                document.getElementById("screen-tv").classList.add("active-screen");
+                document.getElementById("tv-room-code").innerText = currentRoom;
+            } else {
+                document.getElementById("screen-mobile").classList.add("active-screen");
+            }
+
+            // Écoute de la base de données en temps réel
+            onSnapshot(roomRef, (snapshot) => {
+                localRoomData = snapshot.data();
+                if(isTV) updateTVUI(localRoomData);
+                else updateMobileUI(localRoomData);
+            });
+        };
+
+        // ==========================================
+        // LOGIQUE TV
+        // ==========================================
+        function updateTVUI(data) {
+            document.getElementById("tv-players").innerText = data.players.join(", ");
+            
+            document.getElementById("tv-lobby").style.display = data.status === "lobby" ? "block" : "none";
+            document.getElementById("tv-race").style.display = (data.status === "betting" || data.status === "racing") ? "flex" : "none";
+            document.getElementById("tv-results").style.display = data.status === "results" ? "block" : "none";
+
+            if(data.status === "betting") {
+                renderTrack(data.horses);
+                document.getElementById("btn-start-race").style.display = "block";
+            }
+
+            if(data.status === "racing") {
+                renderTrack(data.horses);
+                document.getElementById("btn-start-race").style.display = "none";
+            }
+
+            if(data.status === "results") {
+                showTVResults(data);
+            }
+        }
+
+        window.generateOddsAndStartBetting = async () => {
+            let horses = HORSES_TEMPLATE.map(h => ({
+                ...h,
+                odds: Math.floor(Math.random() * 8) + 2, // Cote entre 2 et 9
+                position: 0,
+                crashed: false
+            }));
+
+            await updateDoc(doc(db, "rooms", currentRoom), {
+                status: "betting",
+                horses: horses,
+                bets: {},
+                winnerIndex: -1
+            });
+        };
+
+        function renderTrack(horses) {
+            const track = document.getElementById("track");
+            track.innerHTML = '<div class="finish-line"></div>';
+            
+            horses.forEach((horse, index) => {
+                let lane = document.createElement('div');
+                lane.className = "lane";
+                
+                let hDiv = document.createElement('div');
+                hDiv.className = horse.crashed ? "horse crashed" : "horse";
+                hDiv.style.borderColor = horse.color;
+                hDiv.style.color = horse.color;
+                hDiv.style.left = `calc(${horse.position}% * 0.8)`; // 0.8 pour ne pas déborder
+                hDiv.innerText = horse.odds + ":1"; // Affiche la cote sur le cheval
+                
+                lane.appendChild(hDiv);
+                track.appendChild(lane);
+            });
+        }
+
+        window.startRace = async () => {
+            await updateDoc(doc(db, "rooms", currentRoom), { status: "racing" });
+
+            let raceInterval = setInterval(async () => {
+                let horses = [...localRoomData.horses];
+                let isFinished = false;
+                let winner = -1;
+
+                horses.forEach((h, i) => {
+                    if (h.crashed) return;
+
+                    // 1% de chance de crash par tick si la course n'est pas finie
+                    if (Math.random() < 0.01) {
+                        h.crashed = true;
+                    } else {
+                        // Avancée aléatoire (L'aléatoire pur du PMU !)
+                        h.position += Math.random() * 4;
+                        if (h.position >= 100) {
+                            h.position = 100;
+                            isFinished = true;
+                            if (winner === -1) winner = i;
+                        }
+                    }
+                });
+
+                // Si tout le monde a crashé (très rare mais possible)
+                if (horses.every(h => h.crashed)) {
+                    isFinished = true;
+                    winner = -1;
+                }
+
+                await updateDoc(doc(db, "rooms", currentRoom), { horses });
+
+                if (isFinished) {
+                    clearInterval(raceInterval);
+                    setTimeout(async () => {
+                        await updateDoc(doc(db, "rooms", currentRoom), { status: "results", winnerIndex: winner });
+                    }, 1000);
+                }
+            }, 200);
+        };
+
+        function showTVResults(data) {
+            let title = document.getElementById("winner-name");
+            let recap = document.getElementById("recap-bets");
+            recap.innerHTML = "<h3>Récapitulatif des paris :</h3><br>";
+
+            if(data.winnerIndex === -1) {
+                title.innerText = "CRASH GÉNÉRAL ! PERSONNE NE GAGNE !";
+                title.style.color = "red";
+            } else {
+                let wHorse = data.horses[data.winnerIndex];
+                title.innerText = `VICTOIRE DE ${wHorse.name} !`;
+                title.style.color = wHorse.color;
+            }
+
+            for(let player in data.bets) {
+                let bet = data.bets[player];
+                let horse = data.horses[bet.horseIndex];
+                
+                if(data.winnerIndex === bet.horseIndex) {
+                    recap.innerHTML += `<p style="color:var(--neon-cyan)">[GAGNANT] ${player} donne ${bet.amount * horse.odds} gorgées !</p>`;
+                } else if (horse.crashed) {
+                    recap.innerHTML += `<p style="color:red; font-weight:bold;">[CRASH] ${player} boit ${bet.amount * horse.odds * 2} gorgées ! (Cheval tombé)</p>`;
+                } else {
+                    recap.innerHTML += `<p style="color:var(--neon-pink)">[PERDANT] ${player} boit ${bet.amount * horse.odds} gorgées.</p>`;
+                }
+            }
+        }
+
+        window.backToLobby = async () => {
+            await updateDoc(doc(db, "rooms", currentRoom), { status: "lobby" });
+        };
+
+        // ==========================================
+        // LOGIQUE MOBILE (JOUEUR)
+        // ==========================================
+        function updateMobileUI(data) {
+            document.getElementById("mobile-lobby").style.display = data.status === "lobby" ? "block" : "none";
+            document.getElementById("mobile-betting").style.display = data.status === "betting" ? "flex" : "none";
+            document.getElementById("mobile-racing").style.display = data.status === "racing" ? "block" : "none";
+            document.getElementById("mobile-results").style.display = data.status === "results" ? "block" : "none";
+
+            if (data.status === "betting") {
+                renderBettingList(data.horses);
+                // Si le joueur a déjà parié, on affiche l'écran d'attente à la place
+                if(data.bets && data.bets[myPseudo]) {
+                    document.getElementById("mobile-betting").style.display = "none";
+                    document.getElementById("mobile-racing").style.display = "block";
+                    document.getElementById("mobile-racing").innerHTML = "<h3>Pari enregistré. En attente du départ...</h3>";
+                }
+            }
+
+            if (data.status === "racing") {
+                document.getElementById("mobile-racing").innerHTML = `<h2 class="cyber-title" style="animation: shake 1s infinite;">COURSE EN COURS</h2><p>Regarde l'écran central !</p>`;
+            }
+
+            if (data.status === "results") {
+                showMobileResult(data);
+            }
+        }
+
+        function renderBettingList(horses) {
+            const list = document.getElementById("horses-list");
+            list.innerHTML = "";
+            horses.forEach((h, i) => {
+                let card = document.createElement("div");
+                card.className = "bet-card";
+                card.style.borderLeft = `5px solid ${h.color}`;
+                card.innerHTML = `
+                    <div>
+                        <input type="radio" name="horseSelect" value="${i}" id="horse-${i}" style="width:auto; margin:0 10px 0 0;">
+                        <label for="horse-${i}" style="font-weight:bold;">${h.name}</label>
+                    </div>
+                    <span class="odds">x${h.odds}</span>
+                `;
+                card.onclick = () => { document.getElementById(`horse-${i}`).checked = true; };
+                list.appendChild(card);
+            });
+        }
+
+        window.placeBet = async () => {
+            let radios = document.getElementsByName('horseSelect');
+            let selected = -1;
+            for(let i=0; i<radios.length; i++) {
+                if(radios[i].checked) selected = parseInt(radios[i].value);
+            }
+
+            if(selected === -1) return alert("Choisis un Cyber-Cheval !");
+            
+            let amount = parseInt(document.getElementById("bet-amount").value);
+            
+            // Haptic Feedback
+            if(navigator.vibrate) navigator.vibrate([50, 80]);
+
+            let currentBets = localRoomData.bets || {};
+            currentBets[myPseudo] = { horseIndex: selected, amount: amount };
+
+            await updateDoc(doc(db, "rooms", currentRoom), { bets: currentBets });
+        };
+
+        function showMobileResult(data) {
+            const box = document.getElementById("my-result-box");
+            let myBet = data.bets ? data.bets[myPseudo] : null;
+
+            if(!myBet) {
+                box.className = "result-box";
+                box.innerHTML = `<h2>Tu n'as pas parié !</h2>`;
+                return;
+            }
+
+            let horse = data.horses[myBet.horseIndex];
+            
+            if (data.winnerIndex === myBet.horseIndex) {
+                if(navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+                box.className = "result-box win";
+                box.innerHTML = `<h2>🏆 BINGO !</h2><p>Ton cheval (${horse.name}) a gagné !</p><h3 style="margin-top:15px; font-size:2rem;">Distribue ${myBet.amount * horse.odds} gorgées</h3>`;
+            } else if (horse.crashed) {
+                if(navigator.vibrate) navigator.vibrate([500]);
+                box.className = "result-box crash";
+                box.innerHTML = `<h2>💀 CRASH CRITIQUE !</h2><p>Ton cheval (${horse.name}) est tombé...</p><h3 style="margin-top:15px; font-size:2rem;">Bois le double : ${myBet.amount * horse.odds * 2} gorgées !</h3>`;
+            } else {
+                if(navigator.vibrate) navigator.vibrate([200]);
+                box.className = "result-box lose";
+                box.innerHTML = `<h2>❌ PERDU...</h2><p>Ton cheval n'a pas fait le poids.</p><h3 style="margin-top:15px; font-size:2rem;">Bois ${myBet.amount * horse.odds} gorgées</h3>`;
+            }
+        }
+
+    </script>
+</body>
+</html>
