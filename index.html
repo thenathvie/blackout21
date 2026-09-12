@@ -3,226 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0402">
-    <title>Blackout 21 - Le Jeu à Boire</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♠️</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#050101">
+    <title>BLACKOUT 21 - UNDERGROUND</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            /* THÈME DE BASE (Classique) */
-            --bg-color: #0a0402;
-            --table-color: radial-gradient(circle at 50% 20%, #3e1811 0%, #0a0402 100%);
-            --gold: #f1c40f;
-            --gold-metallic: linear-gradient(135deg, #e6c27a, #ffe599, #c49a45, #ffebb5, #a67c00);
-            --glass-bg: rgba(15, 6, 4, 0.85);
-            --glass-border: rgba(212, 175, 55, 0.4);
-            --danger: #d63031;
-            --success: #00b894;
-            --text-light: #f5f5f5;
+            --bg-color: #050101;
+            --table-color: radial-gradient(circle at 50% 30%, #1f0404 0%, #050101 80%);
+            --gold: #e6b980;
+            --gold-metallic: linear-gradient(135deg, #ff003c 0%, #8a0021 100%);
+            --glass-bg: rgba(5, 1, 1, 0.85);
+            --glass-border: rgba(255, 0, 60, 0.4);
+            --danger: #ff003c;
+            --success: #00f5d4;
+            --text-light: #e0e0e0;
+            --neon-red: 0 0 15px rgba(255, 0, 60, 0.6), 0 0 30px rgba(255, 0, 60, 0.2);
+            --neon-gold: 0 0 15px rgba(230, 185, 128, 0.4);
         }
 
-        /* THÈME : HAPPY HOUR (X2) */
         body.theme-happy-hour {
-            --bg-color: #1a1700;
-            --table-color: radial-gradient(circle at 50% 20%, #4d4400 0%, #1a1700 100%);
-            --gold: #ffea00;
-            --gold-metallic: linear-gradient(135deg, #ffea00, #fff580, #ffcc00, #fff, #b38f00);
-            --glass-border: rgba(255, 234, 0, 0.6);
-            --danger: #ff3333;
+            --table-color: radial-gradient(circle at 50% 30%, #302600 0%, #050101 80%);
+            --gold: #ffcc00;
+            --gold-metallic: linear-gradient(135deg, #ffcc00, #ff8c00);
+            --glass-border: rgba(255, 204, 0, 0.6);
+            --danger: #ff5500;
         }
 
-        /* THÈME : ALERTE ROUGE (Mort Subite) */
         body.theme-red-alert {
-            --bg-color: #1a0000;
-            --table-color: radial-gradient(circle at 50% 20%, #4a0000 0%, #1a0000 100%);
-            --gold: #ff4d4d;
-            --gold-metallic: linear-gradient(135deg, #ff4d4d, #ff9999, #cc0000, #ffb3b3, #800000);
-            --glass-border: rgba(255, 77, 77, 0.7);
+            --table-color: radial-gradient(circle at 50% 30%, #4a0000 0%, #0a0000 80%);
+            --gold: #ff0000;
+            --gold-metallic: linear-gradient(135deg, #ff0000, #800000);
+            --glass-border: rgba(255, 0, 0, 0.8);
             --danger: #ff0000;
         }
 
-        /* THÈME : TAPIS VERT (Vegas) */
         body.theme-green-carpet {
-            --bg-color: #001a08;
-            --table-color: radial-gradient(circle at 50% 20%, #004d1a 0%, #001a08 100%);
-            --gold: #f1c40f;
-            --glass-border: rgba(241, 196, 15, 0.5);
+            --table-color: radial-gradient(circle at 50% 30%, #002b12 0%, #050101 80%);
+            --gold: #00ff88;
+            --glass-border: rgba(0, 255, 136, 0.5);
         }
 
-        /* THÈME : ROULETTE RUSSE */
         body.theme-russian-roulette {
-            --bg-color: #110500;
-            --table-color: radial-gradient(circle at 50% 20%, #441100 0%, #110500 100%);
-            --gold: #ff6600;
-            --gold-metallic: linear-gradient(135deg, #ff6600, #ffaa66, #cc4400, #ffbb99, #882200);
-            --glass-border: rgba(255, 102, 0, 0.6);
+            --table-color: radial-gradient(circle at 50% 30%, #330a00 0%, #050101 80%);
+            --gold: #ff3300;
+            --gold-metallic: linear-gradient(135deg, #ff3300, #991a00);
+            --glass-border: rgba(255, 51, 0, 0.7);
         }
 
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--table-color); background-color: var(--bg-color);
             color: var(--text-light); text-align: center; box-sizing: border-box; touch-action: manipulation;
-            transition: background 1s ease, background-color 1s ease;
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: -2;
+        }
         body::after {
             content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at center, rgba(212,175,55,0.03) 0%, rgba(0,0,0,0.8) 100%);
-            pointer-events: none; z-index: -1;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none; z-index: 9999; opacity: 0.3;
         }
 
-        body.theme-red-alert::after { animation: pulseRed 2s infinite; }
-        @keyframes pulseRed { 0% { background: radial-gradient(ellipse at center, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%); } 50% { background: radial-gradient(ellipse at center, rgba(255,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%); } 100% { background: radial-gradient(ellipse at center, rgba(255,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%); } }
+        body.theme-red-alert::before { animation: pulseBlood 1.5s infinite; }
+        @keyframes pulseBlood { 0% { opacity: 0.08; } 50% { opacity: 0.15; background-color: rgba(255,0,0,0.1); } 100% { opacity: 0.08; } }
 
-        #app-container { width: 100%; height: 100%; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #app-container { width: 100%; height: 100%; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10; }
 
-        .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 0.4s ease-out; }
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; animation: glitchIn 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
         .screen.active { display: flex; }
         
         .lobby-box { 
-            width: 100%; max-width: 500px; max-height: 95vh;
-            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 20px; border-radius: 16px; border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.95); box-sizing: border-box; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            overflow-y: auto; scrollbar-width: none; transition: all 1s ease;
+            width: 100%; max-width: 500px; max-height: 92vh;
+            background: rgba(5, 1, 1, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 25px 20px; border-radius: 2px;
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--danger);
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.8), var(--neon-red);
+            box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            overflow-y: auto; scrollbar-width: none; transition: all 0.5s ease;
         }
         .lobby-box::-webkit-scrollbar { display: none; }
 
-        /* LOGO STYLES */
-        .app-logo { font-family: 'Playfair Display', serif; font-size: 2.8em; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 2px; transition: 1s ease; font-weight: 900;}
-        .logo-word { background: var(--gold-metallic); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 15px rgba(212, 175, 55, 0.2); }
-        .logo-number { color: var(--danger); text-shadow: 0px 4px 15px rgba(214, 48, 49, 0.4); }
+        .app-logo { font-family: 'Cinzel', serif; font-size: 3.2em; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 4px; font-weight: 900; line-height: 1; }
+        .logo-word { color: #fff; text-shadow: 2px 2px 0px var(--danger), -2px -2px 0px #00f5d4; position: relative; display: inline-block; }
+        .logo-word::before { content: 'BLACKOUT'; position: absolute; left: 2px; text-shadow: -1px 0 red; top: 0; color: white; background: transparent; overflow: hidden; clip: rect(0,900px,0,0); animation: noise-anim 2s infinite linear alternate-reverse; }
+        .logo-number { color: var(--danger); text-shadow: var(--neon-red); }
 
-        h2 { font-family: 'Playfair Display', serif; font-size: 1.8em; margin: 0 0 10px 0; color: var(--gold); transition: color 1s ease;}
-        h3 { font-size: 1.1em; margin: 0; }
+        @keyframes noise-anim {
+          0% { clip: rect(10px, 9999px, 44px, 0); }
+          5% { clip: rect(98px, 9999px, 78px, 0); }
+          10% { clip: rect(11px, 9999px, 86px, 0); }
+          15% { clip: rect(32px, 9999px, 14px, 0); }
+          20% { clip: rect(61px, 9999px, 20px, 0); }
+          25% { clip: rect(11px, 9999px, 83px, 0); }
+          100% { clip: rect(32px, 9999px, 14px, 0); }
+        }
+
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.4em; margin: 0 0 10px 0; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; text-shadow: var(--neon-gold);}
+        h3 { font-size: 1.1em; margin: 0; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; color: #fff;}
         
-        .prevention { font-size: 0.65em; color: rgba(255,255,255,0.4); letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase; font-weight: 600; }
+        .prevention { font-size: 0.7em; color: var(--danger); letter-spacing: 4px; margin-bottom: 20px; text-transform: uppercase; font-family: 'Orbitron', sans-serif; font-weight: 700; text-shadow: 0 0 5px rgba(255,0,60,0.5); }
         
         .btn { 
-            padding: 14px 20px; font-size: 15px; font-weight: 900; font-family: 'Montserrat', sans-serif; text-transform: uppercase; cursor: pointer; border: none; border-radius: 10px; margin: 6px 0; width: 100%; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.5); letter-spacing: 1px;
+            padding: 14px 20px; font-size: 15px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-transform: uppercase; cursor: pointer; 
+            border-radius: 0px; margin: 8px 0; width: 100%; transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); letter-spacing: 2px; position: relative; overflow: hidden;
         }
-        .btn:active { transform: scale(0.96); }
-        .btn-main { background: var(--gold-metallic); color: #000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); transition: background 1s ease;}
-        .btn-main:hover { box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5); }
-        .btn-sub { background: rgba(0,0,0,0.8); color: var(--gold); border: 2px solid var(--gold); transition: border-color 1s ease, color 1s ease;}
+        .btn:active { transform: scale(0.97); }
+        .btn-main { 
+            background: transparent; color: var(--danger); border: 2px solid var(--danger);
+            box-shadow: inset 0 0 0 0 var(--danger), 0 0 10px rgba(255,0,60,0.2);
+        }
+        .btn-main:hover { 
+            background: var(--danger); color: #000; box-shadow: 0 0 25px var(--danger); text-shadow: none;
+        }
+        .btn-sub { 
+            background: transparent; color: #666; border: 1px solid #333; 
+        }
+        .btn-sub:hover { border-color: var(--gold); color: var(--gold); }
         
-        input { padding: 14px; font-size: 16px; font-weight: 800; font-family: 'Montserrat', sans-serif; border-radius: 10px; border: 2px solid rgba(212, 175, 55, 0.3); background: rgba(0,0,0,0.9); color: var(--gold); margin: 8px 0; width: 100%; box-sizing: border-box; text-align: center; text-transform: uppercase; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        input { 
+            padding: 14px; font-size: 16px; font-weight: 700; font-family: 'Orbitron', sans-serif; 
+            border: none; border-bottom: 2px solid #333; background: rgba(0,0,0,0.5); 
+            color: #fff; margin: 10px 0; width: 100%; box-sizing: border-box; text-align: center; 
+            text-transform: uppercase; outline: none; transition: 0.3s; border-radius: 0;
+        }
+        input:focus { border-bottom-color: var(--danger); background: rgba(255,0,60,0.05); text-shadow: var(--neon-red); }
+        input::placeholder { color: #444; }
         
-        .room-code { font-family: 'Playfair Display', serif; font-size: 55px; font-weight: 900; letter-spacing: 8px; margin: 10px 0; color: #fff; background: #000; padding: 10px 25px; border-radius: 12px; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); transition: 1s ease;}
+        .room-code { font-family: 'Orbitron', sans-serif; font-size: 65px; font-weight: 900; letter-spacing: 12px; margin: 10px 0; color: #fff; background: #050101; padding: 10px 25px; border: 2px solid var(--danger); text-shadow: var(--neon-red); box-shadow: inset 0 0 20px rgba(255,0,60,0.2), 0 0 20px rgba(255,0,60,0.4); }
         
         .player-list { list-style: none; padding: 0; margin: 10px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
-        .player-badge { background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 900; border: 1px solid var(--glass-border); color: #fff; animation: popIn 0.3s ease-out; box-shadow: 0 4px 8px rgba(0,0,0,0.6); transition: 1s ease;}
+        .player-badge { background: #0a0202; padding: 8px 16px; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; border: 1px solid #333; border-left: 3px solid var(--gold); color: #fff; text-transform: uppercase; animation: glitchIn 0.3s ease-out; }
 
-        #tv-board { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; flex-grow: 1; gap: 10px; position: relative;}
+        #tv-board { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; flex-grow: 1; gap: 15px; position: relative;}
         
-        /* BANNIÈRE ÉVÉNEMENT */
-        .event-banner { display: none; width: 100%; background: var(--gold); color: #000; font-weight: 900; font-size: 1.2em; padding: 10px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 50; animation: slideDown 0.5s ease; border-radius: 8px;}
+        .event-banner { display: none; width: 100%; background: var(--danger); color: #000; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.1em; padding: 10px; text-transform: uppercase; letter-spacing: 3px; box-shadow: var(--neon-red); z-index: 50; animation: slideDown 0.5s cubic-bezier(0.25, 1, 0.5, 1); border-bottom: 2px solid #fff;}
         .event-banner.active { display: block; }
 
-        .dealer-area { background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%); padding: 15px; border-radius: 0 0 50px 50px; border-bottom: 3px solid var(--gold); border-left: 1px solid var(--glass-border); border-right: 1px solid var(--glass-border); margin: 0 auto; max-width: 900px; width: 100%; box-sizing: border-box; box-shadow: 0 15px 30px rgba(0,0,0,0.8); transition: 1s ease;}
+        .dealer-area { background: rgba(5,1,1,0.9); padding: 20px; border-bottom: 2px solid var(--danger); border-left: 1px solid #222; border-right: 1px solid #222; margin: 0 auto; max-width: 900px; width: 100%; box-sizing: border-box; box-shadow: 0 30px 50px rgba(0,0,0,1); position: relative;}
+        .dealer-area::after { content: 'HOUSE'; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--danger); color: #000; font-family: 'Orbitron'; font-weight: 900; padding: 2px 15px; font-size: 12px; letter-spacing: 4px; }
         
-        .players-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
-        .player-mat { background: rgba(0, 0, 0, 0.7); padding: 12px; border-radius: 10px; min-width: 150px; border: 1px solid var(--glass-border); position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.6); transition: 0.3s; }
-        .player-mat h3 { font-size: 1em; letter-spacing: 1px; color: #fff; }
-        .player-mat.active-turn { border-color: var(--gold); background: rgba(0, 0, 0, 0.9); box-shadow: 0 0 20px var(--glass-border); transform: translateY(-3px); }
-        .player-mat.bust { opacity: 0.5; filter: grayscale(80%); border-color: var(--danger); }
-        .player-mat.target { border-color: #ff6600; box-shadow: 0 0 30px #ff6600; animation: firePulse 1s infinite;}
+        .players-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
+        .player-mat { background: #080202; padding: 15px; min-width: 160px; border: 1px solid #222; border-top: 3px solid #333; position: relative; box-shadow: 10px 10px 20px rgba(0,0,0,0.8); transition: all 0.3s ease; }
+        .player-mat h3 { font-size: 1.1em; letter-spacing: 2px; color: #888; }
+        .player-mat.active-turn { border-top-color: var(--danger); background: #0f0303; box-shadow: 0 -5px 30px rgba(255,0,60,0.3), 10px 10px 20px rgba(0,0,0,0.9); transform: translateY(-5px); }
+        .player-mat.active-turn h3 { color: #fff; text-shadow: var(--neon-red); }
+        .player-mat.bust { opacity: 0.4; filter: grayscale(100%); border-top-color: #111; }
+        .player-mat.target { border-top-color: #ff3300; box-shadow: 0 -5px 40px rgba(255,51,0,0.5); animation: heartbeat 1s infinite;}
         
-        @keyframes firePulse { 0% { box-shadow: 0 0 10px #ff6600; } 50% { box-shadow: 0 0 30px #ff3300, inset 0 0 15px #ff6600; } 100% { box-shadow: 0 0 10px #ff6600; } }
+        @keyframes heartbeat { 0% { transform: scale(1); } 15% { transform: scale(1.05); } 30% { transform: scale(1); } 45% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        .cards-container { display: flex; justify-content: center; margin-top: 5px; min-height: 90px; padding-left: 20px; perspective: 1000px;}
-        .card { background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%); color: #000; width: 55px; height: 80px; border-radius: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900; box-shadow: -3px 3px 8px rgba(0,0,0,0.5); border: 1px solid #ccc; position: relative; margin-left: -20px; }
-        .card.red { color: var(--danger); }
-        .card.hidden { background: repeating-linear-gradient(45deg, #111, #111 6px, #000 6px, #000 12px); color: transparent; border: 2px solid var(--gold); }
-        .card:not(.hidden)::before { content: attr(data-suit); position: absolute; top: 2px; left: 4px; font-size: 12px; line-height:1;}
-        .card:not(.hidden)::after { content: attr(data-suit); position: absolute; bottom: 2px; right: 4px; font-size: 12px; transform: rotate(180deg); line-height:1;}
-        .card .center-suit { font-size: 35px; opacity: 0.15; position: absolute; }
+        .cards-container { display: flex; justify-content: center; margin-top: 10px; min-height: 100px; padding-left: 20px; perspective: 1000px;}
+        .card { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%); 
+            color: #fff; width: 65px; height: 95px; border-radius: 4px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            font-family: 'Cinzel', serif; font-size: 28px; font-weight: 900; 
+            box-shadow: -8px 8px 15px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.05); 
+            border: 1px solid #333; position: relative; margin-left: -25px; transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-10px) rotate(2deg); z-index: 10; }
+        .card.red { color: var(--danger); text-shadow: 0 0 10px rgba(255,0,60,0.5); }
+        .card.hidden { background: repeating-linear-gradient(45deg, #0a0a0a, #0a0a0a 10px, #1a0505 10px, #1a0505 20px); color: transparent; border: 1px solid var(--danger); box-shadow: inset 0 0 15px rgba(255,0,0,0.2); }
+        .card:not(.hidden)::before { content: attr(data-suit); position: absolute; top: 4px; left: 6px; font-size: 14px; line-height:1; font-family: 'Inter';}
+        .card:not(.hidden)::after { content: attr(data-suit); position: absolute; bottom: 4px; right: 6px; font-size: 14px; transform: rotate(180deg); line-height:1; font-family: 'Inter';}
+        .card .center-suit { font-size: 45px; opacity: 0.05; position: absolute; }
 
-        .game-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; width: 100%; }
-        .btn-game { padding: 12px 5px; font-size: 14px; font-weight: 900; border-radius: 8px; border: none; color: white; text-transform: uppercase; box-shadow: 0 4px 0 rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s;}
+        .game-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; width: 100%; }
+        .btn-game { padding: 15px 5px; font-size: 16px; font-weight: 900; font-family: 'Orbitron'; border: none; color: white; text-transform: uppercase; cursor: pointer; transition: 0.1s; border-radius: 0;}
         .btn-game:active { transform: translateY(4px); box-shadow: none !important; }
-        .btn-hit { background: linear-gradient(180deg, #e74c3c, #c0392b); box-shadow: 0 4px 0 #78281f;}
-        .btn-stand { background: linear-gradient(180deg, #f1c40f, #d35400); box-shadow: 0 4px 0 #873600;}
-        .btn-double { background: linear-gradient(180deg, #34495e, #2c3e50); border: 1px solid var(--gold); color: var(--gold); }
-        .btn-split { background: linear-gradient(180deg, #9b59b6, #8e44ad); grid-column: span 2; box-shadow: 0 4px 0 #5b2c6f; }
+        .btn-hit { background: transparent; border: 2px solid var(--danger); color: var(--danger); box-shadow: inset 0 0 10px rgba(255,0,60,0.2); }
+        .btn-hit:active { background: var(--danger); color: #000; }
+        .btn-stand { background: transparent; border: 2px solid #fff; color: #fff; box-shadow: inset 0 0 10px rgba(255,255,255,0.1);}
+        .btn-stand:active { background: #fff; color: #000; }
+        .btn-double { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+        .btn-split { background: transparent; border: 2px solid #a200ff; color: #a200ff; grid-column: span 2; }
         
-        .fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 2, 1, 0.98); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-title { font-size: 35px; margin-bottom: 5px; color: var(--gold); font-family: 'Playfair Display', serif;}
-        .modal-text { font-size: 18px; font-weight: 800; color: white; white-space: pre-line; line-height: 1.5; margin-bottom: 20px; }
-        .take-color { color: var(--danger); font-size: 1.5em;}
-        .btn-give { background: rgba(0,0,0,0.8); color: var(--gold); border: 1px solid var(--gold); padding: 12px; font-size: 14px; font-weight: 900; border-radius: 8px; width: 100%; margin-bottom: 8px; text-transform: uppercase; cursor: pointer; }
+        .fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-title { font-size: 40px; margin-bottom: 10px; color: var(--danger); font-family: 'Cinzel', serif; text-shadow: var(--neon-red); letter-spacing: 4px;}
+        .modal-text { font-size: 18px; font-weight: 700; color: #ddd; white-space: pre-line; line-height: 1.6; margin-bottom: 25px; font-family: 'Inter'; text-transform: uppercase;}
+        .take-color { color: var(--danger); font-size: 1.8em; font-family: 'Orbitron'; font-weight: 900;}
+        .btn-give { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 15px; font-size: 16px; font-family: 'Orbitron'; font-weight: 900; border-radius: 0; width: 100%; margin-bottom: 10px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .btn-give:hover { background: var(--gold); color: #000; }
 
-        /* SLOT MACHINE STYLES */
-        .slot-machine-container { background: linear-gradient(180deg, #b33939, #ff5252, #b33939); padding: 20px; border-radius: 20px; border: 5px solid var(--gold); box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); width: 80%; max-width: 600px; text-align: center; }
-        .slot-machine-window { background: #fff; padding: 20px; border-radius: 10px; border: inset 5px #ccc; margin-top: 20px; min-height: 120px; display: flex; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);}
-        .slot-name { font-size: 3em; font-weight: 900; color: #000; text-transform: uppercase; letter-spacing: 2px; }
-        .slot-title-text { font-family: 'Playfair Display', serif; font-size: 2em; color: #fff; text-shadow: 2px 2px 0 #000; margin: 0; }
+        .slot-machine-container { background: #050101; padding: 30px; border: 2px solid var(--danger); box-shadow: 0 0 50px rgba(255, 0, 60, 0.4); width: 80%; max-width: 600px; text-align: center; position: relative;}
+        .slot-machine-container::before { content:''; position:absolute; top:5px; left:5px; right:5px; bottom:5px; border: 1px dashed #333; pointer-events:none;}
+        .slot-machine-window { background: #000; padding: 30px; border: 1px solid #222; margin-top: 20px; min-height: 150px; display: flex; align-items: center; justify-content: center; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 30px rgba(255,0,60,0.1);}
+        .slot-name { font-size: 3.5em; font-weight: 900; font-family: 'Orbitron'; color: #fff; text-transform: uppercase; letter-spacing: 4px; text-shadow: 2px 2px 0px var(--danger); }
+        .slot-title-text { font-family: 'Cinzel', serif; font-size: 2.5em; color: var(--danger); margin: 0; text-shadow: var(--neon-red); }
 
-        .tv-top-bar { display: flex; justify-content: center; margin-bottom: 5px; width: 100%; position: relative;}
-        .tv-code-badge { font-weight: 900; background: #000; padding: 6px 15px; border-radius: 6px; border: 1px solid var(--gold); color: var(--gold); font-size: 1em; letter-spacing: 2px; transition: 1s ease;}
+        .tv-top-bar { display: flex; justify-content: center; margin-bottom: 15px; width: 100%; position: relative;}
+        .tv-code-badge { font-family: 'Orbitron'; font-weight: 900; background: transparent; padding: 8px 20px; border-bottom: 2px solid var(--danger); color: #fff; font-size: 1.2em; letter-spacing: 4px; }
 
-        /* OPTIMISATION PAYSAGE (Smartphones) */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            #screen-mobile-game .lobby-box { padding: 10px; }
-            #screen-mobile-game .status-badge { margin-bottom: 2px; }
-            #screen-mobile-game h2 { font-size: 1.2em; margin-bottom: 5px; }
-            #mobile-bank-score { padding: 5px 10px; font-size: 1em; margin: 5px 0; }
-            #mobile-my-cards { min-height: 70px; }
-            #mobile-my-cards .card { width: 45px; height: 65px; font-size: 20px; }
-            .game-controls { gap: 5px; margin-top: 5px; }
-            .btn-game { padding: 8px 5px; font-size: 12px; }
-            .event-banner { font-size: 0.75em; padding: 5px; }
+        /* OPTIMISATION TV LOBBY & BOUTON FIXÉ */
+        #screen-tv-lobby .lobby-box { 
+            max-width: 850px; 
+            width: 85%; 
+            max-height: 90vh; 
+            padding: 25px 35px; 
+            border-width: 2px; 
+            justify-content: flex-start;
+        }
+        #screen-tv-lobby .app-logo { font-size: 3em; margin-bottom: 5px; }
+        #screen-tv-lobby h2 { font-size: 1.8em; margin-bottom: 10px; }
+        #screen-tv-lobby .room-code { font-size: 65px; padding: 8px 25px; letter-spacing: 15px; margin: 10px 0; }
+        #screen-tv-lobby h3 { font-size: 1.3em; margin-top: 15px; border-bottom: 1px solid #333; padding-bottom: 5px;}
+        #screen-tv-lobby .player-badge { font-size: 16px; padding: 8px 18px; }
+        
+        #start-game-btn { 
+            font-size: 1.4em !important; 
+            padding: 14px 35px !important; 
+            margin-top: 20px !important;
+            width: auto !important;
+            max-width: 380px;
+            position: relative !important;
+            bottom: auto !important;
+            box-shadow: 0 0 25px rgba(255,0,60,0.4) !important;
         }
 
-        /* ==========================================================================
-           MODIFICATIONS v0.2 : EXPANSION ET TAILLES ÉCRAN TV
-           ========================================================================== */
-        #screen-tv-lobby .lobby-box {
-            max-width: 92vw;
-            width: 85%;
-            padding: 45px;
-            border-radius: 24px;
-        }
-        #screen-tv-lobby h2 { font-size: 3em; margin-bottom: 15px; }
-        #screen-tv-lobby .room-code { font-size: 92px; padding: 15px 45px; letter-spacing: 12px; margin: 20px 0; }
-        #screen-tv-lobby h3 { font-size: 2em; margin-top: 25px; }
-        #screen-tv-lobby .player-badge { font-size: 22px; padding: 14px 28px; border-radius: 10px; }
-        #start-game-btn { font-size: 1.5em !important; padding: 18px 45px !important; }
-
-        #screen-tv-game #tv-board { gap: 25px; }
-        #screen-tv-game .dealer-area { max-width: 96vw; padding: 25px; border-radius: 0 0 70px 70px; }
-        #screen-tv-game .dealer-area h2 { font-size: 2.8em; }
-        #screen-tv-game #tv-dealer-score { font-size: 0.75em !important; }
+        #screen-tv-game #tv-board { gap: 20px; }
+        #screen-tv-game .dealer-area { max-width: 95vw; padding: 20px; }
+        #screen-tv-game .dealer-area h2 { font-size: 1.8em; }
         
         #screen-tv-game .players-area { gap: 20px; padding: 0 20px; }
-        #screen-tv-game .player-mat { min-width: 210px; max-width: 300px; flex-grow: 1; padding: 22px; border-radius: 14px; }
-        #screen-tv-game .player-mat h3 { font-size: 1.6em; }
-        #screen-tv-game .player-mat div[style*="color:var(--gold)"] { font-size: 1.2em !important; height: 24px; }
-        #screen-tv-game .player-mat div[style*="position:absolute"] { font-size: 1.4em !important; padding: 6px 22px !important; bottom: -18px !important; }
+        #screen-tv-game .player-mat { min-width: 180px; max-width: 260px; flex-grow: 1; padding: 20px; }
+        #screen-tv-game .player-mat h3 { font-size: 1.4em; }
+        #screen-tv-game .player-mat div[style*="color:var(--gold)"] { font-size: 1.1em !important; font-family:'Orbitron'; color: var(--danger) !important; text-shadow: var(--neon-red); }
+        #screen-tv-game .player-mat div[style*="position:absolute"] { font-family:'Orbitron'; font-size: 1.4em !important; padding: 6px 20px !important; bottom: -18px !important; background: #000 !important; border: 2px solid #333 !important;}
 
-        /* Agrandissement des cartes sur l'écran TV */
-        #screen-tv-game .cards-container { min-height: 140px; padding-left: 30px; margin-top: 15px; }
-        #screen-tv-game .card { width: 85px; height: 120px; font-size: 38px; border-radius: 8px; margin-left: -30px; box-shadow: -4px 4px 12px rgba(0,0,0,0.6); }
-        #screen-tv-game .card:not(.hidden)::before { font-size: 18px; top: 4px; left: 6px; }
-        #screen-tv-game .card:not(.hidden)::after { font-size: 18px; bottom: 4px; right: 6px; }
-        #screen-tv-game .card .center-suit { font-size: 55px; }
+        #screen-tv-game .cards-container { min-height: 130px; padding-left: 30px; margin-top: 15px; }
+        #screen-tv-game .card { width: 85px; height: 125px; font-size: 40px; margin-left: -35px; border-width: 2px;}
+        #screen-tv-game .card:not(.hidden)::before { font-size: 18px; top: 5px; left: 7px; }
+        #screen-tv-game .card:not(.hidden)::after { font-size: 18px; bottom: 5px; right: 7px; }
+        #screen-tv-game .card .center-suit { font-size: 60px; }
 
-        #tv-result-msg { font-size: 34px; margin: 20px 0; font-weight: 900; }
-        .tv-code-badge { font-size: 1.5em; padding: 10px 30px; }
-        #new-round-btn { font-size: 1.4em !important; padding: 18px 40px !important; max-width: 400px !important; }
-
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-        @keyframes dealCard { 0% { opacity: 0; transform: translate3d(20px, -30px, 0) rotateZ(10deg); } 100% { opacity: 1; transform: translate3d(0, 0, 0) rotateZ(0deg); } }
-        @keyframes slideDown { 0% { transform: translateY(-50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        #tv-result-msg { font-size: 24px; font-family: 'Orbitron'; font-weight: 900; margin: 10px 0; letter-spacing: 3px; text-transform: uppercase;}
         
-        #error-msg { color: var(--danger); font-weight: bold; margin-top: 5px; font-size: 0.9em; }
-        #tv-result-msg { font-size: 20px; font-family: 'Playfair Display', serif; font-weight: 900; margin: 10px 0; color: #fff;}
-        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7em; font-weight: 900; background: rgba(0,0,0,0.8); margin-bottom: 5px; text-transform: uppercase; border: 1px solid var(--gold); color: var(--gold); transition: 1s ease;}
+        #new-round-btn { 
+            font-size: 1.4em !important; 
+            padding: 15px 40px !important; 
+            max-width: 450px !important; 
+            position: relative !important; 
+            margin: 20px auto 30px auto !important; 
+            transform: none !important;
+            left: auto !important;
+            bottom: auto !important;
+            z-index: 100; 
+            box-shadow: 0 0 30px rgba(255,0,60,0.5) !important; 
+            background: #000; 
+            border-color: var(--danger); 
+            color: var(--danger);
+flex-shrink: 0 !important;
+        }
+        #new-round-btn:hover { background: var(--danger); color: #000; }
+
+        @keyframes glitchIn { 0% { opacity: 0; transform: scale(1.05) skewX(10deg); filter: blur(10px); } 100% { opacity: 1; transform: scale(1) skewX(0); filter: blur(0); } }
+        @keyframes slideDown { 0% { transform: translateY(-100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes dealCard { 0% { opacity: 0; transform: translate3d(50px, -50px, 100px) rotateZ(15deg); } 100% { opacity: 1; transform: translate3d(0, 0, 0) rotateZ(0deg); } }
+        
+        #error-msg { color: var(--danger); font-family: 'Orbitron'; font-weight: bold; margin-top: 10px; font-size: 1em; letter-spacing: 1px; text-shadow: var(--neon-red);}
+        .status-badge { display: inline-block; padding: 6px 15px; font-family: 'Orbitron'; font-size: 0.75em; font-weight: 900; background: transparent; margin-bottom: 10px; text-transform: uppercase; border: 1px solid #333; color: #888; letter-spacing: 2px;}
+        
+        #screen-tv-game { justify-content: flex-start !important; overflow-y: auto !important; padding-top: 20px; padding-bottom: 100px; }
+        #screen-tv-game::-webkit-scrollbar { display: none; }
+        #screen-tv-game .cards-container { flex-wrap: wrap !important; row-gap: 15px; }
+        
+        #mobile-bank-score { font-family: 'Orbitron'; color: #fff; font-weight: 900; font-size: 1.3em; margin: 15px 0; background: transparent; padding: 10px 0; border: none; border-bottom: 2px solid var(--danger); display: inline-block; letter-spacing: 2px;}
+        #mobile-my-score { font-family: 'Orbitron', sans-serif !important; font-size: 1.6em !important; font-weight: 900; color: #fff !important; text-shadow: var(--neon-red);}
     </style>
 </head>
 <body>
@@ -231,94 +286,93 @@
 
     <div id="screen-home" class="screen active">
         <div class="lobby-box">
-            <div class="app-logo"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span> <span style="color: var(--gold);">🍷</span></div>
-            <div class="prevention" style="margin-bottom: 20px;">L'Édition Ultime</div>
-            <h2>Ouverture de la Table</h2>
-            <button class="btn btn-main" onclick="window.initTVMode()">📺 Banque (Écran TV)</button>
-            <button class="btn btn-sub" onclick="window.showScreen('screen-join')">📱 Joueur (Smartphone)</button>
+            <div class="app-logo"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
+            <div class="prevention">Underground Edition</div>
+            <h2>Accès Table</h2>
+            <button class="btn btn-main" onclick="window.initTVMode()">[ INIT: BANQUE TV ]</button>
+            <button class="btn btn-sub" onclick="window.showScreen('screen-join')">[ CONNEXION JOUEUR ]</button>
         </div>
     </div>
 
     <div id="screen-join" class="screen">
         <div class="lobby-box">
-            <div class="app-logo" style="font-size: 2em; margin-bottom: 20px;"><span style="color: var(--gold);">♠️</span> <span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
-            <h2>Rejoindre</h2>
-            <input type="text" id="input-pseudo" placeholder="VOTRE PSEUDO" maxlength="12">
-            <input type="text" id="input-room" placeholder="CODE DE TABLE" maxlength="4">
-            <button class="btn btn-main" style="margin-top: 15px;" onclick="window.joinRoom()">Prendre Place</button>
+            <div class="app-logo" style="font-size: 2.5em; margin-bottom: 15px;"><span class="logo-word">BLACKOUT</span></div>
+            <h2>IDENTIFICATION</h2>
+            <input type="text" id="input-pseudo" placeholder="ALIAS (MAX 12)" maxlength="12">
+            <input type="text" id="input-room" placeholder="CODE (4 LETTRES)" maxlength="4">
+            <button class="btn btn-main" style="margin-top: 20px;" onclick="window.joinRoom()">ENTRER</button>
             <div id="error-msg"></div>
-            <button class="btn btn-sub" onclick="window.showScreen('screen-home')">← Retour</button>
+            <button class="btn btn-sub" style="margin-top: 15px; border:none;" onclick="window.showScreen('screen-home')">ABORT</button>
         </div>
     </div>
 
     <div id="screen-mobile-lobby" class="screen">
         <div class="lobby-box">
-            <div style="font-size: 3em; margin-bottom: 5px;">🥃</div>
-            <h2>Place Réservée</h2>
-            <p style="opacity: 0.8; font-size: 0.9em;">Préparez votre verre.</p>
+            <div style="font-size: 3.5em; margin-bottom: 10px; filter: drop-shadow(0 0 10px red);">🩸</div>
+            <h2>PLACE VERROUILLÉE</h2>
+            <p style="opacity: 0.6; font-size: 0.9em; font-family: 'Orbitron'; text-transform: uppercase;">En attente du dealer...</p>
         </div>
     </div>
 
     <div id="screen-disconnected" class="screen">
-        <div class="lobby-box" style="border-color: var(--danger);">
-            <h2 style="color: var(--danger);">🚨 Table Fermée</h2>
-            <p style="font-size: 0.9em; opacity: 0.8;">La session a pris fin.</p>
-            <button class="btn btn-main" onclick="localStorage.removeItem('bj_pseudo'); localStorage.removeItem('bj_room'); window.location.reload()">Menu Principal</button>
+        <div class="lobby-box" style="border-color: var(--danger); box-shadow: 0 0 50px rgba(255,0,0,0.4);">
+            <h2 style="color: var(--danger); text-shadow: var(--neon-red);">🚨 CONNEXION PERDUE</h2>
+            <p style="font-size: 0.9em; opacity: 0.8; font-family:'Orbitron';">La table a été fermée.</p>
+            <button class="btn btn-main" onclick="localStorage.removeItem('bj_pseudo'); localStorage.removeItem('bj_room'); window.location.reload()">RETOUR SYSTÈME</button>
         </div>
     </div>
 
     <div id="screen-tv-lobby" class="screen">
-        <div class="lobby-box" style="max-width: 800px;">
-            <div class="app-logo" style="font-size: 2em; margin-bottom: 10px;"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
-            <h2>CODE D'ACCÈS VIP</h2>
+        <div class="lobby-box">
+            <div class="app-logo"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
+            <h2>CODE D'ACCÈS CLANDESTIN</h2>
             <div id="display-room-code" class="room-code">----</div>
-            <h3 style="color: #fff; margin-top: 10px; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">Joueurs à table (<span id="player-count">0</span>/6)</h3>
+            <h3>JOUEURS CONNECTÉS (<span id="player-count">0</span>/6)</h3>
             <ul id="tv-player-list" class="player-list"></ul>
-            <button id="start-game-btn" class="btn btn-main" style="display: none; padding: 15px; font-size: 1.1em; margin-top: 10px;" onclick="window.startGame()">Faites vos jeux ♠️</button>
-            <button class="btn btn-sub" style="margin-top: 25px; max-width: 280px; font-size: 14px; padding: 10px 20px;" onclick="window.exitTVMode()">← Fermer la Table</button>
+            <button id="start-game-btn" class="btn btn-main" style="display: none;" onclick="window.startGame()">INITIER LA MANCHE</button>
+            <button class="btn btn-sub" style="margin-top: 20px; max-width: 260px; font-size: 13px; border:none;" onclick="window.exitTVMode()">FERMER LA TABLE</button>
         </div>
     </div>
 
     <div id="tv-slot-modal" class="fullscreen-modal" style="z-index: 3000;">
         <div class="slot-machine-container">
-            <h1 id="tv-slot-title" class="slot-title-text">🎰 TIRAGE AU SORT</h1>
-            <div id="tv-slot-window" class="slot-machine-window">
-                </div>
+            <h1 id="tv-slot-title" class="slot-title-text">CIBLE VERROUILLÉE</h1>
+            <div id="tv-slot-window" class="slot-machine-window"></div>
         </div>
     </div>
 
     <div id="screen-tv-game" class="screen">
         <div class="tv-top-bar">
-            <div class="tv-code-badge">TABLE: <span id="tv-game-room-code"></span></div>
-            <button class="btn btn-sub" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: auto; padding: 6px 15px; font-size: 12px; margin: 0; border-width: 1px; border-radius: 6px;" onclick="window.exitTVMode()">← Quitter</button>
+            <div class="tv-code-badge">TABLE: <span id="tv-game-room-code" style="color:var(--danger)"></span></div>
+            <button class="btn btn-sub" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); width: auto; padding: 8px 16px; font-size: 13px; margin: 0; border: none;" onclick="window.exitTVMode()">QUITTER</button>
         </div>
         
         <div id="tv-event-banner" class="event-banner"></div>
 
         <div id="tv-board">
             <div class="dealer-area">
-                <h2>LA BANQUE <span id="tv-dealer-score" style="font-size: 1em; color: var(--gold); margin-left: 10px; font-family: 'Montserrat', sans-serif; background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--gold);"></span></h2>
+                <h2 style="font-family:'Cinzel'; letter-spacing:6px; color:#fff;">LA BANQUE <span id="tv-dealer-score" style="font-size: 0.8em; color: var(--danger); margin-left: 15px; font-family: 'Orbitron'; background: transparent; padding: 5px 12px; border-bottom: 2px solid var(--danger);"></span></h2>
                 <div class="cards-container" id="tv-dealer-cards"></div>
             </div>
             <div id="tv-result-msg"></div>
             <div class="players-area" id="tv-players-area"></div>
         </div>
-        <button id="new-round-btn" class="btn btn-main" style="display:none; font-size: 1em; padding: 12px 25px; margin-top: 10px; max-width: 300px;" onclick="window.startGame()">Manche Suivante 🔄</button>
+        <button id="new-round-btn" class="btn btn-main" style="display:none;" onclick="window.startGame()">NOUVELLE MANCHE</button>
     </div>
 
     <div id="screen-mobile-game" class="screen">
-        <div class="lobby-box" style="padding: 15px; width: 100%; border: none; background: transparent; box-shadow: none;">
-            <div id="mobile-room-code" style="font-weight: 900; font-size: 0.85em; letter-spacing: 3px; color: var(--gold); background: rgba(0,0,0,0.8); border: 1px solid var(--gold); border-radius: 6px; padding: 4px 12px; margin-bottom: 8px;">TABLE : ----</div>
-            <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 10px;"></div>
+        <div class="lobby-box" style="padding: 20px; width: 100%; border: none; background: transparent; box-shadow: none; justify-content: center;">
+            <div id="mobile-room-code" style="font-family:'Orbitron'; font-weight: 900; font-size: 0.85em; letter-spacing: 4px; color: #555; margin-bottom: 15px;">TABLE : ----</div>
+            <div id="mobile-event-banner" class="event-banner" style="font-size: 0.85em; margin-bottom: 15px; border-radius: 0;"></div>
             <div id="mobile-status-badge" class="status-badge">Phase de jeu</div>
-            <h2 id="mobile-status-title" style="margin-top: 0; font-size: 1.2em;">Chargement...</h2>
+            <h2 id="mobile-status-title" style="margin-top: 5px; font-size: 1.4em; font-family:'Cinzel';">Chargement...</h2>
             
-            <div id="mobile-bank-score" style="color: var(--gold); font-weight: 900; font-size: 1.2em; margin: 10px 0; background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 6px; border: 1px solid var(--gold); display: inline-block;">Banque : --</div>
+            <div id="mobile-bank-score">Banque : --</div>
 
-            <div style="background: rgba(0,0,0,0.6); padding: 10px; border-radius: 10px; margin: 10px 0; width: 100%; box-sizing: border-box; border: 1px solid var(--glass-border);">
-                <div id="mobile-my-cards" class="cards-container" style="min-height: 90px; margin-top:0;"></div>
-                <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">
-                    <h3 id="mobile-my-score" style="margin: 0; color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.4em;"></h3>
+            <div style="background: rgba(5,1,1,0.8); padding: 15px; border-radius: 0; margin: 15px 0; width: 100%; box-sizing: border-box; border: 1px solid #222; border-left: 3px solid #444;">
+                <div id="mobile-my-cards" class="cards-container" style="min-height: 100px; margin-top:0;"></div>
+                <div style="margin-top: 15px; border-top: 1px dashed #333; padding-top: 10px;">
+                    <h3 id="mobile-my-score"></h3>
                 </div>
             </div>
             
@@ -332,21 +386,21 @@
     </div>
 
     <div id="mobile-reveal-modal" class="fullscreen-modal" style="z-index: 2000;">
-        <div id="reveal-icon" style="font-size: 5em; margin-bottom: 10px; animation: popIn 0.3s ease-out;"></div>
-        <h1 id="reveal-title" style="font-size: 3em; margin: 0; text-transform: uppercase; font-family: 'Playfair Display', serif; animation: popIn 0.4s ease-out;"></h1>
+        <div id="reveal-icon" style="font-size: 6em; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255,0,0,0.5);"></div>
+        <h1 id="reveal-title" style="font-size: 4em; margin: 0; text-transform: uppercase; font-family: 'Cinzel', serif; letter-spacing: 6px;"></h1>
     </div>
 
     <div id="mobile-distrib-modal" class="fullscreen-modal">
         <h2 id="distrib-modal-title" class="modal-title"></h2>
         <p id="distrib-modal-text" class="modal-text"></p>
-        <div style="width: 100%; max-width: 300px;" id="distrib-buttons-container"></div>
+        <div style="width: 100%; max-width: 350px;" id="distrib-buttons-container"></div>
     </div>
 
     <div id="mobile-drink-modal" class="fullscreen-modal">
-        <div style="font-size: 4em; margin-bottom: 5px;" id="drink-modal-icon">🍷</div>
-        <h2 id="drink-modal-title" class="modal-title">VERDICT</h2>
+        <div style="font-size: 5em; margin-bottom: 10px; filter: drop-shadow(0 0 15px red);" id="drink-modal-icon">🩸</div>
+        <h2 id="drink-modal-title" class="modal-title">SANCTION</h2>
         <p id="drink-modal-text" class="modal-text"></p>
-        <button class="btn btn-main" onclick="document.getElementById('mobile-drink-modal').style.display='none'" style="margin-top:10px; max-width: 250px;">J'AI COMPRIS</button>
+        <button class="btn btn-main" onclick="document.getElementById('mobile-drink-modal').style.display='none'" style="margin-top:20px; max-width: 300px;">J'AI COMPRIS</button>
     </div>
 
 </div>
@@ -378,7 +432,6 @@
 
         const vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
 
-        // Détection de l'orientation pour le mobile
         function checkOrientation() {
             if (window.innerHeight > window.innerWidth) {
                 document.body.classList.add('is-portrait');
@@ -387,7 +440,7 @@
             }
         }
         window.addEventListener('resize', checkOrientation);
-        checkOrientation(); // Appel initial
+        checkOrientation();
 
         function calculateScore(hand) {
             let score = 0; let aces = 0;
@@ -419,7 +472,7 @@
 
         function createHtmlCard(card, hidden = false, index = 0, totalCards = 1) {
             const shouldAnimate = (totalCards <= 2) || (index === totalCards - 1);
-            const animationStyle = shouldAnimate ? `animation: dealCard 0.4s ease-out forwards; opacity: 0; animation-delay: ${index * 0.1}s;` : `opacity: 1; animation: none;`;
+            const animationStyle = shouldAnimate ? `animation: dealCard 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; animation-delay: ${index * 0.1}s;` : `opacity: 1; animation: none;`;
             if (hidden) return `<div class="card hidden" style="${animationStyle}"></div>`;
             const isRed = card.suit === '♥' || card.suit === '♦';
             return `<div class="card ${isRed ? 'red' : ''}" data-suit="${card.suit}" style="${animationStyle}"><span class="center-suit">${card.suit}</span><span style="position:relative; z-index:2">${card.value}</span></div>`;
@@ -429,7 +482,6 @@
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             
-            // Activation de la vérification Paysage uniquement sur l'écran du jeu
             document.body.classList.toggle('is-mobile-game', screenId === 'screen-mobile-game');
             
             const err = document.getElementById('error-msg');
@@ -445,7 +497,6 @@
             }
         });
 
-        // FONCTION RETOUR TV (v0.2)
         window.exitTVMode = async () => {
             if (currentRoomCode) {
                 try {
@@ -491,6 +542,7 @@
             
             await setDoc(doc(db, "rooms", currentRoomCode), { status: "waiting", players: [], pings: {}, tvPing: Date.now(), streaks: {}, roundsSinceLastEvent: 0, nextForcedEvent: null });
             document.getElementById('display-room-code').innerText = currentRoomCode;
+            document.getElementById('tv-game-room-code').innerText = currentRoomCode;
             window.showScreen('screen-tv-lobby');
 
             onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
@@ -515,14 +567,13 @@
             document.getElementById('start-game-btn').style.display = (localRoomData.players.length > 0) ? "inline-block" : "none";
         }
 
-        // --- GESTION ANIMATION MACHINE À SOUS (TV UNIQUEMENT) ---
         async function runSlotAnimationTV(type, results) {
             const modal = document.getElementById('tv-slot-modal');
             const title = document.getElementById('tv-slot-title');
             const windowEl = document.getElementById('tv-slot-window');
             modal.style.display = "flex";
             
-            title.innerText = type === "roulette" ? "🎰 ROULETTE RUSSE : CIBLE" : "🚨 BLACKJACK : SANCTION DE LA BANQUE";
+            title.innerText = type === "roulette" ? "ROULETTE RUSSE" : "SANCTION DE LA BANQUE";
             
             let players = localRoomData.players.filter(p => !p.includes("_split"));
             if(players.length === 0) players = ["AUCUN JOUEUR"];
@@ -532,17 +583,17 @@
                 windowEl.innerHTML = `<div class="slot-name">${players[Math.floor(Math.random() * players.length)]}</div>`;
                 ticks++;
                 
-                if (ticks > 25) { // Fin du roulement rapide après ~2.5s
+                if (ticks > 25) { 
                     clearInterval(interval);
                     
                     if (type === "roulette") {
                         windowEl.innerHTML = `<div class="slot-name" style="color: var(--danger); font-size: 3.5em;">🎯 ${results[0]} 🎯</div>
-                                              <div style="color: black; font-weight: bold; margin-top: 5px;">Cible Verrouillée</div>`;
+                                              <div style="color: #666; font-family:'Orbitron'; font-weight: bold; margin-top: 10px; letter-spacing:2px;">CIBLE VERROUILLÉE</div>`;
                     } else {
                         let counts = {};
                         results.forEach(r => counts[r] = (counts[r]||0) + 1);
-                        let resHtml = Object.entries(counts).map(([name, count]) => `<div style="font-size: 1.5em; font-weight: 900; color: var(--danger);">${name} : 🍺 x${count}</div>`).join('');
-                        windowEl.innerHTML = `<div style="display:flex; flex-direction:column; gap:8px;">${resHtml}</div>`;
+                        let resHtml = Object.entries(counts).map(([name, count]) => `<div style="font-size: 1.8em; font-weight: 900; color: var(--danger); font-family:'Orbitron';">${name} : 🩸 x${count}</div>`).join('');
+                        windowEl.innerHTML = `<div style="display:flex; flex-direction:column; gap:10px;">${resHtml}</div>`;
                     }
                     
                     setTimeout(() => {
@@ -551,9 +602,9 @@
                             let nextStatus = type === "roulette" ? "playing" : "distributing";
                             updateDoc(doc(db, "rooms", currentRoomCode), { status: nextStatus });
                         }
-                    }, 3500); // Laisse le résultat affiché ~3.5s
+                    }, 3500); 
                 }
-            }, 100);
+            }, 80);
         }
 
         window.startGame = async () => {
@@ -563,17 +614,16 @@
             let nextEvt = localRoomData.nextForcedEvent || null;
             let roundsCounter = (localRoomData.roundsSinceLastEvent || 0) + 1;
             
-            // PROBABILITÉS D'ÉVÉNEMENTS
-            if (nextEvt === null && roundsCounter >= 10) {
+            if (nextEvt === null && roundsCounter >= 2) { 
                 let rand = Math.random(); 
-                if (rand < 0.50) {
-                    nextEvt = "happy_hour";        // 20%
-                } else if (rand < 0.15) { 
-                    nextEvt = "green_carpet";      // 15%
-                } else if (rand < 0.25) {
-                    nextEvt = "russian_roulette";  // 10%
-                } else if (rand < 0.325) {
-                    nextEvt = "red_alert";         // 7.5%
+                if (rand < 0.076) {
+                    nextEvt = "happy_hour";        
+                } else if (rand < 0.133) { 
+                    nextEvt = "green_carpet";      
+                } else if (rand < 0.171) {
+                    nextEvt = "russian_roulette";  
+                } else if (rand < 0.200) {
+                    nextEvt = "red_alert";         
                 }
             }
             if (nextEvt) roundsCounter = 0;
@@ -613,7 +663,6 @@
 
         function updateThemeAndBanner(data) {
             document.body.className = data.currentEvent ? `theme-${data.currentEvent.replace('_', '-')}` : '';
-            // Réapplique les classes importantes pour l'orientation
             checkOrientation();
             document.body.classList.toggle('is-mobile-game', document.getElementById('screen-mobile-game').classList.contains('active'));
 
@@ -622,10 +671,10 @@
             
             if (data.currentEvent) {
                 let msg = "";
-                if (data.currentEvent === "happy_hour") msg = "🍻 HAPPY HOUR : TOUTES LES GORGÉES SONT DOUBLÉES ! 🍻";
-                if (data.currentEvent === "red_alert") msg = "🚨 ALERTE ROUGE : LA MOINDRE DÉFAITE = CUL SEC ! 🚨";
-                if (data.currentEvent === "green_carpet") msg = "🎰 TAPIS VERT : OBLIGATION DE TIRER JUSQU'À 16 ! 🎰";
-                if (data.currentEvent === "russian_roulette") msg = `☠️ ROULETTE RUSSE : TOUTES VOS GORGÉES GAGNÉES VONT VERS ${data.eventTarget || "?"} ! ☠️`;
+                if (data.currentEvent === "happy_hour") msg = "🩸 HAPPY HOUR : TOUTES LES GORGÉES SONT DOUBLÉES 🩸";
+                if (data.currentEvent === "red_alert") msg = "🚨 ALERTE ROUGE : LA MOINDRE DÉFAITE = CUL SEC 🚨";
+                if (data.currentEvent === "green_carpet") msg = "🎰 TAPIS VERT : OBLIGATION DE TIRER JUSQU'À 16 🎰";
+                if (data.currentEvent === "russian_roulette") msg = `☠️ ROULETTE RUSSE : TOUTES LES GORGÉES GAGNÉES VONT VERS ${data.eventTarget || "?"} ☠️`;
                 
                 if(tvBanner) { tvBanner.innerText = msg; tvBanner.classList.add('active'); }
                 if(mobileBanner) { mobileBanner.innerText = msg; mobileBanner.classList.add('active'); }
@@ -657,23 +706,23 @@
                 const isCurrent = (index === data.currentTurnIndex && !isFin && !isDist && !data.dealerPlaying && data.status === "playing");
                 const isTarget = (data.currentEvent === "russian_roulette" && p.replace("_split", "") === data.eventTarget);
                 
-                let stateText = state === 'bust' ? "💥 BRÛLÉ" : state === 'stand' ? "✅ RESTE" : state === 'left' ? "❌ PARTI" : "";
+                let stateText = state === 'bust' ? "💀 BRÛLÉ" : state === 'stand' ? "🔒 RESTE" : state === 'left' ? "❌ PARTI" : "";
                 if (data.doubled?.[p]) stateText += " (x2)";
                 
-                if (isDist) stateText = "🤫 Décision...";
+                if (isDist) stateText = "DÉCISION...";
                 else if (isFin && data.results?.[p]) {
                     const res = data.results[p];
-                    if (res.culSec) stateText = "🚨 CUL SEC !";
-                    else if (res.take > 0 || res.give > 0) stateText = (res.take > 0 ? `🍺 +${res.take} ` : "") + (res.give > 0 ? `🎁 ${res.give}` : "");
+                    if (res.culSec) stateText = "🚨 CUL SEC";
+                    else if (res.take > 0 || res.give > 0) stateText = (res.take > 0 ? `🩸 +${res.take} ` : "") + (res.give > 0 ? `🎯 ${res.give}` : "");
                     else stateText = "🛡️ SAUVÉ";
                 }
 
                 newPlayersAreaHtml += `
                     <div class="player-mat ${isCurrent ? 'active-turn' : ''} ${['bust', 'left'].includes(state) ? 'bust' : ''} ${isTarget ? 'target' : ''}">
                         <h3>${p.replace("_split", " (Split)")}</h3>
-                        <div style="color:var(--gold); font-weight:bold; font-size:0.85em; height:16px; margin-bottom:5px;">${stateText}</div>
+                        <div style="color:var(--danger); font-weight:900; font-size:0.85em; height:16px; margin-bottom:10px; font-family:'Orbitron'; letter-spacing:1px;">${stateText}</div>
                         <div class="cards-container">${hand.map((c, i) => createHtmlCard(c, false, i, hand.length)).join('')}</div>
-                        <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); background:#000; padding:4px 15px; border-radius:20px; border:1px solid var(--gold); font-weight:bold; white-space:nowrap;">${displayScore(hand)}</div>
+                        <div style="position:absolute; bottom:-12px; left:50%; transform:translateX(-50%); background:#000; padding:4px 15px; border:1px solid #333; font-weight:bold; white-space:nowrap;">${displayScore(hand)}</div>
                     </div>`;
             });
 
@@ -689,10 +738,10 @@
             document.getElementById('new-round-btn').style.display = isFin ? "inline-block" : "none";
             const msgEl = document.getElementById('tv-result-msg');
             
-            if (data.status === "rolling") { msgEl.innerText = "Tirage au sort en cours... 🎰"; msgEl.style.color = "var(--danger)"; }
-            else if (data.dealerPlaying) { msgEl.innerText = "La banque dévoile son jeu..."; msgEl.style.color = "#fff"; }
-            else if (isDist) { msgEl.innerText = "Distribution secrète en cours... 🤫"; msgEl.style.color = "#fff"; }
-            else if (isFin) { msgEl.innerText = "Fin de manche. 🍻"; msgEl.style.color = "var(--gold)"; }
+            if (data.status === "rolling") { msgEl.innerText = "TIRAGE EN COURS..."; msgEl.style.color = "var(--danger)"; }
+            else if (data.dealerPlaying) { msgEl.innerText = "LA BANQUE JOUE..."; msgEl.style.color = "#fff"; }
+            else if (isDist) { msgEl.innerText = "ATTRIBUTION DES GORGÉES..."; msgEl.style.color = "#fff"; }
+            else if (isFin) { msgEl.innerText = "MANCHE TERMINÉE"; msgEl.style.color = "var(--danger)"; }
             else msgEl.innerText = ""; 
         }
 
@@ -749,10 +798,10 @@
                 else if (pScore < dScore) { outcome = "loss"; take = 2; }
                 else { outcome = "tie"; take = 1; give = 1; }
 
-                if (data.doubled?.[p]) { take *= 2; give *= 2; }
-
-                if (data.currentEvent === "happy_hour") { take *= 2; give *= 2; }
+                /* PRISE EN COMPTE EFFECTIVE DES ÉVÉNEMENTS SUR LES GORGÉES */
                 if (data.currentEvent === "green_carpet" && isPlayerBJNatural) give = 10;
+                if (data.doubled?.[p]) { take *= 2; give *= 2; }
+                if (data.currentEvent === "happy_hour") { take *= 2; give *= 2; }
                 
                 let culSec = false;
                 if (data.currentEvent === "red_alert" && ["bust", "loss", "bj_dealer"].includes(outcome)) culSec = true;
@@ -783,7 +832,11 @@
             }
 
             Object.keys(realResults).forEach(realP => {
-                if (streaks[realP] >= 5) { realResults[realP].culSec = true; streaks[realP] = 0; if (results[realP]) results[realP].culSec = true; }
+                if (streaks[realP] >= 5) { 
+                    realResults[realP].culSec = true; 
+                    streaks[realP] = 0; 
+                    if (results[realP]) results[realP].culSec = true; 
+                }
             });
 
             let finalUpdates = {
@@ -791,7 +844,6 @@
                 results, realResults, streaks, poolToGive, receivedSips
             };
 
-            // Trigger la machine à sous si nécessaire, sinon passe direct en distribution
             if (victims.length > 0) {
                 finalUpdates.status = "rolling";
                 finalUpdates.rollingType = "dealer_bj";
@@ -840,8 +892,8 @@
                         else if (["playing", "distributing", "finished", "rolling"].includes(localRoomData.status)) updateGameMobile();
                         else { window.showScreen('screen-mobile-lobby'); document.getElementById('mobile-drink-modal').style.display = "none"; document.getElementById('mobile-distrib-modal').style.display = "none"; }
                     });
-                } else document.getElementById('error-msg').innerText = "Session introuvable.";
-            } catch (error) { document.getElementById('error-msg').innerText = "Erreur réseau."; }
+                } else document.getElementById('error-msg').innerText = "SESSION INTROUVABLE.";
+            } catch (error) { document.getElementById('error-msg').innerText = "ERREUR RÉSEAU."; }
         };
 
         function showRevealScreen(outcome) {
@@ -851,11 +903,11 @@
             const icon = document.getElementById('reveal-icon');
             
             if(["win", "bj_player", "dealer_bust"].includes(outcome)) {
-                title.innerText = "VICTOIRE"; title.style.color = "var(--success)"; icon.innerText = "🎉"; vibrate([100, 100, 100]);
+                title.innerText = "VICTOIRE"; title.style.color = "var(--success)"; title.style.textShadow = "0 0 20px var(--success)"; icon.innerText = "💀🔪"; vibrate([100, 100, 100]);
             } else if(["loss", "bust", "bj_dealer"].includes(outcome)) {
-                title.innerText = "DÉFAITE"; title.style.color = "var(--danger)"; icon.innerText = "💀"; vibrate([400, 200, 400]);
+                title.innerText = "ÉLIMINÉ"; title.style.color = "var(--danger)"; title.style.textShadow = "var(--neon-red)"; icon.innerText = "🩸"; vibrate([400, 200, 400]);
             } else {
-                title.innerText = "ÉGALITÉ"; title.style.color = "var(--gold)"; icon.innerText = "🤝"; vibrate([200]);
+                title.innerText = "ÉGALITÉ"; title.style.color = "#666"; title.style.textShadow = "none"; icon.innerText = "🛡️"; vibrate([200]);
             }
             
             modal.style.display = "flex";
@@ -880,18 +932,18 @@
 
             if (data.status === "rolling") {
                 controls.style.display = "none"; drinkModal.style.display = "none"; distribModal.style.display = "none";
-                badge.innerText = "Animation..."; badge.style.borderColor = "var(--danger)";
-                title.innerText = "🎰 Regardez l'écran TV !";
-                document.getElementById('mobile-my-cards').innerHTML = "<div style='font-size: 3em; text-align:center;'>👀📺</div>";
+                badge.innerText = "ATTENTION..."; badge.style.borderColor = "var(--danger)"; badge.style.color = "var(--danger)";
+                title.innerText = "REGARDEZ L'ÉCRAN";
+                document.getElementById('mobile-my-cards').innerHTML = "<div style='font-size: 3em; text-align:center; color:var(--danger);'>📺</div>";
                 document.getElementById('mobile-my-score').innerText = "";
                 return; 
             }
 
-            if (data.status === "playing") { drinkModal.style.display = "none"; distribModal.style.display = "none"; badge.innerText = "En cours"; badge.style.borderColor = "var(--gold)"; }
+            if (data.status === "playing") { drinkModal.style.display = "none"; distribModal.style.display = "none"; badge.innerText = "EN COURS"; badge.style.borderColor = "#333"; badge.style.color="#888";}
 
             if (data.dealerHand && data.dealerHand.length > 0) {
                 const hideSecond = (data.status !== "finished" && data.status !== "distributing" && !data.dealerPlaying);
-                document.getElementById('mobile-bank-score').innerText = hideSecond ? `Banque : ${displayScore([data.dealerHand[0]])}` : `Banque : ${displayScore(data.dealerHand)}`;
+                document.getElementById('mobile-bank-score').innerText = hideSecond ? `BANQUE : ${displayScore([data.dealerHand[0]])}` : `BANQUE : ${displayScore(data.dealerHand)}`;
             }
 
             if (data.status === "distributing") {
@@ -900,17 +952,17 @@
 
                 if (amountToGive > 0) {
                     vibrate([150, 100, 150]);
-                    document.getElementById('distrib-modal-title').innerText = "DISTRIBUTION";
-                    document.getElementById('distrib-modal-text').innerText = `Il vous reste ${amountToGive} gorgée(s) à donner :`;
+                    document.getElementById('distrib-modal-title').innerText = "EXÉCUTION";
+                    document.getElementById('distrib-modal-text').innerText = `VOUS AVEZ ${amountToGive} GORGÉE(S) À DISTRIBUER :`;
                     
                     let btnContainer = document.getElementById('distrib-buttons-container'); btnContainer.innerHTML = "";
                     [...new Set(data.players.filter(p => data.playerStates[p] !== "left").map(p => p.replace("_split", "")))].forEach(p => {
-                        if (p !== myPseudo) btnContainer.innerHTML += `<button class="btn-give" onclick="window.giveSipTo('${p}')">Donner à ${p}</button>`;
+                        if (p !== myPseudo) btnContainer.innerHTML += `<button class="btn-give" onclick="window.giveSipTo('${p}')">CIBLER ${p}</button>`;
                     });
                     distribModal.style.display = "flex";
                 } else {
                     document.getElementById('distrib-modal-title').innerText = "ATTENTE";
-                    document.getElementById('distrib-modal-text').innerText = "Les autres joueurs distribuent leurs gorgées...";
+                    document.getElementById('distrib-modal-text').innerText = "LES AUTRES JOUEURS CIBLENT LEURS VICTIMES...";
                     document.getElementById('distrib-buttons-container').innerHTML = "";
                     distribModal.style.display = "flex";
                 }
@@ -919,20 +971,24 @@
 
             if (data.status === "finished" && data.realResults?.[myPseudo]) {
                 const res = data.realResults[myPseudo], received = data.receivedSips?.[myPseudo] || 0;
-                let msgTitle = "VERDICT", msgText = "", totalTake = res.take + received;
+                let msgTitle = "SANCTION", msgText = "", totalTake = res.take + received;
                 const textEl = document.getElementById('drink-modal-text'), iconEl = document.getElementById('drink-modal-icon');
                 
                 if (totalTake > 0) {
-                    vibrate([400]); iconEl.innerText = "🥃";
-                    msgText += `<span class="take-color" style="font-size: 26px;">Buvez ${totalTake} gorgée(s) !</span>\n`;
-                    if(received > 0 && res.take > 0) msgText += `<small style="font-size: 14px; font-weight:normal; opacity:0.7">(${res.take} de la table + ${received} reçues)</small>\n`;
-                    else if (received > 0) msgText += `<small style="font-size: 14px; font-weight:normal; opacity:0.7">(Les autres joueurs vous ont ciblé !)</small>\n`;
-                } else { iconEl.innerText = "👑"; msgText = "Vous êtes sauvé !"; }
+                    vibrate([400]); iconEl.innerText = "🩸";
+                    msgText += `<span class="take-color" style="font-size: 26px;">BUVEZ ${totalTake} FOIS</span>\n`;
+                    if(received > 0 && res.take > 0) msgText += `<small style="font-size: 14px; font-weight:normal; opacity:0.7">(${res.take} DU JEU + ${received} REÇUES)</small>\n`;
+                    else if (received > 0) msgText += `<small style="font-size: 14px; font-weight:normal; opacity:0.7">(VOUS AVEZ ÉTÉ CIBLÉ)</small>\n`;
+                } else { iconEl.innerText = "🛡️"; msgText = "AUCUNE SANCTION."; }
+
+                if (data.currentEvent === "russian_roulette" && myPseudo === data.eventTarget && res.take > 0) {
+                    msgText += `\n<small style="color:var(--danger); font-weight:bold;">☠️ ROULETTE RUSSE : VOUS ABSORBEZ TOUTES LES GORGÉES !</small>`;
+                }
 
                 if (res.culSec) {
                     vibrate([400, 200, 400, 200, 800]); iconEl.innerText = "💀";
                     msgTitle = "CUL SEC !";
-                    msgText = `Sanction de la partie.\n\n${msgText}`;
+                    msgText = `SANCTION MAXIMALE.\n\n${msgText}`;
                 }
 
                 document.getElementById('drink-modal-title').innerText = msgTitle;
@@ -945,7 +1001,7 @@
             if (data.status === "playing" && data.players[data.currentTurnIndex] === myPseudo + "_split") displayP = myPseudo + "_split";
 
             const myHand = data.playerHands?.[displayP];
-            if (!myHand) { title.innerText = "Patience..."; controls.style.display = "none"; document.getElementById('mobile-my-cards').innerHTML = ""; document.getElementById('mobile-my-score').innerText = ""; return; }
+            if (!myHand) { title.innerText = "PATIENCE..."; controls.style.display = "none"; document.getElementById('mobile-my-cards').innerHTML = ""; document.getElementById('mobile-my-score').innerText = ""; return; }
 
             const isMyTurn = (data.players[data.currentTurnIndex] === displayP && data.status === "playing");
             const myState = data.playerStates[displayP];
@@ -955,16 +1011,16 @@
             
             let currentScore = calculateScore(myHand);
             let currentDisplayScore = displayScore(myHand);
-            document.getElementById('mobile-my-score').innerText = `Score : ${currentDisplayScore} ${displayP.includes("_split") ? "(Split)" : ""}`;
+            document.getElementById('mobile-my-score').innerText = `${currentDisplayScore} ${displayP.includes("_split") ? "(SPLIT)" : ""}`;
 
-            if (myState === "bust") { title.innerText = "💥 BRÛLÉ !"; title.style.color = "var(--danger)"; controls.style.display = "none"; badge.innerText = "Perdu"; badge.style.borderColor = "var(--danger)";}
-            else if (myState === "stand") { title.innerText = "✅ RESTE"; title.style.color = "var(--gold)"; controls.style.display = "none"; badge.innerText = "En attente"; badge.style.borderColor = "var(--gold)";}
+            if (myState === "bust") { title.innerText = "💀 BRÛLÉ"; title.style.color = "var(--danger)"; controls.style.display = "none"; badge.innerText = "ÉLIMINÉ"; badge.style.borderColor = "var(--danger)"; badge.style.color="var(--danger)";}
+            else if (myState === "stand") { title.innerText = "🔒 RESTE"; title.style.color = "#888"; controls.style.display = "none"; badge.innerText = "EN ATTENTE"; badge.style.borderColor = "#333"; badge.style.color="#888";}
             else if (isMyTurn) {
-                vibrate([80]); title.innerText = "C'est à vous !"; title.style.color = "var(--gold)"; controls.style.display = "grid"; badge.innerText = "Votre Tour"; badge.style.background = "var(--gold)"; badge.style.color = "#000";
+                vibrate([80]); title.innerText = "À VOUS DE JOUER"; title.style.color = "#fff"; controls.style.display = "grid"; badge.innerText = "VOTRE TOUR"; badge.style.background = "var(--danger)"; badge.style.color = "#000"; badge.style.borderColor="var(--danger)";
                 
                 const btnStand = document.getElementById('btn-stand');
                 if (data.currentEvent === "green_carpet" && currentScore < 16) {
-                    btnStand.style.opacity = "0.5"; btnStand.style.pointerEvents = "none"; btnStand.innerText = "MIN 16";
+                    btnStand.style.opacity = "0.2"; btnStand.style.pointerEvents = "none"; btnStand.innerText = "MIN 16";
                 } else {
                     btnStand.style.opacity = "1"; btnStand.style.pointerEvents = "auto"; btnStand.innerText = "RESTER";
                 }
@@ -972,9 +1028,9 @@
                 document.getElementById('btn-double').style.display = myHand.length === 2 ? "block" : "none";
                 document.getElementById('btn-split').style.display = (myHand.length === 2 && myHand[0].value === myHand[1].value && !displayP.includes("_split")) ? "block" : "none";
             } else {
-                let waitN = data.players[data.currentTurnIndex] ? data.players[data.currentTurnIndex].replace("_split", " (Split)") : "Banque";
-                title.innerText = `Tour de ${waitN}...`; title.style.color = "white"; controls.style.display = "none";
-                badge.innerText = "Observation"; badge.style.background = "transparent"; badge.style.color = "white";
+                let waitN = data.players[data.currentTurnIndex] ? data.players[data.currentTurnIndex].replace("_split", " (Split)") : "BANQUE";
+                title.innerText = `TOUR DE ${waitN}`; title.style.color = "#555"; controls.style.display = "none";
+                badge.innerText = "OBSERVATION"; badge.style.background = "transparent"; badge.style.color = "#555";
             }
         }
 
