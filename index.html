@@ -44,13 +44,11 @@
         }
         body::before {
             top: -10%; left: -10%; width: 50vw; height: 50vw;
-            /* Remplacement du filter: blur() par un dégradé doux pour les performances GPU */
             background: radial-gradient(circle, rgba(121, 40, 202, 0.4) 0%, transparent 60%);
             animation: float1 10s ease-in-out infinite alternate;
         }
         body::after {
             bottom: -10%; right: -10%; width: 60vw; height: 60vw;
-            /* Remplacement du filter: blur() par un dégradé doux pour les performances GPU */
             background: radial-gradient(circle, rgba(255, 0, 128, 0.3) 0%, transparent 60%);
             animation: float2 12s ease-in-out infinite alternate;
         }
@@ -300,28 +298,6 @@
         let mySelectedBet = 0;
         let betConfirmed = false;
         
-        // --- GESTION AUDIO (Fallback pour iOS) ---
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
-        
-        function playSound(freq, duration, type='sine') {
-            try {
-                if (!audioCtx) audioCtx = new AudioContext();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = type; osc.frequency.value = freq;
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-                osc.stop(audioCtx.currentTime + duration);
-            } catch(e) {}
-        }
-        
-        const vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
-        const hapticHit = () => { vibrate(50); playSound(400, 0.1, 'triangle'); };
-        const hapticBust = () => { vibrate([200, 200]); playSound(150, 0.4, 'sawtooth'); };
-        const hapticWin = () => { vibrate([100, 50, 100]); playSound(600, 0.1, 'square'); setTimeout(() => playSound(800, 0.2, 'square'), 100); };
-
         function calculateScore(hand) {
             let score = 0; let aces = 0;
             if(!hand) return 0;
@@ -481,7 +457,7 @@
 
         async function confirmBet() {
             if (mySelectedBet === 0 || betConfirmed) return;
-            betConfirmed = true; hapticHit();
+            betConfirmed = true;
             
             document.getElementById('btn-confirm-bet').style.display = "none";
             document.getElementById('bet-accepted-msg').style.display = "block";
@@ -608,23 +584,23 @@
         }
 
         async function hit() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; 
             document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             let deck = [...data.deck], hand = [...data.playerHands[target]]; hand.push(deck.pop());
             let updates = { deck, [`playerHands.${target}`]: hand };
-            if (calculateScore(hand) > 21) { updates[`playerStates.${target}`] = "bust"; updates.currentTurnIndex = data.currentTurnIndex + 1; hapticBust(); }
+            if (calculateScore(hand) > 21) { updates[`playerStates.${target}`] = "bust"; updates.currentTurnIndex = data.currentTurnIndex + 1; }
             await updateDoc(doc(db, "rooms", currentRoomCode), updates);
         }
 
         async function stand() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; 
             document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`playerStates.${target}`]: "stand", currentTurnIndex: data.currentTurnIndex + 1 });
         }
 
         async function double() {
             let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return;
-            let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; hapticHit();
+            let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; 
             document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             let deck = [...data.deck]; hand.push(deck.pop());
             await updateDoc(doc(db, "rooms", currentRoomCode), { deck, [`playerHands.${target}`]: hand, [`playerStates.${target}`]: calculateScore(hand) > 21 ? "bust" : "stand", [`doubled.${target}`]: true, currentTurnIndex: data.currentTurnIndex + 1 });
@@ -733,14 +709,12 @@
                 const received = data.receivedSips?.[myPseudo] || 0;
                 
                 if (received > 0) {
-                    hapticBust();
                     document.getElementById('drink-modal-text').innerText = `DANS LE GOSIER :
 ${received} GORGÉE(S) !`;
                     document.getElementById('drink-modal-icon').innerText = "💀";
                     document.getElementById('drink-modal-title').innerText = "CUL SEC !";
                     document.getElementById('drink-modal-title').style.color = "var(--secondary)";
                 } else {
-                    hapticWin();
                     document.getElementById('drink-modal-text').innerText = `Tranquille pour cette fois.`;
                     document.getElementById('drink-modal-icon').innerText = "😎";
                     document.getElementById('drink-modal-title').innerText = "SAUVÉ";
@@ -752,7 +726,7 @@ ${received} GORGÉE(S) !`;
 
         async function giveSipTo(targetPlayer, amount) {
             let data = localRoomData, left = data.poolToGive?.[myPseudo] || 0;
-            if (left < amount) return; hapticHit();
+            if (left < amount) return; 
             await updateDoc(doc(db, "rooms", currentRoomCode), { 
                 [`poolToGive.${myPseudo}`]: left - amount, 
                 [`receivedSips.${targetPlayer}`]: (data.receivedSips?.[targetPlayer] || 0) + amount 
