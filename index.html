@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#09090e">
-    <title>BLACKOUT 21 - AFTER PARTY</title>
+    <title>BLACKOUT 21</title>
+    <!-- Preload Firebase pour accélérer le chargement initial sur mobile -->
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js">
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js">
 
     <!-- PWA & Mobile Home Screen -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -61,7 +64,7 @@
 
         #app-container { width: 100%; height: 100%; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10; }
 
-        .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); overflow-y: auto; }
+        .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; animation: popIn 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); overflow-y: auto; }
         .screen.active { display: flex; }
         
         .lobby-box { 
@@ -83,7 +86,7 @@
         
         .btn { 
             padding: 18px 24px; font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; margin: 8px 0; width: 100%; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 20px; border: none;
+            cursor: pointer; margin: 8px 0; width: 100%; transition: all 0.1s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 20px; border: none;
         }
         .btn:active { transform: scale(0.92); }
         
@@ -97,7 +100,7 @@
             padding: 18px; font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; 
             border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); border-radius: 16px;
             color: #fff; margin: 10px 0 20px 0; width: 100%; box-sizing: border-box; text-align: center; 
-            text-transform: uppercase; outline: none; transition: 0.3s;
+            text-transform: uppercase; outline: none; transition: 0.15s;
         }
         input:focus { border-color: var(--secondary); background: rgba(255,0,128,0.05); box-shadow: 0 0 20px rgba(255,0,128,0.2); transform: scale(1.02); }
         input::placeholder { color: #555; font-weight: 600; }
@@ -109,7 +112,7 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             font-size: 32px; font-weight: 900; 
             box-shadow: -10px 10px 20px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.5); 
-            border: none; position: relative; margin-left: -30px; transition: transform 0.3s;
+            border: none; position: relative; margin-left: -30px; transition: transform 0.15s;
         }
         .card.red { color: #FF0055; }
         .card.hidden { 
@@ -122,26 +125,25 @@
         .game-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; width: 100%; }
         .btn-game { 
             padding: 16px 5px; font-size: 15px; font-weight: 800; font-family: 'Outfit'; border: none; color: white; 
-            text-transform: uppercase; cursor: pointer; transition: 0.2s; border-radius: 16px;
+            text-transform: uppercase; cursor: pointer; transition: 0.1s; border-radius: 16px;
         }
         .btn-game:active { transform: scale(0.92); }
         .btn-hit { background: var(--secondary); box-shadow: 0 4px 15px rgba(255,0,128,0.3); }
         .btn-stand { background: rgba(255, 255, 255, 0.15); }
-        .btn-double { background: var(--tertiary); color: #fff; box-shadow: 0 4px 15px rgba(255,140,0,0.3); }
-        .btn-split { background: var(--primary); color: #fff; grid-column: span 2; box-shadow: 0 4px 15px rgba(121,40,202,0.3); }
+        .btn-double { background: var(--tertiary); color: #fff; grid-column: span 2; box-shadow: 0 4px 15px rgba(255,140,0,0.3); }
         
         .fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 14, 0.95); backdrop-filter: blur(20px); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 25px; box-sizing: border-box; text-align: center; }
         
         .distrib-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
         .distrib-name { font-size: 18px; font-weight: 800; text-transform: uppercase; }
-        .btn-give { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px 15px; font-size: 14px; font-family: 'Outfit'; font-weight: 800; cursor: pointer; transition: 0.2s; border-radius: 12px; margin-left: 5px; }
+        .btn-give { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px 15px; font-size: 14px; font-family: 'Outfit'; font-weight: 800; cursor: pointer; transition: 0.1s; border-radius: 12px; margin-left: 5px; }
         .btn-give:active { background: #fff; color: #000; transform: scale(0.95); }
         .btn-give-all { background: var(--primary); color: #fff; }
         
         .bet-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; margin: 25px 0; }
         .bet-btn { 
             background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.1); color: #fff; font-family: 'Outfit'; font-size: 22px; font-weight: 800;
-            padding: 15px 0; cursor: pointer; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 16px;
+            padding: 15px 0; cursor: pointer; transition: all 0.1s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 16px;
         }
         .bet-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
         .bet-btn.selected { border-color: transparent; color: #fff; background: var(--gradient-party); box-shadow: 0 8px 20px rgba(255,0,128,0.4); transform: scale(1.1); z-index: 2;}
@@ -154,7 +156,15 @@
         .highlight-text { background: var(--gradient-party); -webkit-background-clip: text; color: transparent; }
 
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-    </style>
+    
+        .event-banner {
+            background: linear-gradient(90deg, var(--secondary), var(--tertiary));
+            color: #fff; padding: 8px 15px; border-radius: 12px; font-weight: 900; font-size: 14px;
+            text-transform: uppercase; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(255,0,128,0.4);
+            animation: pulse-event 2s infinite; text-align: center;
+        }
+        @keyframes pulse-event { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+</style>
 </head>
 <body>
 
@@ -231,7 +241,8 @@
     <div id="screen-mobile-game" class="screen">
         <div style="width: 100%; max-width: 450px; padding: 10px;">
             
-            <div class="dealer-area">
+            <div id="active-event-banner" class="event-banner" style="display:none;"></div>
+                <div class="dealer-area">
                 <div id="mobile-bank-score" style="font-weight:800; font-size:1.1em; color:#aaa; text-align:center;">SCORE : --</div>
                 <div id="mobile-bank-cards" class="cards-container" style="min-height: 90px; transform: scale(0.85); margin-top:5px;"></div>
             </div>
@@ -249,7 +260,6 @@
                 <button id="btn-action-hit" class="btn-game btn-hit">CARTE</button>
                 <button id="btn-action-stand" class="btn-game btn-stand">RESTER</button>
                 <button id="btn-action-double" class="btn-game btn-double">DOUBLE (x2)</button>
-                <button id="btn-action-split" class="btn-game btn-split">SPLIT</button>
             </div>
             
             <button id="btn-next-round" class="btn btn-main" style="display:none; margin-top:30px;">ON REMET ÇA 🔄</button>
@@ -327,13 +337,6 @@
             while (score > 21 && aces > 0) { score -= 10; aces -= 1; }
             return score;
         }
-        
-        // Nouvelle fonction pour comparer la valeur des cartes pour le Split
-        function getCardValue(val) {
-            if (['J', 'Q', 'K'].includes(val)) return 10;
-            if (val === 'A') return 11;
-            return parseInt(val);
-        }
 
         function createHtmlCard(card, hidden = false) {
             if (hidden) return `<div class="card hidden"></div>`;
@@ -362,7 +365,6 @@
         document.getElementById('btn-action-hit').addEventListener('click', hit);
         document.getElementById('btn-action-stand').addEventListener('click', stand);
         document.getElementById('btn-action-double').addEventListener('click', double);
-        document.getElementById('btn-action-split').addEventListener('click', split);
 
         // --- GÉNÉRATION DES BOUTONS DE PARI ---
         const betGrid = document.getElementById('bet-grid');
@@ -380,10 +382,12 @@
             currentRoomCode = "";
             for (let i = 0; i < 4; i++) currentRoomCode += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 26));
             
+            document.getElementById('action-create-room').innerText = "CRÉATION... ⏳";
             await setDoc(doc(db, "rooms", currentRoomCode), { 
                 status: "waiting", players: [myPseudo], host: myPseudo, bets: {}
             });
             
+            document.getElementById('action-create-room').innerText = "C'EST PARTI 🚀";
             document.getElementById('display-room-code').innerText = currentRoomCode;
             listenToRoom();
         }
@@ -394,16 +398,25 @@
             if (!myPseudo || currentRoomCode.length !== 4) return;
 
             try {
+                document.getElementById('action-join-room').innerText = "RECHERCHE... ⏳";
                 const roomSnap = await getDoc(doc(db, "rooms", currentRoomCode));
                 if (roomSnap.exists()) {
                     let data = roomSnap.data();
                     if (data.host === myPseudo) isHost = true;
                     
                     await updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayUnion(myPseudo) });
+                    document.getElementById('action-create-room').innerText = "C'EST PARTI 🚀";
+            document.getElementById('action-join-room').innerText = "S'INFILTRER 🤫";
                     document.getElementById('display-room-code').innerText = currentRoomCode;
                     listenToRoom();
-                } else document.getElementById('error-msg').innerText = "CODE INVALIDE BRO.";
-            } catch (error) { document.getElementById('error-msg').innerText = "ERREUR RÉSEAU."; }
+                } else {
+                    document.getElementById('action-join-room').innerText = "S'INFILTRER 🤫";
+                    document.getElementById('error-msg').innerText = "CODE INVALIDE BRO.";
+                }
+            } catch (error) { 
+                document.getElementById('action-join-room').innerText = "S'INFILTRER 🤫";
+                document.getElementById('error-msg').innerText = "ERREUR RÉSEAU."; 
+            }
         }
 
         function listenToRoom() {
@@ -440,7 +453,7 @@
                 document.getElementById('mobile-drink-modal').style.display = 'none';
                 
                 if (isHost) {
-                    let activePlayers = data.players.filter(p => !p.includes("_split"));
+                    let activePlayers = data.players;
                     let allBet = activePlayers.every(p => data.bets && data.bets[p]);
                     if (allBet && activePlayers.length > 0) dealCards(activePlayers);
                 }
@@ -481,11 +494,29 @@
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`bets.${myPseudo}`]: mySelectedBet });
         }
 
+        
         async function startGame() {
             if (!isHost) return;
             betConfirmed = false;
-            await updateDoc(doc(db, "rooms", currentRoomCode), { status: "betting", bets: {}, poolToGive: {}, receivedSips: {} });
+            
+            // 20% de chance d'avoir un event (1 sur 5 en moyenne)
+            let activeEvent = null;
+            let eventTarget = null;
+            if (Math.random() < 0.2) {
+                const events = ["roulette", "happy_hour", "duel", "bank_bust"];
+                activeEvent = events[Math.floor(Math.random() * events.length)];
+                if (activeEvent === "roulette") {
+                    let pList = localRoomData.players;
+                    eventTarget = pList[Math.floor(Math.random() * pList.length)];
+                }
+            }
+
+            await updateDoc(doc(db, "rooms", currentRoomCode), { 
+                status: "betting", bets: {}, poolToGive: {}, receivedSips: {},
+                activeEvent: activeEvent, eventTarget: eventTarget, duelWinner: null 
+            });
         }
+
 
         async function dealCards(activePlayers) {
             let deck = [];
@@ -501,7 +532,6 @@
             let playerHands = {}, playerStates = {};
             activePlayers.forEach(p => { playerHands[p] = [deck.pop(), deck.pop()]; playerStates[p] = "playing"; });
             
-            // FIX MAJEUR: On écrase `data.players` avec `activePlayers` pour supprimer les mains fantômes du tour précédent
             await updateDoc(doc(db, "rooms", currentRoomCode), {
                 players: activePlayers,
                 status: "playing", deck, playerHands, playerStates, 
@@ -514,24 +544,34 @@
             await updateDoc(doc(db, "rooms", currentRoomCode), { dealerPlaying: true });
             let data = localRoomData, dHand = [...data.dealerHand], deck = [...data.deck];
             
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 50));
             while(calculateScore(dHand) < 17) {
-                await new Promise(r => setTimeout(r, 1000));
+                await new Promise(r => setTimeout(r, 50));
                 dHand.push(deck.pop());
                 await updateDoc(doc(db, "rooms", currentRoomCode), { dealerHand: dHand, deck: deck });
             }
-            await new Promise(r => setTimeout(r, 1000));
+            await new Promise(r => setTimeout(r, 50));
+            
             
             data = localRoomData;
             let dScore = calculateScore(dHand), isDealerBJ = (dHand.length === 2 && dScore === 21);
             let poolToGive = {}, receivedSips = {};
             data.players.forEach(p => { receivedSips[p] = 0; poolToGive[p] = 0; });
 
+            let event = data.activeEvent;
+            let bestPlayerScore = -1;
+            let duelWinner = null;
+
             data.players.forEach(p => {
                 if (!data.playerHands[p]) return;
-                let actualPlayer = p.split("_split")[0]; 
+                let actualPlayer = p; 
                 let bet = data.bets[actualPlayer] || 1;
                 if (data.doubled?.[p]) bet *= 2; 
+
+                // Happy Hour : les mises sont doublées de base
+                if (event === "happy_hour") bet *= 2;
+                // Banqueroute du croupier : 3 gorgées direct si BJ du croupier
+                if (event === "bank_bust" && isDealerBJ) { receivedSips[actualPlayer] += 3; }
 
                 let pScore = calculateScore(data.playerHands[p]), isPlayerBJ = (data.playerHands[p].length === 2 && pScore === 21);
                 let take = 0, give = 0;
@@ -540,22 +580,47 @@
                 else if (pScore === 21 && dScore === 21) { take = 0; give = 0; }
                 else if (isPlayerBJ) { give = Math.ceil(bet * 1.5); } 
                 else if (isDealerBJ) { take = bet * 2; }
-                else if (dScore > 21) { give = bet; }
+                else if (dScore > 21) { 
+                    give = bet; 
+                    if (event === "bank_bust") give *= 2; // Banqueroute : donne 2x plus si la banque saute
+                }
                 else if (pScore > dScore) { give = bet; }
                 else if (pScore < dScore) { take = bet; }
 
-                poolToGive[actualPlayer] += give;
-                receivedSips[actualPlayer] += take; 
+                if (event === "roulette") {
+                    // Roulette russe : on ne donne rien, tout part vers la cible
+                    if (give > 0) {
+                        receivedSips[data.eventTarget] += give;
+                    }
+                    receivedSips[actualPlayer] += take;
+                } else if (event === "duel") {
+                    receivedSips[actualPlayer] += take;
+                    // On cherche le gagnant du duel (plus haut score sans sauter)
+                    if (data.playerStates[p] !== "bust" && pScore <= 21 && pScore > bestPlayerScore) {
+                        bestPlayerScore = pScore;
+                        duelWinner = actualPlayer;
+                    }
+                } else {
+                    poolToGive[actualPlayer] += give;
+                    receivedSips[actualPlayer] += take; 
+                }
             });
+
+            // Si c'est un duel, le gagnant reçoit la différence entre son score et 15 (arbitraire pour l'exemple) comme pool à donner
+            if (event === "duel" && duelWinner) {
+                poolToGive[duelWinner] += Math.max(1, bestPlayerScore - 15);
+            }
 
             await updateDoc(doc(db, "rooms", currentRoomCode), {
                 dealerHand: dHand, dealerPlayed: true, dealerPlaying: false,
                 poolToGive, receivedSips, status: "distributing"
             });
+
         }
 
         async function hit() {
             let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
+            document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             let deck = [...data.deck], hand = [...data.playerHands[target]]; hand.push(deck.pop());
             let updates = { deck, [`playerHands.${target}`]: hand };
             if (calculateScore(hand) > 21) { updates[`playerStates.${target}`] = "bust"; updates.currentTurnIndex = data.currentTurnIndex + 1; hapticBust(); }
@@ -564,42 +629,33 @@
 
         async function stand() {
             let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
+            document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`playerStates.${target}`]: "stand", currentTurnIndex: data.currentTurnIndex + 1 });
         }
 
         async function double() {
             let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return;
             let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; hapticHit();
+            document.getElementById('mobile-controls').style.display = 'none'; // Instant feedback
             let deck = [...data.deck]; hand.push(deck.pop());
             await updateDoc(doc(db, "rooms", currentRoomCode), { deck, [`playerHands.${target}`]: hand, [`playerStates.${target}`]: calculateScore(hand) > 21 ? "bust" : "stand", [`doubled.${target}`]: true, currentTurnIndex: data.currentTurnIndex + 1 });
         }
-
-        async function split() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex];
-            if (!target.startsWith(myPseudo)) return;
-            let hand = data.playerHands[target]; 
-            
-            // FIX MAJEUR: Vérification de la valeur de la carte (ex: 10 et Roi sont séparables)
-            if (hand.length !== 2 || getCardValue(hand[0].value) !== getCardValue(hand[1].value)) return; 
-            hapticWin();
-            
-            let splitCount = Object.keys(data.playerHands).filter(k => k.startsWith(myPseudo + "_split")).length;
-            let ghost = myPseudo + "_split" + (splitCount + 1); 
-            
-            let deck = [...data.deck], newP = [...data.players];
-            newP.splice(newP.indexOf(target) + 1, 0, ghost);
-            
-            await updateDoc(doc(db, "rooms", currentRoomCode), { 
-                players: newP, 
-                deck, 
-                [`playerHands.${target}`]: [hand[0], deck.pop()], 
-                [`playerHands.${ghost}`]: [hand[1], deck.pop()], 
-                [`playerStates.${ghost}`]: "playing" 
-            });
-        }
-
+        
         function updateGameUI(data) {
             const hideSecond = (data.status !== "finished" && data.status !== "distributing" && !data.dealerPlaying);
+            
+            // Affichage de l'événement
+            const banner = document.getElementById('active-event-banner');
+            if (data.activeEvent) {
+                banner.style.display = "block";
+                if (data.activeEvent === "roulette") banner.innerText = `🔫 ROULETTE RUSSE : TOUT POUR ${data.eventTarget} !`;
+                else if (data.activeEvent === "happy_hour") banner.innerText = "🍻 HAPPY HOUR : GORGÉES x2 !";
+                else if (data.activeEvent === "duel") banner.innerText = "⚔️ LE DUEL : LE MEILLEUR PUNIRA QUI IL VEUT !";
+                else if (data.activeEvent === "bank_bust") banner.innerText = "💸 BANQUEROUTE : SI LA BANQUE SAUTE, GORGÉES x2 !";
+            } else {
+                banner.style.display = "none";
+            }
+
             
             if (data.dealerHand) {
                 document.getElementById('mobile-bank-score').innerText = hideSecond ? `SCORE BANQUE : ${calculateScore([data.dealerHand[0]])}` : `SCORE BANQUE : ${calculateScore(data.dealerHand)}`;
@@ -618,7 +674,7 @@
                 document.getElementById('mobile-my-bet').innerText = actualBet;
                 
                 document.getElementById('mobile-my-cards').innerHTML = myHand.map(c => createHtmlCard(c, false)).join('');
-                document.getElementById('mobile-my-score').innerText = `${calculateScore(myHand)} ${displayP.includes("_split") ? "(SPLIT)" : ""}`;
+                document.getElementById('mobile-my-score').innerText = `${calculateScore(myHand)}`;
 
                 const isMyTurn = (data.players[data.currentTurnIndex] === displayP && data.status === "playing");
                 const indicator = document.getElementById('turn-indicator');
@@ -628,13 +684,9 @@
                     indicator.innerText = "À TOI DE JOUER 🔥"; indicator.className = "highlight-text"; 
                     document.getElementById('mobile-controls').style.display = "grid";
                     document.getElementById('btn-action-double').style.display = myHand.length === 2 ? "block" : "none";
-                    
-                    // FIX MAJEUR: Afficher le bouton split seulement si la VALEUR des 2 cartes est identique
-                    let canSplit = (myHand.length === 2 && getCardValue(myHand[0].value) === getCardValue(myHand[1].value));
-                    document.getElementById('btn-action-split').style.display = canSplit ? "block" : "none";
                 } else {
                     let currentPlayer = data.players[data.currentTurnIndex] 
-                        ? data.players[data.currentTurnIndex].split("_split")[0] + (data.players[data.currentTurnIndex].includes("_split") ? " (Split)" : "") 
+                        ? data.players[data.currentTurnIndex] 
                         : "LA BANQUE";
                     indicator.innerText = `TOUR DE : ${currentPlayer.toUpperCase()}`; indicator.style.color = "#888"; indicator.className = "";
                     document.getElementById('mobile-controls').style.display = "none";
@@ -659,7 +711,7 @@
                         document.getElementById('distrib-modal-text').innerText = `T'AS ${myAmountToGive} GORGÉE(S) À DONNER :`;
                         let btnContainer = document.getElementById('distrib-buttons-container'); btnContainer.innerHTML = "";
                         
-                        let activeOpponents = [...new Set(data.players.map(p => p.split("_split")[0]))].filter(p => p !== myPseudo);
+                        let activeOpponents = data.players.filter(p => p !== myPseudo);
                         
                         activeOpponents.forEach(p => {
                             let row = document.createElement('div');
