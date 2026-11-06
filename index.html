@@ -5,16 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#09090e">
     <title>BLACKOUT 21 - AFTER PARTY</title>
+
+    <!-- PWA & Mobile Home Screen -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BLACKOUT 21">
+    
+    <!-- Icône (Base64 intégrée pour fonctionner en fichier unique) -->
+    <link rel="apple-touch-icon" href="data:image/png;base64,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">
+    <link rel="icon" sizes="512x512" href="data:image/png;base64,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">
+    
+    <!-- Manifest pour Android -->
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkJMQUNLT1VUIDIxIC0gQUZURVIgUEFSVFkiLCAic2hvcnRfbmFtZSI6ICJCTEFDS09VVCAyMSIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDkwOTBlIiwgInRoZW1lX2NvbG9yIjogIiMwOTA5MGUiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFnQUFBQUlBQ0FJQUFBQjdHa090QUFBVnFFbEVRVlI0bk8zZFdiQmxWMTBINEwxdlRoSm9UWm9rUFdSQ0lJTUtJVVlGUkJTRTBySW9jUjZlZlBEQk42dEVaUXBKdWp0MHV0UHBkQ2ZwTkNFZ0NSQkNCa2xDQUFmVUtrY2NINnp5eVNwUVFRaVF6c1FZeEpaMGh1UER4VTZuYzIvZmMrN2RlLzNYOEgyMUhydnVYZmVjdlgrL3U5YmE5M1EvN2JaM0FMUm5NbzJlQVFBaEZxSW5BRUFNQlFEUUtGdEFBSTJ5QWdCb2xBSUFhTlNrNi9yb09RQVF3QmtBUUtOc0FRRTBTZ0VBTkVvQkFEVEtHUUJBb3lZZUFnSm9rOGRBQVJybERBQ2dVYzRBQUJwbEJRRFFLQVVBMENnRkFOQW9ad0FBamZJWUtFQ2piQUVCTk1vV0VFQ2pyQUFBR3FVQUFCcmx3K0FBR3VVTUFLQlJIZ01GYUpRekFJQkdLUUNBUmprREFHalVKSG9DTUx6VFR0dzd4cGY5Nm1NWGovRmxJVXAvY09ISzZEbkFmRWJLOTdYVEVKUkZBWkN2YklOK1hvcUJQUFgvczdBcmVnN1FkVjIzNGNROTBWTkk1eXVQdlQxNkNxQUFpTk5VNGgrYlBpQ0VBaUFkaVQ4amZVQWFDb0J4Q2YwMVVnYU1wLy9XY1FxQWdXMDhRZWlQNHN1SGxBRkRVZ0FNUStnbnBneFlPd1hBbXNqOWNKcUFWZXUvZGR4VjBYT2dQQnRQdURwNkNoenR5NGN1aVo0Q2hlbi9Xd0V3czAxeXZ3U1BhQUptb3dCWW1kd3ZsQ2JnMkJRQXk1TDcxZEFFTEtuL3BnTGdtVGJML1hvOXJBazRnZ0xnYWFLL0VXcUFSUW9BdWQ4dVRkQzQvcHZIN1k2ZUEyRTJuK0RkcDN2NDBLWFJVeUJHLzZnQ2FNL3BjcCtsUEtRSkdxTUEyaUw2V1pFYWFFZi82RVFpTk9IMDQ3M1J6T0doeDlWQS9SUkEvVVEvcTZZRzZ0Wi9Rd0hVNnd6Unp4QWVWQU9WVWdCMUV2ME1UZzNVcC8vR3hEUGdWVG5qZUgvWXdZZ2VmUHl5NkNrd0dBVlFEOUZQTW1xZ0R2M1hGVUQ1emhUOVJIaEFEUlJPQVpSTjlCTk9EWlJMQVpSSzlKTVZOVkFpQlZBZTBVKzIxRUJaK3E4cGdLS2NKZjNKMndFZFVJNythNU05MFhOZ0ptY2R2eXQ2Q2pDckE0OXZpWjRDSyt1L2Ryd0N5TjFaRTlGUGtRNDhvUWF5MW45VkFlVHRiT2xQeWU3WEFSbFRBUGtTL1ZSRERlUkpBZVJJOUZNbE5aQ2JoZWdKY0RUcFQ2MWMyN25wdjJJRmtJM251ejFvdzVjc0JmTFFmK1g0dmRGem9PdTY3dm1USzZPbkFPbDg2WW10MFZOQUFXUkE5Tk1zTlJETEdVQXc2VS9MWFAreCtpOWJBY1Q1SGxjL2ROMFhyUU9DS0lBWW9oK09vZ2JTc3dVVVFQckRzN2t2MGxNQXFibktZVG51anNUNlIwNjRKbm9PclhqQmNUdWpwd0JsK01LVDI2S24wQVFyZ0VTa1A4ek8vWktHQWtqQjFRenpjdGNrWUF0b1hDNWlXQ1BiUWVQcEgxWUFvM21oOUljaDNLY0R4bUVMYUN6U0g0YmliaHFKQWhpRjZ4V0c1WjRhUS8vd0NkZEd6NkVxTHp4dVIvUVVvR2IzUFhsNTlCVHEwVCtrQUliekl1a1A0L3U4RGhpSUxhREJTSDlJdzcwMkZBVXdERmNrcE9TT0cwVC9vQzJnTlR2SHRRZ1JQbWN2YUcyc0FOWksra01VZDk4YTlRK2VlRjMwSEFwMnpzSVYwVk9BMW4zdXFYZEVUNkZVQ21DVlJEOWtSUTJzUXYrQUFwamZ1ZElmOHZOZk9tQk96Z0RtSnYwaFQrN05lU21BK2JqQ0lHZnUwTGtvZ0RtNHRpQi83dFBaOVFlY0Fjem1QRmNWbE9PenpnTm0wQjg0Y1YvMEhBcHczc0wyNkNrQTgvbnNVOXVqcDVBN1cwQXJrLzVRSW5mdWloVEFDbHhEVUM3Mzc3SDE5OXNDV3Q3NUM5dWpwd0NzMVdmc0JTM0RDbUJaMGgvcTRGNWVqZ0pZbWlzR2F1S09YbEovLzNOc0FSM3QvSDU3OUJTQTRYMW11ajE2Q25ucHYvU2M2NlBua0pmdjdUMCtETlg2ejZrLzZIbWFMU0NBUmltQVovRHJQOVROUFg2ay9vdTJnUDdmOTdreW9BMy9ZU09vNnpvcmdNT2tQN1REL2I1SUFYU2Rxd0hhNDY3dkZFRG5Pb0JXdWZmN0x6eG5mL1FjSW4xL2YzbjBGSUJJL3o3ZEVUMkZNRTJ2QUtRLzBISU9ORjBBQUMxcnR3QmFybjNnU00ybVFYOWZrMmNBTDI3MS9RYVc4K24yRGdQNis1NjdQM29PcWIyNGsvN0FFajdkdGRVQnpXMEJTWDlnT2EzbHc2VHIrdWc1QU9Tam9VanNQLy9jZDBiUElaMlhkTnVpcHdEazdsUGR6dWdwSk5MUUZwRDBCMmJSVGxhMFVnRHR2S1BBMmpXU0dLMFVBQUJIV1poMlhmV2prVElIQnZTU2JsdDRkbzA5Nmw4QlhDRDlnVldwUGowV3VxNnZlRlQvL2dHanVxRGJGcDVqNDQzNlZ3QUFMS25tTTRBTHVxM1JMeTlRdkF1NnJlRnBOdEpZaUY2Q2pEVmVLdjJCZ2J5MDJ4cWVhV09NT3JlQVhqcVYvc0NRcWt5VnlUUjZCZ0JGcUM4dEsxd0JYRmhqVVFQaDZzdVcyaDREcmU4ZEF2Sng0WFJyZU1vTk9DcGNBUUF3aTZvZUE3MXd1aVg2OVFRcWQrRjBTM2pXRFRYcVdRSDhnUFFIa3FnbWJlb3BBQURtVWtrQlZGUElRQkhxeUJ4L0J3Q3dHaFdFWncyUGdWNVVSUlVEWmJsb3VpVTgvZFk0aXQ4Q3VtaDZXZlFVZ0VhVm5qK1Rybytld2hwVnNBd0R5bFZ5aEpiOWR3QVhQVlYyL1FLbHUraXB5OEtUME44QkFEQ2ZnZ3ZnQi8zNkQyU2czQ3dxdFFES2ZjV0IraFNhU0pOcDBVY1lBSGtvTVV1TFhBSDgwRk9YUms4QjRCbEt6S1VpQ3dDQXRTdXZBRXFzV2FBRnhhV1R6d0lDR0V4WmlWcllDdUNIU3l0WW9DbGxaVlJoQlFEQVVQcFBmZGQ3b3Vjd3E1YzlkVW4wRkFCVzlxOExWMGRQWVNibGZ4Z2NRRzRLeWRWaXRvQmU5cVJmLzRFeWxKSlh4UlFBQU1NcTQrT2dTNmxUZ0VVdmUvS1M4T1QwY2RBQUxLMkFBbmk1WC8rQkF1V2ZYWk5panFzQnlwTjF3T1orQnZEeUo5OGUvUklCck5MTG4zeDdlSW82QXdEZ2FGa1h3Q3Y4K2c4VUx1Y2N5N29BQUJoUHZtY0FPZGNtd094ZWtldEpnQlVBUUtQNmZ6dnB2ZEZ6V01LUFBIRng5QlFvek1HRGp3NzFwZGF0V3ovVWw0TEQvbVd5TjNvS1I1dEVUNEJ4RFJpTFFHWDhsNUFBS1dRWXRqbWVBYnpTL2c5UW5ReVRMY2NDQUNDQjdCNER6YkFrb1dqT2dmTHh5aWN1RHMvWUk0Y1BnNE9hTGFiL3dZT1BlclFwR3hsRnJpMGdxTmFSdi90YkIvQnNlUlhBano3eHR1Z3BRQ1dlbmZnNklBZFpwWnpIUUtGQ3kyVzl2YUFjNUpPNkdhMEFYcFZUTVVLNWp2MmJ2blZBdUh5eUxxTUNBTlp1bG56WEFTeFNBRkNQMlpOZEI5QjEzV1RhWi9GTTBvODkvdGJvS1VEWjVzMzBHZis5TTRNeHZPcUp0LzN6OGRkR3o4SUtBS3JnTjNwV1FRRkE4YVEvcTVORkFkai9nVldUL29YS0lmZjhIUUFVVFBvWExUeCtzMWdCQUtzZy9WbWorQUw0OFF6V1FWQWM2VitCOFBUemFhQlFIdWxma2NnRWRnWUFoWkgrTllsTjRPQXRvRmMvL3BiWUNVQlpwSDlsWWpNdy9nd0FtSkgwWjFnS0FNb2cvUm5jd3JUdm9vYjlINWlSOUsvWXF4OS9TMVFJVDZKL2RzYlZ6aWQ1VlJ5UkZmOW94UElZS0dSTityY2hKb2NYcGwwWE1sNXo2TTBoUHpBVVJQbzM0aldIM2h5U3d3NkJJVlBTbjdFcEFNaVI5Q2NCQlFEWmtmNmtFWE1HOEJNT0FHQVowcjlOUHhGeERHQUZBQm1SL3FUa01WREloZlJ2WHVvMHRnS0FMRWgvMGdzNEEzanRvVGRGLzlTUW5YYitacHZsdlBiUW01d0JRS04wQUlsTkhBRkFQdGF0VzI4dnFHbHBBOWtLQVBKaUhVQXlxYzhBWHZlWUF3QllnUTVvMXVzZVMzb000REZReUpHOW9JYWx5MlJiUUpBcDZ3REdwZ0FnWDZ2ckFNM0JqQ2JUNkJrQXh6RHZYcEQwTDEzS1RFNjZBdmpKeDM0djViZURPc3llNmRLL0FpbHowaFlRRkdDV1pKZit6TXNXRUpUaDJIdEIwcjhteVdMWlk2QlFqT1U2UVBwWEoxRXMyd0tDa2p3NzY2VS9xNWF1QUg3cXNkOU45cjJnWWtjbXZ2U3ZVckswbkV6dEFFRnBGdmVDcEgvRjBpU3pMU0Fva3ZSbjdSUUFRS01VQUVDakpsT1BnUUprSmsweUoxb0IvUFMzZnlmTk53S29RSnJNdEFVRTBDZ0ZBTkFvbndVRWtLTUU0V3dGQU5Bb0JRRFFLSjhHQ3BDbjBjUFpHUUJBanBLY0FmVGQyT1AxMzM3aitEOElRRlZlLyswM2poM096Z0FBR3FVQUFCcmxEQUFnVTJQbnN4VUFRS004QmdxUXJYSHoyUllRUUtac0FRRXdDZ1VBMENnRkFOQW9ad0FBbVNyK0RPQU4vL3ZiWTM4TGdDcU5uWjhlQXkzWXdZT1BEdldsMXExYlA5U1hBZ1kxWWtSUDVEL2RvRjBDREduTWlIWUdBSkN2VVNQYVUwQUFqVklBQUkxU0FBQ05jZ1lBa0s5Ukk5cGpvQUE1R3pHaWJRRUJORW9CQURUS0dRQkF2dndkQUFERFV3QUFqWnAwdmFlQUFISTFaa1E3QXdESWx6TUFBSWFuQUFBYVpRc0lJRisyZ0FBWW5nSUFhSlFQZ3dQSW1jZEFBWnJrREFDQTRTa0FnRVlwQUlCR09RTUF5TmZJL3lXa2g0RG91blhyMWtkUEFWakttQkh0TVZDQW5KWDhmd0ovL0x0dkd2dGJBRlJwN1B4MEJnQ1FxYkh6MlZOQUFJMVNBQUNOVWdBQWpYSUdBSkNwc2ZQWlk2QUEyUm8zbjIwQkFUVEtGaEJBcGp3R0NzQW9GQUJBb3hhNnZodDczSHZTemRFL0prQmg3ajNwNXJIRDJSa0FRSTRTaExQSFFBSHlOSG80T3dNQWFKUUNBR2lVTXdDQUhDVUlaeXNBZ0VZcEFJQkdKU3FBZTA1Nlg1cHZCRkNCTkprNW1Yb01GQ0F6YVpMWkZoQkFveFFBUUtNVUFFQ2pKbE5IQUFDWlNaUE02VllBZDUzOC9tVGZDNkJjeWRMU0ZoQkFvM3dhS0VCdUVzV3l6d0lDeUV1eVdMWUZCTkNvcEFYdzRaTS9rUExiQVJRblpVN2FBZ0xJU01wTXRnVUUwQ2dGQU5Bb2o0RUNaQ1ZkSmk5TXV5N2x1UFBrVzVMOWJBQmx1ZlBrVzFJR3NpMGdnRVpON0FBQjVDSnRJRnNCQURRcTlSbkF0T3Z1V084WUFPQm9kNnhQZWdEZ0RBQ2dYUjREQmNoRTZqUzJBZ0JvVk1BWndMVHJibC8vd2VnZkhDQWp0Ni8vWVBvb3RnSUFhSlFDQUdpVUFnQm9WTXdad0xUcmJuTU1BTkIxWGRmZEZuRUFNUFVZS0VBR1luTFlad0VCUkF2SzRiQXRvR25YZmVoNXQ4YjgwQURaK05EemJvMEs0VW4wejA0V0RoNThOSG9LaWF4YnR6NTZDdk1KZjJ0V040SGlYdWMyZVFvSW9GSEJCV0FYQ0doWmJBWk9wb0hmSEtCdHNRbnNNVkNBUUpFSkhIOEdjT3Z6UGhROUJZQUE0ZWtYWHdBQWhIQUdBQkFqUEg2eldBRjhNSG9kQkpCWURybVhSUUVBa0o0Q0FHalVaTnBuOFJqb0xhZmM5cHRmLzQzb1dRQ2tjTXNwdDRVZkFIUldBQUROVWdBQWpjcW9BRzQ1NWJib0tRQ01McCtzODNjQUFFbmxrN29aclFDNnJ2dEFOc1VJTUlhc1VpNnZBZ0FnR1o4R0NwQlNScEViK1g4Q0x6bmVmOHJ0MGE4SndDamVmOHJ0NFJsNzVMQUZCTkNvSEF2QUlnQ29UNGJKNWpGUWdCUXlETnNjVndBQUpMRFE5WDJHNDMybjNoSDl5Z0FNNW4ybjNoR2VxODhlaytpWGhkVmJ0MjU5OUJRWW5YZVo4V1QzR09qaGNiTkZBRkNGbTArOUl6eFJQUVlLd05PeUxnQ0xBS0IwT2VkWTFnVUF3SGp5UFFOWUhEZGxYSjRBeDNaVHJydi9pOE9Id1FHTUordUFMV0FMNktaVDc0eWVBc0RjOHMrdUFnb0FnREhrZmdhd09ONmJmWkVDSE9tOXA5NFpucHdyRGlzQWdFWVZVd0FXQVVBcFNzbXJTZDVuMUFBRktpUlgrMXZQL2tUMEhPYndXMS85OWVncEFCekw3NS8yQjlGVG1GVXhXMEFBREt1d0FpaW9Xb0VHbFpWUi9rdElnTUdVbGFpRnJRQzZybnRQVVFVTHRLTzRkQ3F2QUFBWVJKRUZVRnpOQXRVck1aY20wMUllV0FYSVdJbFpXdVFLb091NmQ1LzI0ZWdwQUh4SG9ZbFVhZ0YweGI3aVFHWEt6YUtDQ3dDQXRTamo0NkNYR3pjV1c3eEFIVzQ4N2NQaFNianE0Y1BnQU5hZzVBZ3RmZ3ZveGcwV0FVQ00wdk5ub2V2NjBzZU5HKzZLZmhtQjV0eTQ0YTd3OUZ2ajhGbEFBS3RSUVhnV3Z3VzA2RjBXQVVCQ2RXUk9KUVVBd0x6cUtZQTZDaG5JWHpWcFUvYmZBUncxYnFqbFhRR3lkY09HdThLemJxaFJ6d29BZ0xuVThCam9rZU9HRFhkSHY2UkF0VzdZY0hkNHlnMDRLbHdCNkFCZ0RQVmxpNzhEQUpoSmZXbTVFTDBFR1dXOGMyTnRSUTNFZXVmR3U4T1RiZkJSNFJiUUloMEFES1hXUEtucU1kQ2p4djVLM3pNZ3BmMGI3dzVQczVGR3RTc0FBSTZ0dHNkQWp4cjdOOTRUL1FvREJkdS84Wjd3SEJ0djFMOEMwQUhBNmxTZkhqV2ZBUndlMTlmK0xnS0R1MzdqUGVIWk5mYW9md1VBd0pKYUtRQ0xBR0IyalNSR0t3WFFOZk9PQW12VVRsWTBjUVp3ZU94cjVuMEZWbWRmQTF2L2g4ZWs2L3JvRnh3Z0h3MUZZa05iUUl2MmJmeEk5QlNBVExXV0QzVitHTnl4eDc1TmJiM0h3Q3oyYmZwSWVEb2xIbTJkQVJ3ZTEra0E0QWpYYmZwSWVDNmxIODF0QVIybUE0QkZ6YVpCdXdVQTBMaW1DNkRaMmdjT2F6a0grbmUvNEMraTV4RHNyWS84V3ZRVWdCalhicm8zZWdxUm1sNEJMR3I4Q29CbXVmY1ZRTmU1RHFBOTd2cE9BUnptYW9CMnVOOFhOZnAzQUV1T2Exd1QwSUJyTnQwYm5qYVpEQ3VBWjlBQlVEZjMrSkVVQUVDaituZTk0QytqNTVDZGl4LzUxZWdwQU1QYnUrbWowVlBJUzRzZkJyZmkyTHZaVlFLMTJidjVvK0haa3R1d0JiUTBIUUExY1VjdlNRRXN5eFVEZFhBdkw4ZGpvTWNhZTF3M1VMZzltejhhbmlUWkRpdUFGZWdBS0pmNzk5Z1V3TXBjUTFBaWQrNktGdUxQb1VzWWV6Wi9MUHFkQXVhd1ovUEh3bk1qLytFTVlOWnh0UTZBUWx5OStXUGhpVkhFc0FVMEJ4MEErWE9mems0QnpNZTFCVGx6aDg1RkFjek5GUVo1Y20vT3l4bkFhc1p1MXhsa1pyZDkvL2xIdi8rRmZ4WDl4aFhzMG9kL0pYb0swRHEva0sxYXYvOUZmeDA5aDdKZCt0QXZSMDhCMnJYNzlJOUhUNkZnemdEV3l2VUhVZHg5YTlSZmJ3VXdoTXVzQXlDdHE2VC9tbGtCRE1PMUNDbTU0d2FoQUFiamlvUTAzR3RENmZmWkFoclVGbnRCTUtaZDBuODQvYjRYL1UzMEhDcTA1YUZmaXA0QzFHYlg2WDhZUFlYYTJBSWFoU3NWaHVXZUdvTUNHSXZyRlliaWJocEpmNTB0b0RGdHRSY0VhM09sOUIrTkFraEJEY0FxaVA2eDJRSkt3WFVNODNMWEpLQUFFbkUxdyt6Y0wybjAxNTd6dDlGemFNdTJCMzh4ZWdxUXI1MW4vRkgwRkJwaUJaQ2E2eHVXNCs1SVRBRUVjSlhEczdrdjByTUZGTWwyRUhTaVAwNS9qUUlJZGJrT29HMDdwSDhjVzBEQlhQMjB6UFVmeXdvZ0Y1WUNORVgwNTZDLzVweFBScytCNzdqOHdWK0luZ0trc09PTVA0NmVBbDNYZGYxZUJaQ1pkNmdCNm5XRjZNK0pNNERzdUVPb2xXczdOMVlBK2JJVW9CcWlQMDhLSUhkcWdLS0ovcHoxZTg3OVpQUWNXTUgyQjNRQVJkcCtwdlRQbWdJb2hocWdJS0svQ1AyZWMvOHVlZzdNWWZzRFB4ODlCVGlXN1dmK1NmUVVtRlYvdFFJb3pSVTZnRnk5US9vWFJRR1VTZzJRRmRGZklnVlFOalZBT05GZkxnVlFBelZBQ05GZnVuNjNBcWpGRGpWQUtwZUwvaW9vZ05xb0FVWWwrbXZTN3o3Mzc2UG53UEIyUFBCejBWT2dOcGVmK1lub0tUQXdCVkF6TmNBZ1JIK3QrcXNVUU8xMnFnRldhNXZvcjVvQ2FJVWFZQzZpdndYOVZlY3BnSWJzUEtBR1dNRzJzMFIvS3hSQWk5UUFTeEw5cmVsM0tZQ0dYYWtKNkxxdGNyOVYvYTd6L2lGNkRnUzc4c0RQUmsrQkdGdlArdFBvS1JCSkFmQTBUZEFJdWM4aUJjRFIxRURGUkQ5SDZxOVVBQ3hqbHlhb3hSYTV6MUlVQUN2VEJJV1MreHliQW1BT21xQUljcDhaOVRzVkFQTzdTaFBrNXpLNXo1ejZuZWY5WS9RY0tOaFZCOTRRUFlYV1hYYlduMFZQZ1ZJcEFJYWhDUktUKzZ5ZEFtQjR5bUFrUXA5aDlUdk9Wd0NNYVBmOXltQk5MajFiNkRNV0JVQTZ5bUJHUXA4MEZBQmg5TUZoRXA4UUNvQmNOTlVIRXA4YzlGZWMvMC9SYzRDbFhYMy96MFJQWVJpWG5QM24wVk9BSlV5aUp3RExXaTQzc3kwR1FVOVpGQURsV1RGblIyb0krVTVsRkFBVmt0UXdpOGswZWdZQWhGaUluZ0FBTVJRQVFLTW1YZGRIendHQUFNNEFBQm8xc1FBQWFKTXpBSUJHS1FDQVJqa0RBR2lVRlFCQW96d0dDdEFvVzBBQWpiSUZCTkFvQlFEUUtBVUEwQ2huQUFDTnNnSUFhSlRIUUFFYTVjUGdBQnJsREFDZ1VjNEFBQnFsQUFBYXBRQUFHdVVNQUtCUkhnTUZhSlF0SUlCR0tRQ0FSamtEQUdpVUZRQkFveFFBUUtQK0R5NTdRdk1VLzJjdUFBQUFBRWxGVGtTdVFtQ0MiLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3BuZyIsICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSJ9XX0=">
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪩</text></svg>">
-    <!-- Police ultra moderne et ronde type TikTok/GenZ -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg-dark: #09090e;
-            --primary: #7928CA; /* Violet TikTok */
-            --secondary: #FF0080; /* Rose vif */
-            --tertiary: #FF8C00; /* Orange sunset */
+            --primary: #7928CA;
+            --secondary: #FF0080;
+            --tertiary: #FF8C00;
             --text-light: #ffffff;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -28,18 +41,19 @@
             color: var(--text-light); text-align: center; box-sizing: border-box; touch-action: manipulation;
         }
 
-        /* Tâches de couleurs floutées en fond (Mesh Gradient Vibes) */
+        body::before, body::after {
+            content: ''; position: fixed; pointer-events: none; z-index: -2;
+            border-radius: 50%;
+        }
         body::before {
-            content: ''; position: fixed; top: -10%; left: -10%; width: 50vw; height: 50vw;
+            top: -10%; left: -10%; width: 50vw; height: 50vw;
             background: radial-gradient(circle, rgba(121, 40, 202, 0.4) 0%, transparent 70%);
-            filter: blur(80px); pointer-events: none; z-index: -2;
-            animation: float1 10s ease-in-out infinite alternate;
+            filter: blur(80px); animation: float1 10s ease-in-out infinite alternate;
         }
         body::after {
-            content: ''; position: fixed; bottom: -10%; right: -10%; width: 60vw; height: 60vw;
+            bottom: -10%; right: -10%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(255, 0, 128, 0.3) 0%, transparent 70%);
-            filter: blur(90px); pointer-events: none; z-index: -2;
-            animation: float2 12s ease-in-out infinite alternate;
+            filter: blur(90px); animation: float2 12s ease-in-out infinite alternate;
         }
 
         @keyframes float1 { 0% { transform: translate(0, 0); } 100% { transform: translate(30px, 50px); } }
@@ -50,7 +64,6 @@
         .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); overflow-y: auto; }
         .screen.active { display: flex; }
         
-        /* Glassmorphism ultra propre */
         .lobby-box { 
             width: 100%; max-width: 420px; max-height: 92vh;
             background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -60,7 +73,6 @@
             box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         }
 
-        /* Typographie */
         .app-logo { font-size: 3em; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: -1px; font-weight: 900; line-height: 1; }
         .logo-word { color: #fff; text-shadow: 0 4px 20px rgba(255, 255, 255, 0.4); }
         .logo-number { background: var(--gradient-party); -webkit-background-clip: text; color: transparent; }
@@ -69,7 +81,6 @@
         h2 { font-size: 1.6em; margin: 0 0 10px 0; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
         h3 { font-size: 1.1em; margin: 0; font-weight: 600; color: #888; text-transform: uppercase; }
         
-        /* Boutons TikTok Style */
         .btn { 
             padding: 18px 24px; font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 1px;
             cursor: pointer; margin: 8px 0; width: 100%; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 20px; border: none;
@@ -82,7 +93,6 @@
         .btn-sub { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
         .btn-sub:hover { background: rgba(255,255,255,0.1); }
         
-        /* Inputs arrondis */
         input { 
             padding: 18px; font-size: 16px; font-weight: 800; font-family: 'Outfit', sans-serif; 
             border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); border-radius: 16px;
@@ -92,7 +102,6 @@
         input:focus { border-color: var(--secondary); background: rgba(255,0,128,0.05); box-shadow: 0 0 20px rgba(255,0,128,0.2); transform: scale(1.02); }
         input::placeholder { color: #555; font-weight: 600; }
         
-        /* Cartes Modernes */
         .cards-container { display: flex; justify-content: center; margin-top: 15px; min-height: 110px; padding-left: 20px;}
         .card { 
             background: rgba(255, 255, 255, 0.95); 
@@ -122,10 +131,13 @@
         .btn-split { background: var(--primary); color: #fff; grid-column: span 2; box-shadow: 0 4px 15px rgba(121,40,202,0.3); }
         
         .fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 14, 0.95); backdrop-filter: blur(20px); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; padding: 25px; box-sizing: border-box; text-align: center; }
-        .btn-give { background: rgba(255,255,255,0.05); color: #fff; border: 2px solid rgba(255,255,255,0.2); padding: 18px; font-size: 16px; font-family: 'Outfit'; font-weight: 800; width: 100%; margin-bottom: 12px; cursor: pointer; transition: 0.2s; border-radius: 20px; text-transform: uppercase;}
-        .btn-give:active { background: #fff; color: #000; transform: scale(0.95); }
         
-        /* Grille des paris (Crousti/Party Style) */
+        .distrib-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .distrib-name { font-size: 18px; font-weight: 800; text-transform: uppercase; }
+        .btn-give { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px 15px; font-size: 14px; font-family: 'Outfit'; font-weight: 800; cursor: pointer; transition: 0.2s; border-radius: 12px; margin-left: 5px; }
+        .btn-give:active { background: #fff; color: #000; transform: scale(0.95); }
+        .btn-give-all { background: var(--primary); color: #fff; }
+        
         .bet-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%; margin: 25px 0; }
         .bet-btn { 
             background: rgba(255,255,255,0.03); border: 2px solid rgba(255,255,255,0.1); color: #fff; font-family: 'Outfit'; font-size: 22px; font-weight: 800;
@@ -147,14 +159,13 @@
 <body>
 
 <div id="app-container">
-
     <!-- HOME -->
     <div id="screen-home" class="screen active">
         <div class="lobby-box">
             <div class="app-logo"><span class="logo-word">BLACKOUT</span> <span class="logo-number">21</span></div>
             <div class="subtitle">AFTER PARTY EDITION 🪩</div>
-            <button class="btn btn-main" onclick="window.showScreen('screen-create')">CRÉER LA TABLE 🔥</button>
-            <button class="btn btn-sub" onclick="window.showScreen('screen-join')">REJOINDRE LA SQUAD 🎯</button>
+            <button id="nav-show-create" class="btn btn-main">CRÉER LA TABLE 🔥</button>
+            <button id="nav-show-join" class="btn btn-sub">REJOINDRE LA SQUAD 🎯</button>
         </div>
     </div>
 
@@ -164,8 +175,8 @@
             <div class="app-logo" style="font-size: 2.2em; margin-bottom: 10px;">LANCER L'<span class="logo-number">AFTER</span></div>
             <p style="color:#aaa; margin-bottom:20px; font-size:14px;">T'es le boss de cette game.</p>
             <input type="text" id="input-pseudo-create" placeholder="TON BLASE (MAX 12)" maxlength="12">
-            <button class="btn btn-main" onclick="window.createRoom()">C'EST PARTI 🚀</button>
-            <button class="btn btn-sub" style="margin-top: 10px; border:none; background:transparent;" onclick="window.showScreen('screen-home')">RETOUR</button>
+            <button id="action-create-room" class="btn btn-main">C'EST PARTI 🚀</button>
+            <button class="btn btn-sub nav-back" style="margin-top: 10px; border:none; background:transparent;">RETOUR</button>
         </div>
     </div>
 
@@ -175,9 +186,9 @@
             <div class="app-logo" style="font-size: 2.2em; margin-bottom: 10px;"><span class="logo-word">INCOGNITO</span> 🕶️</div>
             <input type="text" id="input-pseudo-join" placeholder="TON BLASE (MAX 12)" maxlength="12">
             <input type="text" id="input-room" placeholder="CODE SECRET (4 LETTRES)" maxlength="4">
-            <button class="btn btn-main" onclick="window.joinRoom()">S'INFILTRER 🤫</button>
+            <button id="action-join-room" class="btn btn-main">S'INFILTRER 🤫</button>
             <div id="error-msg" style="color:var(--secondary); margin-top:10px; font-weight:800;"></div>
-            <button class="btn btn-sub" style="margin-top: 10px; border:none; background:transparent;" onclick="window.showScreen('screen-home')">RETOUR</button>
+            <button class="btn btn-sub nav-back" style="margin-top: 10px; border:none; background:transparent;">RETOUR</button>
         </div>
     </div>
 
@@ -192,7 +203,7 @@
                 <div id="lobby-players" style="font-size: 1.2em; font-weight:800; color:#fff; line-height: 1.8;"></div>
             </div>
             
-            <button id="btn-start-game" class="btn btn-main" style="display:none; margin-top:20px;" onclick="window.startGame()">LANCER LA DINGUERIE 🚀</button>
+            <button id="btn-start-game" class="btn btn-main" style="display:none; margin-top:20px;">LANCER LA DINGUERIE 🚀</button>
             <p id="msg-wait-host" style="opacity: 0.5; font-size: 14px; margin-top:20px;">Le boss prépare les verres...</p>
         </div>
     </div>
@@ -203,22 +214,12 @@
             <h2>FAITES VOS JEUX 🎲</h2>
             <p style="font-size:14px; color:#aaa; margin-bottom:0;">COMBIEN DE GORGÉES TU PARIES ?</p>
             
-            <!-- Grille de 10 paris -->
-            <div class="bet-grid">
-                <button class="bet-btn" onclick="window.selectBet(1)">1</button>
-                <button class="bet-btn" onclick="window.selectBet(2)">2</button>
-                <button class="bet-btn" onclick="window.selectBet(3)">3</button>
-                <button class="bet-btn" onclick="window.selectBet(4)">4</button>
-                <button class="bet-btn" onclick="window.selectBet(5)">5</button>
-                <button class="bet-btn" onclick="window.selectBet(6)">6</button>
-                <button class="bet-btn" onclick="window.selectBet(7)">7</button>
-                <button class="bet-btn" onclick="window.selectBet(8)">8</button>
-                <button class="bet-btn" onclick="window.selectBet(9)">9</button>
-                <button class="bet-btn" onclick="window.selectBet(10)">10</button>
+            <div class="bet-grid" id="bet-grid">
+                <!-- Généré dynamiquement -->
             </div>
 
             <div style="min-height: 70px; display: flex; align-items: center; justify-content: center; width: 100%;">
-                <button id="btn-confirm-bet" class="btn btn-main" style="display:none;" onclick="window.confirmBet()">VALIDER (🥃)</button>
+                <button id="btn-confirm-bet" class="btn btn-main" style="display:none;">VALIDER (🥃)</button>
                 <div id="bet-accepted-msg" class="status-success" style="display:none;">
                     PARI ENREGISTRÉ 🔥<br><span style="font-size:12px; color:#888; font-weight:600;">En attente des autres joueurs...</span>
                 </div>
@@ -230,13 +231,11 @@
     <div id="screen-mobile-game" class="screen">
         <div style="width: 100%; max-width: 450px; padding: 10px;">
             
-            <!-- DEALER AREA -->
             <div class="dealer-area">
                 <div id="mobile-bank-score" style="font-weight:800; font-size:1.1em; color:#aaa; text-align:center;">SCORE : --</div>
                 <div id="mobile-bank-cards" class="cards-container" style="min-height: 90px; transform: scale(0.85); margin-top:5px;"></div>
             </div>
 
-            <!-- PLAYER AREA -->
             <div style="background: rgba(255,255,255,0.03); padding: 25px 20px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);">
                 <div id="turn-indicator" style="font-weight:900; font-size:1.5em; margin-bottom:5px;" class="highlight-text">C'EST TON TOUR</div>
                 <div style="font-size:13px; color:#888; font-weight:600; margin-bottom:15px;">MISE EN JEU : <span id="mobile-my-bet" style="color:#fff; font-size:1.4em;"></span> 🥃</div>
@@ -247,13 +246,13 @@
             </div>
             
             <div id="mobile-controls" class="game-controls" style="display: none;">
-                <button class="btn-game btn-hit" onclick="window.hit()">CARTE</button>
-                <button class="btn-game btn-stand" onclick="window.stand()">RESTER</button>
-                <button class="btn-game btn-double" id="btn-double" onclick="window.double()">DOUBLE (x2)</button>
-                <button class="btn-game btn-split" id="btn-split" onclick="window.split()">SPLIT</button>
+                <button id="btn-action-hit" class="btn-game btn-hit">CARTE</button>
+                <button id="btn-action-stand" class="btn-game btn-stand">RESTER</button>
+                <button id="btn-action-double" class="btn-game btn-double">DOUBLE (x2)</button>
+                <button id="btn-action-split" class="btn-game btn-split">SPLIT</button>
             </div>
             
-            <button id="btn-next-round" class="btn btn-main" style="display:none; margin-top:30px;" onclick="window.startGame()">ON REMET ÇA 🔄</button>
+            <button id="btn-next-round" class="btn btn-main" style="display:none; margin-top:30px;">ON REMET ÇA 🔄</button>
         </div>
     </div>
 
@@ -268,12 +267,10 @@
         <div style="font-size: 5em; margin-bottom: 10px; filter: drop-shadow(0 10px 20px rgba(255,0,128,0.5));" id="drink-modal-icon">🥃</div>
         <h2 id="drink-modal-title" style="color:var(--secondary); font-size:3em; font-weight:900; margin-bottom:10px;">AÏE AÏE AÏE</h2>
         <p id="drink-modal-text" style="color:#fff; white-space:pre-line; line-height:1.5; font-size:1.4em; font-weight:800;"></p>
-        <button class="btn btn-main" onclick="document.getElementById('mobile-drink-modal').style.display='none'" style="margin-top:30px; max-width: 300px; box-shadow:none;">J'AI SOIF 😋</button>
+        <button id="btn-close-drink" class="btn btn-main" style="margin-top:30px; max-width: 300px; box-shadow:none;">J'AI SOIF 😋</button>
     </div>
-
 </div>
 
-    <!-- LOGIQUE JAVASCRIPT INTACTE (TEXTES MIS À JOUR POUR LA VIBE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -296,8 +293,28 @@
         let localRoomData = null;
         let mySelectedBet = 0;
         let betConfirmed = false;
-
+        
+        // --- GESTION AUDIO (Fallback pour iOS) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        
+        function playSound(freq, duration, type='sine') {
+            try {
+                if (!audioCtx) audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type; osc.frequency.value = freq;
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+        
         const vibrate = (pattern) => { if (navigator.vibrate) navigator.vibrate(pattern); };
+        const hapticHit = () => { vibrate(50); playSound(400, 0.1, 'triangle'); };
+        const hapticBust = () => { vibrate([200, 200]); playSound(150, 0.4, 'sawtooth'); };
+        const hapticWin = () => { vibrate([100, 50, 100]); playSound(600, 0.1, 'square'); setTimeout(() => playSound(800, 0.2, 'square'), 100); };
 
         function calculateScore(hand) {
             let score = 0; let aces = 0;
@@ -310,6 +327,13 @@
             while (score > 21 && aces > 0) { score -= 10; aces -= 1; }
             return score;
         }
+        
+        // Nouvelle fonction pour comparer la valeur des cartes pour le Split
+        function getCardValue(val) {
+            if (['J', 'Q', 'K'].includes(val)) return 10;
+            if (val === 'A') return 11;
+            return parseInt(val);
+        }
 
         function createHtmlCard(card, hidden = false) {
             if (hidden) return `<div class="card hidden"></div>`;
@@ -319,13 +343,37 @@
             </div>`;
         }
 
-        window.showScreen = (screenId) => {
+        const showScreen = (screenId) => {
             document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             document.getElementById('error-msg').innerText = ""; 
         };
 
-        window.createRoom = async () => {
+        // --- BINDINGS DES ÉVÉNEMENTS ---
+        document.getElementById('nav-show-create').addEventListener('click', () => showScreen('screen-create'));
+        document.getElementById('nav-show-join').addEventListener('click', () => showScreen('screen-join'));
+        document.querySelectorAll('.nav-back').forEach(btn => btn.addEventListener('click', () => showScreen('screen-home')));
+        document.getElementById('btn-close-drink').addEventListener('click', () => document.getElementById('mobile-drink-modal').style.display='none');
+        document.getElementById('action-create-room').addEventListener('click', createRoom);
+        document.getElementById('action-join-room').addEventListener('click', joinRoom);
+        document.getElementById('btn-start-game').addEventListener('click', startGame);
+        document.getElementById('btn-next-round').addEventListener('click', startGame);
+        document.getElementById('btn-confirm-bet').addEventListener('click', confirmBet);
+        document.getElementById('btn-action-hit').addEventListener('click', hit);
+        document.getElementById('btn-action-stand').addEventListener('click', stand);
+        document.getElementById('btn-action-double').addEventListener('click', double);
+        document.getElementById('btn-action-split').addEventListener('click', split);
+
+        // --- GÉNÉRATION DES BOUTONS DE PARI ---
+        const betGrid = document.getElementById('bet-grid');
+        for(let i=1; i<=10; i++) {
+            let btn = document.createElement('button');
+            btn.className = 'bet-btn'; btn.innerText = i;
+            btn.addEventListener('click', (e) => selectBet(i, e.target));
+            betGrid.appendChild(btn);
+        }
+
+        async function createRoom() {
             myPseudo = document.getElementById('input-pseudo-create').value.trim();
             if (!myPseudo) return;
             isHost = true;
@@ -338,9 +386,9 @@
             
             document.getElementById('display-room-code').innerText = currentRoomCode;
             listenToRoom();
-        };
+        }
 
-        window.joinRoom = async () => {
+        async function joinRoom() {
             myPseudo = document.getElementById('input-pseudo-join').value.trim();
             currentRoomCode = document.getElementById('input-room').value.trim().toUpperCase();
             if (!myPseudo || currentRoomCode.length !== 4) return;
@@ -356,10 +404,10 @@
                     listenToRoom();
                 } else document.getElementById('error-msg').innerText = "CODE INVALIDE BRO.";
             } catch (error) { document.getElementById('error-msg').innerText = "ERREUR RÉSEAU."; }
-        };
+        }
 
         function listenToRoom() {
-            window.showScreen('screen-mobile-lobby');
+            showScreen('screen-mobile-lobby');
             onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
                 if (docSnap.exists()) {
                     localRoomData = docSnap.data();
@@ -370,19 +418,18 @@
 
         function handleStateChange(data) {
             if (data.status === "waiting") {
-                window.showScreen('screen-mobile-lobby');
+                showScreen('screen-mobile-lobby');
                 document.getElementById('lobby-players').innerHTML = data.players.join('<br>');
                 document.getElementById('btn-start-game').style.display = isHost ? "block" : "none";
                 document.getElementById('msg-wait-host').style.display = isHost ? "none" : "block";
             }
             
             if (data.status === "betting") {
-                window.showScreen('screen-betting');
+                showScreen('screen-betting');
                 
                 if (!betConfirmed) {
                     document.querySelectorAll('.bet-btn').forEach(b => {
-                        b.classList.remove('selected');
-                        b.disabled = false;
+                        b.classList.remove('selected'); b.disabled = false;
                     });
                     document.getElementById('btn-confirm-bet').style.display = "none";
                     document.getElementById('bet-accepted-msg').style.display = "none";
@@ -401,7 +448,7 @@
 
             if (data.status === "playing") {
                 betConfirmed = false;
-                window.showScreen('screen-mobile-game');
+                showScreen('screen-mobile-game');
                 updateGameUI(data);
                 
                 if (isHost && data.currentTurnIndex >= data.players.length && !data.dealerPlayed && !data.dealerPlaying) {
@@ -415,41 +462,48 @@
             }
         }
 
-        window.selectBet = (amount) => {
+        function selectBet(amount, target) {
             if (betConfirmed) return;
             mySelectedBet = amount;
             document.querySelectorAll('.bet-btn').forEach(b => b.classList.remove('selected'));
-            event.target.classList.add('selected');
+            target.classList.add('selected');
             document.getElementById('btn-confirm-bet').style.display = "block";
-        };
+        }
 
-        window.confirmBet = async () => {
+        async function confirmBet() {
             if (mySelectedBet === 0 || betConfirmed) return;
-            betConfirmed = true;
-            vibrate(50);
+            betConfirmed = true; hapticHit();
             
             document.getElementById('btn-confirm-bet').style.display = "none";
             document.getElementById('bet-accepted-msg').style.display = "block";
             document.querySelectorAll('.bet-btn').forEach(b => b.disabled = true);
             
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`bets.${myPseudo}`]: mySelectedBet });
-        };
+        }
 
-        window.startGame = async () => {
+        async function startGame() {
             if (!isHost) return;
             betConfirmed = false;
             await updateDoc(doc(db, "rooms", currentRoomCode), { status: "betting", bets: {}, poolToGive: {}, receivedSips: {} });
-        };
+        }
 
         async function dealCards(activePlayers) {
             let deck = [];
-            for(let s of ['♠', '♥', '♣', '♦']) for(let v of ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']) deck.push({suit: s, value: v});
+            for(let d=0; d<6; d++) {
+                for(let s of ['♠', '♥', '♣', '♦']) {
+                    for(let v of ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']) {
+                        deck.push({suit: s, value: v});
+                    }
+                }
+            }
             deck = deck.sort(() => Math.random() - 0.5);
 
             let playerHands = {}, playerStates = {};
             activePlayers.forEach(p => { playerHands[p] = [deck.pop(), deck.pop()]; playerStates[p] = "playing"; });
             
+            // FIX MAJEUR: On écrase `data.players` avec `activePlayers` pour supprimer les mains fantômes du tour précédent
             await updateDoc(doc(db, "rooms", currentRoomCode), {
+                players: activePlayers,
                 status: "playing", deck, playerHands, playerStates, 
                 dealerHand: [deck.pop(), deck.pop()], currentTurnIndex: 0, 
                 dealerPlayed: false, dealerPlaying: false, doubled: {}
@@ -475,7 +529,7 @@
 
             data.players.forEach(p => {
                 if (!data.playerHands[p]) return;
-                let actualPlayer = p.replace("_split", "");
+                let actualPlayer = p.split("_split")[0]; 
                 let bet = data.bets[actualPlayer] || 1;
                 if (data.doubled?.[p]) bet *= 2; 
 
@@ -484,7 +538,7 @@
                 
                 if (data.playerStates[p] === "bust") { take = bet; }
                 else if (pScore === 21 && dScore === 21) { take = 0; give = 0; }
-                else if (isPlayerBJ) { give = bet * 2; }
+                else if (isPlayerBJ) { give = Math.ceil(bet * 1.5); } 
                 else if (isDealerBJ) { take = bet * 2; }
                 else if (dScore > 21) { give = bet; }
                 else if (pScore > dScore) { give = bet; }
@@ -500,31 +554,49 @@
             });
         }
 
-        window.hit = async () => {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; vibrate(50);
+        async function hit() {
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
             let deck = [...data.deck], hand = [...data.playerHands[target]]; hand.push(deck.pop());
             let updates = { deck, [`playerHands.${target}`]: hand };
-            if (calculateScore(hand) > 21) { updates[`playerStates.${target}`] = "bust"; updates.currentTurnIndex = data.currentTurnIndex + 1; vibrate([200, 200]); }
+            if (calculateScore(hand) > 21) { updates[`playerStates.${target}`] = "bust"; updates.currentTurnIndex = data.currentTurnIndex + 1; hapticBust(); }
             await updateDoc(doc(db, "rooms", currentRoomCode), updates);
-        };
-        window.stand = async () => {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; vibrate(50);
+        }
+
+        async function stand() {
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; hapticHit();
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`playerStates.${target}`]: "stand", currentTurnIndex: data.currentTurnIndex + 1 });
-        };
-        window.double = async () => {
+        }
+
+        async function double() {
             let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return;
-            let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; vibrate([50, 80]);
+            let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; hapticHit();
             let deck = [...data.deck]; hand.push(deck.pop());
             await updateDoc(doc(db, "rooms", currentRoomCode), { deck, [`playerHands.${target}`]: hand, [`playerStates.${target}`]: calculateScore(hand) > 21 ? "bust" : "stand", [`doubled.${target}`]: true, currentTurnIndex: data.currentTurnIndex + 1 });
-        };
-        window.split = async () => {
+        }
+
+        async function split() {
             let data = localRoomData, target = data.players[data.currentTurnIndex];
-            if (!target.startsWith(myPseudo) || target.includes("_split")) return;
-            let hand = data.playerHands[target]; if (hand.length !== 2 || hand[0].value !== hand[1].value) return; vibrate([100, 50, 100]);
-            let deck = [...data.deck], ghost = target + "_split", newP = [...data.players];
+            if (!target.startsWith(myPseudo)) return;
+            let hand = data.playerHands[target]; 
+            
+            // FIX MAJEUR: Vérification de la valeur de la carte (ex: 10 et Roi sont séparables)
+            if (hand.length !== 2 || getCardValue(hand[0].value) !== getCardValue(hand[1].value)) return; 
+            hapticWin();
+            
+            let splitCount = Object.keys(data.playerHands).filter(k => k.startsWith(myPseudo + "_split")).length;
+            let ghost = myPseudo + "_split" + (splitCount + 1); 
+            
+            let deck = [...data.deck], newP = [...data.players];
             newP.splice(newP.indexOf(target) + 1, 0, ghost);
-            await updateDoc(doc(db, "rooms", currentRoomCode), { players: newP, deck, [`playerHands.${target}`]: [hand[0], deck.pop()], [`playerHands.${ghost}`]: [hand[1], deck.pop()], [`playerStates.${ghost}`]: "playing" });
-        };
+            
+            await updateDoc(doc(db, "rooms", currentRoomCode), { 
+                players: newP, 
+                deck, 
+                [`playerHands.${target}`]: [hand[0], deck.pop()], 
+                [`playerHands.${ghost}`]: [hand[1], deck.pop()], 
+                [`playerStates.${ghost}`]: "playing" 
+            });
+        }
 
         function updateGameUI(data) {
             const hideSecond = (data.status !== "finished" && data.status !== "distributing" && !data.dealerPlaying);
@@ -535,7 +607,9 @@
             }
 
             let displayP = myPseudo;
-            if (data.status === "playing" && data.players[data.currentTurnIndex] === myPseudo + "_split") displayP = myPseudo + "_split";
+            if (data.status === "playing" && data.players[data.currentTurnIndex] && data.players[data.currentTurnIndex].startsWith(myPseudo)) {
+                displayP = data.players[data.currentTurnIndex];
+            }
             const myHand = data.playerHands?.[displayP];
             
             if (myHand) {
@@ -553,10 +627,15 @@
                 else if (isMyTurn) {
                     indicator.innerText = "À TOI DE JOUER 🔥"; indicator.className = "highlight-text"; 
                     document.getElementById('mobile-controls').style.display = "grid";
-                    document.getElementById('btn-double').style.display = myHand.length === 2 ? "block" : "none";
-                    document.getElementById('btn-split').style.display = (myHand.length === 2 && myHand[0].value === myHand[1].value && !displayP.includes("_split")) ? "block" : "none";
+                    document.getElementById('btn-action-double').style.display = myHand.length === 2 ? "block" : "none";
+                    
+                    // FIX MAJEUR: Afficher le bouton split seulement si la VALEUR des 2 cartes est identique
+                    let canSplit = (myHand.length === 2 && getCardValue(myHand[0].value) === getCardValue(myHand[1].value));
+                    document.getElementById('btn-action-split').style.display = canSplit ? "block" : "none";
                 } else {
-                    let currentPlayer = data.players[data.currentTurnIndex] ? data.players[data.currentTurnIndex].replace("_split", " (Split)") : "LA BANQUE";
+                    let currentPlayer = data.players[data.currentTurnIndex] 
+                        ? data.players[data.currentTurnIndex].split("_split")[0] + (data.players[data.currentTurnIndex].includes("_split") ? " (Split)" : "") 
+                        : "LA BANQUE";
                     indicator.innerText = `TOUR DE : ${currentPlayer.toUpperCase()}`; indicator.style.color = "#888"; indicator.className = "";
                     document.getElementById('mobile-controls').style.display = "none";
                 }
@@ -580,9 +659,27 @@
                         document.getElementById('distrib-modal-text').innerText = `T'AS ${myAmountToGive} GORGÉE(S) À DONNER :`;
                         let btnContainer = document.getElementById('distrib-buttons-container'); btnContainer.innerHTML = "";
                         
-                        data.players.filter(p => !p.includes("_split") && p !== myPseudo).forEach(p => {
-                            btnContainer.innerHTML += `<button class="btn-give" onclick="window.giveSipTo('${p}')">FUMER ${p} 🎯</button>`;
+                        let activeOpponents = [...new Set(data.players.map(p => p.split("_split")[0]))].filter(p => p !== myPseudo);
+                        
+                        activeOpponents.forEach(p => {
+                            let row = document.createElement('div');
+                            row.className = 'distrib-row';
+                            row.innerHTML = `<span class="distrib-name">${p}</span> 
+                                             <div>
+                                                 <button class="btn-give" data-target="${p}" data-amount="1">+1</button>
+                                                 <button class="btn-give btn-give-all" data-target="${p}" data-amount="all">TOUT</button>
+                                             </div>`;
+                            btnContainer.appendChild(row);
                         });
+
+                        document.querySelectorAll('.btn-give').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                let target = e.currentTarget.getAttribute('data-target');
+                                let amount = e.currentTarget.getAttribute('data-amount') === 'all' ? localRoomData.poolToGive[myPseudo] : 1;
+                                giveSipTo(target, amount);
+                            });
+                        });
+                        
                     } else {
                         distribModal.style.display = "flex";
                         document.getElementById('distrib-modal-title').innerText = "PAUSE";
@@ -597,12 +694,14 @@
                 const received = data.receivedSips?.[myPseudo] || 0;
                 
                 if (received > 0) {
-                    vibrate([200, 100, 200]);
-                    document.getElementById('drink-modal-text').innerText = `DANS LE GOSIER :\n${received} GORGÉE(S) !`;
+                    hapticBust();
+                    document.getElementById('drink-modal-text').innerText = `DANS LE GOSIER :
+${received} GORGÉE(S) !`;
                     document.getElementById('drink-modal-icon').innerText = "💀";
                     document.getElementById('drink-modal-title').innerText = "CUL SEC !";
                     document.getElementById('drink-modal-title').style.color = "var(--secondary)";
                 } else {
+                    hapticWin();
                     document.getElementById('drink-modal-text').innerText = `Tranquille pour cette fois.`;
                     document.getElementById('drink-modal-icon').innerText = "😎";
                     document.getElementById('drink-modal-title').innerText = "SAUVÉ";
@@ -612,15 +711,14 @@
             }
         }
 
-        window.giveSipTo = async (targetPlayer) => {
+        async function giveSipTo(targetPlayer, amount) {
             let data = localRoomData, left = data.poolToGive?.[myPseudo] || 0;
-            if (left <= 0) return; vibrate(40);
+            if (left < amount) return; hapticHit();
             await updateDoc(doc(db, "rooms", currentRoomCode), { 
-                [`poolToGive.${myPseudo}`]: left - 1, 
-                [`receivedSips.${targetPlayer}`]: (data.receivedSips?.[targetPlayer] || 0) + 1 
+                [`poolToGive.${myPseudo}`]: left - amount, 
+                [`receivedSips.${targetPlayer}`]: (data.receivedSips?.[targetPlayer] || 0) + amount 
             });
-        };
-
+        }
     </script>
 </body>
 </html>
