@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#09090e">
     <title>BLACKOUT 21</title>
     <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js">
@@ -145,6 +145,24 @@
         .floating-btn:active { transform: scale(0.9); }
         #btn-host-force { left: 15px; color: var(--tertiary); border-color: var(--tertiary); }
         #btn-quit { right: 15px; color: var(--secondary); border-color: var(--secondary); }
+    
+        /* v2 : mise en page mobile, tablette de table, toast, accessibilité */
+        html, body, #app-container { height: 100dvh; }
+        .screen { justify-content: flex-start; }
+        .screen > * { margin-top: auto; margin-bottom: auto; }
+        .hint { color: #777; font-size: 12px; line-height: 1.5; margin: 14px 4px 0; }
+        .table-strip { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 12px; scrollbar-width: none; }
+        .table-strip::-webkit-scrollbar { display: none; }
+        .chip { flex: 0 0 auto; min-width: 70px; padding: 8px 10px; border-radius: 14px; background: var(--glass-bg); border: 1px solid var(--glass-border); display: flex; flex-direction: column; gap: 2px; font-size: 12px; font-weight: 800; text-align: left; transition: box-shadow .2s, border-color .2s; }
+        .chip b { font-size: 13px; max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chip small { color: #8a8a96; font-weight: 600; }
+        .chip.me { border-color: rgba(255,255,255,0.3); }
+        .chip.turn { border-color: var(--secondary); box-shadow: 0 0 16px rgba(255,0,128,0.35); }
+        .chip.bust { opacity: .45; }
+        #toast { position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 16px); opacity: 0; pointer-events: none; z-index: 2000; background: #1c1c26; border: 1px solid var(--glass-border); padding: 12px 20px; border-radius: 14px; font-weight: 800; font-size: 14px; transition: .2s; }
+        #toast.show { opacity: 1; transform: translate(-50%, 0); }
+        :focus-visible { outline: 3px solid var(--tertiary); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
@@ -161,6 +179,7 @@
             <div class="subtitle">AFTER PARTY EDITION 🪩</div>
             <button id="nav-show-create" class="btn btn-main">CRÉER LA TABLE 🔥</button>
             <button id="nav-show-join" class="btn btn-sub">REJOINDRE LA SQUAD 🎯</button>
+            <p class="hint">Les gorgées peuvent se jouer avec n'importe quelle boisson. Bois avec modération : personne n'est obligé de finir son verre.</p>
         </div>
     </div>
 
@@ -180,7 +199,7 @@
         <div class="lobby-box">
             <div class="app-logo" style="font-size: 2.2em; margin-bottom: 10px;"><span class="logo-word">INCOGNITO</span> 🕶️</div>
             <input type="text" id="input-pseudo-join" placeholder="TON BLASE (MAX 12)" maxlength="12">
-            <input type="text" id="input-room" placeholder="CODE SECRET (4 LETTRES)" maxlength="4">
+            <input type="text" id="input-room" placeholder="CODE SECRET (4 LETTRES)" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false">
             <button id="action-join-room" class="btn btn-main">S'INFILTRER 🤫</button>
             <div id="error-msg" style="color:var(--secondary); margin-top:10px; font-weight:800;"></div>
             <button class="btn btn-sub nav-back" style="margin-top: 10px; border:none; background:transparent;">RETOUR</button>
@@ -198,6 +217,7 @@
                 <div id="lobby-players" style="font-size: 1.2em; font-weight:800; color:#fff; line-height: 1.8;"></div>
             </div>
             
+            <button id="btn-share" class="btn btn-sub" style="margin-top:14px;">INVITER LA SQUAD 🔗</button>
             <button id="btn-start-game" class="btn btn-main" style="display:none; margin-top:20px;">LANCER LA DINGUERIE 🚀</button>
             <p id="msg-wait-host" style="opacity: 0.5; font-size: 14px; margin-top:20px;">Le boss prépare les verres...</p>
         </div>
@@ -225,6 +245,7 @@
         <div style="width: 100%; max-width: 450px; padding: 10px;">
             
             <div id="active-event-banner" class="event-banner" style="display:none;"></div>
+            <div id="table-strip" class="table-strip" aria-label="Joueurs à la table"></div>
                 <div class="dealer-area">
                 <div id="mobile-bank-score" style="font-weight:800; font-size:1.1em; color:#aaa; text-align:center;">SCORE : --</div>
                 <div id="mobile-bank-cards" class="cards-container" style="min-height: 90px; transform: scale(0.85); margin-top:5px;"></div>
@@ -283,6 +304,31 @@
         let localRoomData = null;
         let mySelectedBet = 0;
         let betConfirmed = false;
+        let busy = false, wasMyTurn = false;
+        const SESSION_KEY = 'blackout21-session';
+
+        // Échappe tout pseudo avant de l'injecter dans du HTML (anti-XSS)
+        const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        // Pseudo normalisé : majuscules, sans caractères interdits dans les chemins de champs Firestore
+        const norm = s => s.trim().toUpperCase().replace(/[.~*\/\[\]`]/g, '');
+        const saveSession = () => { try { localStorage.setItem(SESSION_KEY, JSON.stringify({ room: currentRoomCode, pseudo: myPseudo })); } catch (e) {} };
+        const clearSession = () => { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} };
+        const keepAwake = () => { try { navigator.wakeLock?.request('screen').catch(() => {}); } catch (e) {} };
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && currentRoomCode) keepAwake(); });
+
+        function toast(msg) {
+            let t = document.getElementById('toast');
+            if (!t) { t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+            t.textContent = msg; t.classList.add('show');
+            clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2400);
+        }
+
+        // Mélange Fisher-Yates non biaisé (l'ancien sort() aléatoire ne l'était pas)
+        function shuffle(a) {
+            const r = new Uint32Array(1);
+            for (let i = a.length - 1; i > 0; i--) { crypto.getRandomValues(r); const j = r[0] % (i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+            return a;
+        }
         
         function calculateScore(hand) {
             let score = 0; let aces = 0;
@@ -317,6 +363,8 @@
             if (!currentRoomCode || !myPseudo || !localRoomData) return;
             let updatedPlayers = localRoomData.players.filter(p => p !== myPseudo);
             let updates = { players: updatedPlayers };
+            const idx = localRoomData.players.indexOf(myPseudo);
+            if (localRoomData.status === 'playing' && idx >= 0 && idx < localRoomData.currentTurnIndex) updates.currentTurnIndex = localRoomData.currentTurnIndex - 1;
             
             // Si c'est l'hôte qui part, il lègue la couronne au prochain
             if (isHost && updatedPlayers.length > 0) {
@@ -326,12 +374,12 @@
         }
 
         // Ecouter la fermeture de page
-        window.addEventListener('beforeunload', leaveRoom);
-        window.addEventListener('pagehide', leaveRoom);
+        // Pas de départ automatique à la fermeture : sur mobile, changer d'appli éjectait le joueur.
+        // La session est conservée : un rechargement ramène le joueur à sa table.
         
         document.getElementById('btn-quit').addEventListener('click', async () => {
             await leaveRoom();
-            window.location.reload();
+            clearSession(); window.location.reload();
         });
 
         // Hôte : Forcer le passage d'étape ou Kick les AFK
@@ -376,6 +424,16 @@
         document.getElementById('btn-action-stand').addEventListener('click', stand);
         document.getElementById('btn-action-double').addEventListener('click', double);
 
+        [['input-pseudo-create', createRoom], ['input-pseudo-join', joinRoom], ['input-room', joinRoom]].forEach(([id, fn]) =>
+            document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') fn(); }));
+        document.getElementById('btn-share').addEventListener('click', async () => {
+            const url = `${location.origin}${location.pathname}?room=${currentRoomCode}`;
+            try {
+                if (navigator.share) await navigator.share({ title: 'BLACKOUT 21', text: `Rejoins ma table : ${currentRoomCode}`, url });
+                else { await navigator.clipboard.writeText(url); toast('Lien copié !'); }
+            } catch (e) {}
+        });
+
         // --- GÉNÉRATION DES BOUTONS DE PARI ---
         const betGrid = document.getElementById('bet-grid');
         for(let i=1; i<=10; i++) {
@@ -386,11 +444,16 @@
         }
 
         async function createRoom() {
-            myPseudo = document.getElementById('input-pseudo-create').value.trim();
+            myPseudo = norm(document.getElementById('input-pseudo-create').value);
             if (!myPseudo) return;
             isHost = true;
             currentRoomCode = "";
-            for (let i = 0; i < 4; i++) currentRoomCode += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 26));
+            // Code sans I ni O, et jamais d'écrasement d'une table existante
+            for (let t = 0; t < 6; t++) {
+                currentRoomCode = Array.from({ length: 4 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ".charAt(Math.floor(Math.random() * 24))).join('');
+                try { if (!(await getDoc(doc(db, "rooms", currentRoomCode))).exists()) break; }
+                catch (e) { toast('Pas de connexion. Réessaie.'); return; }
+            }
             
             document.getElementById('action-create-room').innerText = "CRÉATION... ⏳";
             await setDoc(doc(db, "rooms", currentRoomCode), { 
@@ -403,7 +466,7 @@
         }
 
         async function joinRoom() {
-            myPseudo = document.getElementById('input-pseudo-join').value.trim();
+            myPseudo = norm(document.getElementById('input-pseudo-join').value);
             currentRoomCode = document.getElementById('input-room').value.trim().toUpperCase();
             if (!myPseudo || currentRoomCode.length !== 4) return;
 
@@ -412,6 +475,9 @@
                 const roomSnap = await getDoc(doc(db, "rooms", currentRoomCode));
                 if (roomSnap.exists()) {
                     let data = roomSnap.data();
+                    const refuse = (m) => { document.getElementById('action-join-room').innerText = "S'INFILTRER 🤫"; document.getElementById('error-msg').innerText = m; };
+                    if (data.players.includes(myPseudo)) return refuse('BLASE DÉJÀ PRIS.');
+                    if (data.status !== 'waiting' && data.status !== 'finished') return refuse('MANCHE EN COURS, REVIENS ENTRE DEUX TOURS.');
                     if (data.host === myPseudo) isHost = true;
                     
                     await updateDoc(doc(db, "rooms", currentRoomCode), { players: arrayUnion(myPseudo) });
@@ -430,6 +496,7 @@
         }
 
         function listenToRoom() {
+            saveSession(); keepAwake();
             showScreen('screen-mobile-lobby');
             onSnapshot(doc(db, "rooms", currentRoomCode), (docSnap) => {
                 if (docSnap.exists()) {
@@ -440,6 +507,11 @@
         }
 
         function handleStateChange(data) {
+            busy = false;
+            // Joueur retiré de la table (kick de l'hôte ou départ) : on le ramène à l'accueil
+            if (myPseudo && data.players && !data.players.includes(myPseudo)) {
+                clearSession(); toast('Tu as quitté la table.'); setTimeout(() => window.location.reload(), 900); return;
+            }
             // MIGRATION AUTOMATIQUE DE L'HÔTE
             if (data.players && data.players.length > 0) {
                 // Si l'hôte n'est plus là, le premier joueur récupère la couronne
@@ -472,13 +544,19 @@
             if (data.status === "waiting") {
                 showScreen('screen-mobile-lobby');
                 // Afficher la 👑 à côté de l'hôte
-                document.getElementById('lobby-players').innerHTML = data.players.map(p => p === data.host ? `👑 ${p}` : p).join('<br>');
+                document.getElementById('lobby-players').innerHTML = data.players.map(p => esc(p === data.host ? '👑 ' + p : p)).join('<br>');
                 document.getElementById('btn-start-game').style.display = isHost ? "block" : "none";
                 document.getElementById('msg-wait-host').style.display = isHost ? "none" : "block";
             }
             
             if (data.status === "betting") {
                 showScreen('screen-betting');
+                if (data.bets && data.bets[myPseudo] && !betConfirmed) {
+                    betConfirmed = true;
+                    document.getElementById('btn-confirm-bet').style.display = "none";
+                    document.getElementById('bet-accepted-msg').style.display = "block";
+                    document.querySelectorAll('.bet-btn').forEach(b => b.disabled = true);
+                }
                 if (!betConfirmed) {
                     document.querySelectorAll('.bet-btn').forEach(b => { b.classList.remove('selected'); b.disabled = false; });
                     document.getElementById('btn-confirm-bet').style.display = "none";
@@ -556,7 +634,7 @@
                     }
                 }
             }
-            deck = deck.sort(() => Math.random() - 0.5);
+            deck = shuffle(deck);
 
             let playerHands = {}, playerStates = {};
             activePlayers.forEach(p => { playerHands[p] = [deck.pop(), deck.pop()]; playerStates[p] = "playing"; });
@@ -628,7 +706,7 @@
         }
 
         async function hit() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; 
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (target !== myPseudo || busy) return; busy = true; setTimeout(() => { busy = false; }, 2500); 
             document.getElementById('mobile-controls').style.display = 'none'; 
             let deck = [...data.deck], hand = [...data.playerHands[target]]; hand.push(deck.pop());
             let updates = { deck, [`playerHands.${target}`]: hand };
@@ -637,13 +715,13 @@
         }
 
         async function stand() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return; 
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (target !== myPseudo || busy) return; busy = true; setTimeout(() => { busy = false; }, 2500); 
             document.getElementById('mobile-controls').style.display = 'none'; 
             await updateDoc(doc(db, "rooms", currentRoomCode), { [`playerStates.${target}`]: "stand", currentTurnIndex: data.currentTurnIndex + 1 });
         }
 
         async function double() {
-            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (!target.startsWith(myPseudo)) return;
+            let data = localRoomData, target = data.players[data.currentTurnIndex]; if (target !== myPseudo || busy) return; busy = true; setTimeout(() => { busy = false; }, 2500);
             let hand = [...data.playerHands[target]]; if (hand.length !== 2) return; 
             document.getElementById('mobile-controls').style.display = 'none'; 
             let deck = [...data.deck]; hand.push(deck.pop());
@@ -653,6 +731,12 @@
         function updateGameUI(data) {
             const hideSecond = (data.status !== "finished" && data.status !== "distributing" && !data.dealerPlaying);
             
+            document.getElementById('table-strip').innerHTML = data.players.map((p, i) => {
+                const st = data.playerStates?.[p], turn = data.status === 'playing' && i === data.currentTurnIndex;
+                const icon = st === 'bust' ? '💀' : st === 'stand' ? '✋' : turn ? '🔥' : '⏳';
+                const sc = data.playerHands?.[p] ? calculateScore(data.playerHands[p]) : '';
+                return `<div class="chip${turn ? ' turn' : ''}${st === 'bust' ? ' bust' : ''}${p === myPseudo ? ' me' : ''}"><b>${esc(p)}</b><span>${icon} ${sc}</span><small>${data.bets?.[p] ?? ''} 🥃</small></div>`;
+            }).join('');
             const banner = document.getElementById('active-event-banner');
             if (data.activeEvent) {
                 banner.style.display = "block";
@@ -670,7 +754,7 @@
             }
 
             let displayP = myPseudo;
-            if (data.status === "playing" && data.players[data.currentTurnIndex] && data.players[data.currentTurnIndex].startsWith(myPseudo)) {
+            if (data.status === "playing" && data.players[data.currentTurnIndex] && data.players[data.currentTurnIndex] === myPseudo) {
                 displayP = data.players[data.currentTurnIndex];
             }
             const myHand = data.playerHands?.[displayP];
@@ -684,11 +768,12 @@
                 document.getElementById('mobile-my-score').innerText = `${calculateScore(myHand)}`;
 
                 const isMyTurn = (data.players[data.currentTurnIndex] === displayP && data.status === "playing");
+                const justMyTurn = isMyTurn && !wasMyTurn; wasMyTurn = isMyTurn;
                 const indicator = document.getElementById('turn-indicator');
                 
                 if (data.playerStates[displayP] === "bust") { indicator.innerText = "💀 T'ES CRAMÉ"; indicator.style.color = "var(--secondary)"; indicator.className = ""; document.getElementById('mobile-controls').style.display = "none"; }
                 else if (isMyTurn) {
-                    indicator.innerText = "À TOI DE JOUER 🔥"; indicator.className = "highlight-text"; 
+                    indicator.innerText = "À TOI DE JOUER 🔥"; if (justMyTurn && navigator.vibrate) navigator.vibrate([120, 60, 120]); indicator.className = "highlight-text"; 
                     document.getElementById('mobile-controls').style.display = "grid";
                     document.getElementById('btn-action-double').style.display = myHand.length === 2 ? "block" : "none";
                 } else {
@@ -723,10 +808,10 @@
                         activeOpponents.forEach(p => {
                             let row = document.createElement('div');
                             row.className = 'distrib-row';
-                            row.innerHTML = `<span class="distrib-name">${p}</span> 
+                            row.innerHTML = `<span class="distrib-name">${esc(p)}</span> 
                                              <div>
-                                                 <button class="btn-give" data-target="${p}" data-amount="1">+1</button>
-                                                 <button class="btn-give btn-give-all" data-target="${p}" data-amount="all">TOUT</button>
+                                                 <button class="btn-give" data-target="${esc(p)}" data-amount="1">+1</button>
+                                                 <button class="btn-give btn-give-all" data-target="${esc(p)}" data-amount="all">TOUT</button>
                                              </div>`;
                             btnContainer.appendChild(row);
                         });
@@ -776,6 +861,23 @@ ${received} GORGÉE(S) !`;
                 [`receivedSips.${targetPlayer}`]: (data.receivedSips?.[targetPlayer] || 0) + amount 
             });
         }
+    
+        (async () => {
+            try {
+                const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+                if (saved && saved.room && saved.pseudo) {
+                    const snap = await getDoc(doc(db, "rooms", saved.room));
+                    if (snap.exists() && snap.data().players.includes(saved.pseudo)) {
+                        currentRoomCode = saved.room; myPseudo = saved.pseudo;
+                        document.getElementById('display-room-code').innerText = saved.room;
+                        listenToRoom(); return;
+                    }
+                    clearSession();
+                }
+                const code = (new URLSearchParams(location.search).get('room') || '').toUpperCase().slice(0, 4);
+                if (code.length === 4) { document.getElementById('input-room').value = code; showScreen('screen-join'); }
+            } catch (e) {}
+        })();
     </script>
 </body>
 </html>
